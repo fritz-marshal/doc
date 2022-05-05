@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>Technical implementation</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Developer Guidelines" href="developer.html" />
+  <link rel="prev" title="Kowalski collection schemas" href="catalogs.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Fritz Marshal</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#fritz-marshal-manual">fritz marshal manual</a></span>
+      </p>
+      <ul class="current">
+        
+          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 current"><a href="#" class="reference internal current">Technical implementation</a>
+
+            
+              <ul>
+                
+                  <li class="toctree-l2"><a href="#kowalski-and-skyportal" class="reference internal">Kowalski and SkyPortal</a></li>
+                
+              </ul>
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Technical implementation</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="prev">
+    <a href="catalogs.html"
+       title="previous chapter">← Kowalski collection schemas</a>
+  </li>
+  <li class="next">
+    <a href="developer.html"
+       title="next chapter">Developer Guidelines →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <section id="technical-implementation">
+<h1>Technical implementation<a class="headerlink" href="#technical-implementation" title="Permalink to this headline">¶</a></h1>
+<p>This is the TL;DR section of the docs.</p>
+<p>The key characteristics of Fritz are efficiency, scalability, portability, and extensibility.
+Fritz employs a modular architecture and
+integrates and extends two major components: <a class="reference external" href="https://github.com/dmitryduev/kowalski">Kowalski</a>
+acts as the alert processor and data archive, and <a class="reference external" href="https://github.com/skyportal/skyportal">SkyPortal</a>,
+which handles the rest of the stack.
+The schematic overview of our system is shown below:</p>
+<p><img alt="img/fritz.png" src="_images/fritz.jpg" /></p>
+<section id="kowalski-and-skyportal">
+<h2>Kowalski and SkyPortal<a class="headerlink" href="#kowalski-and-skyportal" title="Permalink to this headline">¶</a></h2>
+<p>A schematic overview of the functional aspects of <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> and how they interact is shown below:</p>
+<p><img alt="img/kowalski.png" src="_images/kowalski.jpg" /></p>
+<p>A non-relational (NoSQL) database <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> powers the data archive, the alert stream sink,
+and the alert handling service. We base the choice of <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> as the workhorse on the following reasons:</p>
+<ul class="simple">
+<li><p>Individual alerts are stored as binary <code class="docutils literal notranslate"><span class="pre">JSON</span></code> (<code class="docutils literal notranslate"><span class="pre">BSON</span></code>) “documents” in “collections”,
+a natural format for the <code class="docutils literal notranslate"><span class="pre">AVRO</span></code> alert packets.</p></li>
+<li><p>Collections are implemented as B-trees, which guarantees <code class="docutils literal notranslate"><span class="pre">~log(N)</span></code> execution times for the standard
+CRUD operations, where <code class="docutils literal notranslate"><span class="pre">N</span></code> is the number of documents in the collection.</p></li>
+<li><p>Collections support multiple (compound) indexes and associated (in-memory) “covered” queries,
+which will provide efficient access to the most-in-demand data.</p></li>
+<li><p>Being a NoSQL database, <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> does not enforce any schema by default
+meaning no downtime in case of an alert packet schema change.</p></li>
+<li><p>Built-in <code class="docutils literal notranslate"><span class="pre">GeoJSON</span></code> support with 2D indexes on the sphere allowing efficient (potentially complicated) positional queries.</p></li>
+<li><p>Built-in support for horizontal scaling through sharding.</p></li>
+</ul>
+<p>An API layer provides an interface for the interaction with the backend:
+it is built using a <code class="docutils literal notranslate"><span class="pre">python</span></code> asynchronous web framework, <code class="docutils literal notranslate"><span class="pre">aiohttp</span></code>, and the standard <code class="docutils literal notranslate"><span class="pre">python</span></code> async event loop
+serves as a simple, fast, and robust job queue.
+A <a class="reference external" href="https://github.com/dmitryduev/penquins">programmatic <code class="docutils literal notranslate"><span class="pre">python</span></code> client</a> is also available
+to interact with Kowalski’s API.
+Multiple instances of the API service are maintained using the <code class="docutils literal notranslate"><span class="pre">Gunicorn</span></code> WSGI HTTP Server.
+Incoming and outgoing traffic is routed through <code class="docutils literal notranslate"><span class="pre">traefik</span></code>,
+which acts as a simple and performant reverse proxy/load balancer.
+An alert brokering layer listens to <code class="docutils literal notranslate"><span class="pre">Kafka</span></code> alert streams and uses a <code class="docutils literal notranslate"><span class="pre">dask.distributed</span></code> cluster for
+distributed alert packet processing, which includes data preprocessing, execution of machine learning models,
+catalog cross-matching, and ingestion into <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code>.
+It also executes user-defined filters based on the augmented alert data and posts the filtering results
+to a <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> instance. Kowalski is containerized using <code class="docutils literal notranslate"><span class="pre">Docker</span></code> software and orchestrated with <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>
+allowing for simple and efficient deployment in the cloud and/or on-premise.</p>
+<p><a class="reference external" href="https://skyportal.io"><code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code></a>, similarly being an API-driven system, provides an interactive marshal
+and a follow-up observation manager with flawless integration with both robotic and classical follow-up facilities.
+It is designed with extensibility and scalability in mind: it uses an asynchronous <code class="docutils literal notranslate"><span class="pre">python</span></code> <code class="docutils literal notranslate"><span class="pre">tornado</span></code>-based backend,
+and a <code class="docutils literal notranslate"><span class="pre">React</span></code>/<code class="docutils literal notranslate"><span class="pre">Redux</span></code>-powered frontend. It is containerized and can be orchestrated with <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code> or <code class="docutils literal notranslate"><span class="pre">kubernetes</span></code>.
+<code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> features real-time Slack-like messaging with notifications (via email or text);
+fine-grained access control with ACLs and roles; rich visualization capabilities;
+authentication via OAuth; and distributed computation via Dask.</p>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="prev">
+    <a href="catalogs.html"
+       title="previous chapter">← Kowalski collection schemas</a>
+  </li>
+  <li class="next">
+    <a href="developer.html"
+       title="next chapter">Developer Guidelines →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, The Fritz Marshal authors.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>

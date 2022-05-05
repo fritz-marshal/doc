@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>Fritz marshal manual</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" />
+  <link rel="next" title="Fritz User Guide" href="user_guide.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="#" class="home-link">
+    
+      <span class="site-name">Fritz Marshal</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="#fritz-marshal-manual">fritz marshal manual</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="#">Docs</a> &raquo;</li>
+    
+    <li>Fritz marshal manual</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+  <li class="next">
+    <a href="user_guide.html"
+       title="next chapter">Fritz User Guide →</a>
+  </li>
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <section id="fritz-marshal-manual">
+<h1>Fritz marshal manual<a class="headerlink" href="#fritz-marshal-manual" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="user_guide.html">Fritz User Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#quick-start">Quick start</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#alert-filters-in-fritz">Alert filters in <code class="docutils literal notranslate"><span class="pre">Fritz</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide.html#feedback">Feedback</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="run_your_own.html">Run your own Fritz</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="run_your_own.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_your_own.html#initializing-fritz">Initializing Fritz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_your_own.html#demo-data">Demo data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_your_own.html#launching-fritz">Launching Fritz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="run_your_own.html#shutting-down-fritz">Shutting down Fritz</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api.html">API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="catalogs.html">Kowalski collection schemas</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="catalogs.html#catalogs">Catalogs</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="technical_implementation.html">Technical implementation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="technical_implementation.html#kowalski-and-skyportal">Kowalski and SkyPortal</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guidelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#how-to-contribute">How to contribute</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#setting-up-your-environment">Setting up your environment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="license.html">License</a></li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+  <li class="next">
+    <a href="user_guide.html"
+       title="next chapter">Fritz User Guide →</a>
+  </li>
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, The Fritz Marshal authors.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>
