@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+      <title>Alerts tutorial</title>
+    
+      <link rel="stylesheet" href="_static/pygments.css">
+      <link rel="stylesheet" href="_static/theme.css">
+      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+      
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+
+      <!-- sphinx script_files -->
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+
+      
+      <script src="_static/theme-vendors.js"></script>
+      <script src="_static/theme.js" defer></script>
+    
+  <link rel="index" title="Index" href="genindex.html" />
+  <link rel="search" title="Search" href="search.html" /> 
+  </head>
+
+  <body>
+    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+  <router-link to="index.html" class="home-link">
+    
+      <span class="site-name">Fritz Marshal</span>
+    
+  </router-link>
+
+  <div class="links">
+    <navlinks class="can-hide">
+
+
+
+    </navlinks>
+  </div>
+</navbar>
+
+      
+      <div class="sidebar-mask" @click="toggleSidebar(false)">
+      </div>
+        <sidebar @toggle-sidebar="toggleSidebar">
+          
+          <navlinks>
+            
+
+
+
+            
+          </navlinks><div id="searchbox" class="searchbox" role="search">
+  <div class="caption"><span class="caption-text">Quick search</span>
+    <div class="searchformwrapper">
+      <form class="search" action="search.html" method="get">
+        <input type="text" name="q" />
+        <input type="submit" value="Search" />
+        <input type="hidden" name="check_keywords" value="yes" />
+        <input type="hidden" name="area" value="default" />
+      </form>
+    </div>
+  </div>
+</div><div class="sidebar-links" role="navigation" aria-label="main navigation">
+  
+    <div class="sidebar-group">
+      <p class="caption">
+        <span class="caption-text"><a href="index.html#fritz-marshal-manual">fritz marshal manual</a></span>
+      </p>
+      <ul class="">
+        
+          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+
+            
+          </li>
+
+        
+          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+
+            
+          </li>
+
+        
+      </ul>
+    </div>
+  
+</div>
+        </sidebar>
+
+      <page>
+          <div class="body-header" role="navigation" aria-label="navigation">
+  
+  <ul class="breadcrumbs">
+    <li><a href="index.html">Docs</a> &raquo;</li>
+    
+    <li>Alerts tutorial</li>
+  </ul>
+  
+
+  <ul class="page-nav">
+</ul>
+  
+</div>
+<hr>
+          <div class="content" role="main">
+            
+  <section id="alerts-tutorial">
+<h1>Alerts tutorial<a class="headerlink" href="#alerts-tutorial" title="Permalink to this headline">¶</a></h1>
+<p>This document will help you navigate through the simulated Rubin alerts ingested in the MongoDB Compass, so that you can try different filtering schemes using the MongoDB syntax, which is compatible with Fritz.
+First a summary of what you’ll do:</p>
+<ul class="simple">
+<li><p>Install MongoDB Compass</p></li>
+<li><p>Connect to cluster with Rubin alerts</p></li>
+<li><p>Create your filter</p></li>
+<li><p>Save your candidates</p></li>
+<li><p>Explore your results</p></li>
+</ul>
+<section id="note">
+<h2>0. Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
+<p>I based most of this work on the tutorial you can find <a class="reference external" href="https://docs.fritz.science/user_guide.html#alert-filters-in-fritz">the alert filters tutorial you can find here</a>, so I recommend looking at it if you run into an issue.</p>
+</section>
+<section id="to-install-mongodb-compass">
+<h2>1. To install MongoDB Compass<a class="headerlink" href="#to-install-mongodb-compass" title="Permalink to this headline">¶</a></h2>
+<p>Go to https://www.mongodb.com/products/compass and click in ‘Download now’</p>
+</section>
+<section id="connecting-to-cluster">
+<h2>2. Connecting to cluster<a class="headerlink" href="#connecting-to-cluster" title="Permalink to this headline">¶</a></h2>
+<p>Once Mongo DB Compass is installed, launch it, and connect to the cluster by</p>
+<ul>
+<li><p>Opening Mongo DB Compass</p></li>
+<li><p>Copy the following into the box under New Connection, and click Connect.  <br/>
+mongodb+srv://alert_digger:WhereIsTheKN&#64;cluster0.s0ada.mongodb.net/test  <br/></p>
+<p><img alt="tutorial: cluster info" src="_images/tutorial1.png" /></p>
+</li>
+<li><p>To see the alerts (around 4000 of them) navigate in the left menu to the folder ZTF &gt; lsst_800</p>
+<p><img alt="tutorial: alerts" src="_images/tutorial2.png" /></p>
+</li>
+</ul>
+<p><strong>Tab description</strong>
+From https://www.mongodb.com/docs/</p>
+<ul class="simple">
+<li><p>Documents: here you can see all the avro packages, and their individual properties. You can add Data or export a collection. You can apply filters here too, but it is easier in the Aggregation tab. It displays only 20 alerts.</p></li>
+<li><p>Aggregations: Here you can make a new filter and apply it to the collection. After each step, you can visualize how many alerts passed the filters and modify the filter step to check how things change. You can export the results and resulting filter.</p></li>
+<li><p>Scheme: provides an overview of the data type and shape of the fields in a particular collection. Databases and collections are visible in the left-side navigation.</p></li>
+<li><p>Explain plan: it shows the details of your filter.</p></li>
+<li><p>Indexes: Indexes are special data structures that improve query performance. Indexes store a portion of a collection’s data in an easy-to-traverse form. The Indexes tab lists the existing indexes for a collection</p></li>
+<li><p>Validation: <em>Schema validation</em> ensures that all documents in a collection follow a defined set of rules, such as conforming to a specific shape or only allowing a specified range of values in fields. This tab allows you to manage <em>schema validation</em> rules for a collection.</p></li>
+</ul>
+</section>
+<section id="to-make-a-new-filter">
+<h2>3. To make a new filter<a class="headerlink" href="#to-make-a-new-filter" title="Permalink to this headline">¶</a></h2>
+<p>In the Aggregation tab, click on Create New &gt; Pipeline from text. This will promt a new window where you can write/paste your filter.</p>
+<p><img alt="tutorial: pipeline" src="_images/tutorial3.png" /></p>
+<p>At the end of this document there is a filtering example, used by the multi-messenger astronomy (MMA) group to vet short gamma-ray burst (SGRB) candidates. Once you plug in your filter, MongoDB Compass will break it down for you in different steps. This filter has two <span class="math notranslate nohighlight">\(project stages before the \)</span>match stage. You can play around with these to modify your filter.</p>
+<p><img alt="tutorial: filter steps" src="_images/tutorial4.png" /></p>
+</section>
+<section id="saving-candidates">
+<h2>4. Saving candidates<a class="headerlink" href="#saving-candidates" title="Permalink to this headline">¶</a></h2>
+<p>Once you are done with the filtering, you can</p>
+<ol class="simple">
+<li><p>‘Export to language’ (recommended, as MongoDB Compass is not good for saving your filters) - button next to ‘Create new +’.</p></li>
+<li><p>Save your current filter – Save button next to ‘Create new +’.</p>
+<ol class="simple">
+<li><p>Export your results as a json or csv file – click on the export button next to ‘Run’ and then choose your preferred format.</p></li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="exploring">
+<h2>5. Exploring<a class="headerlink" href="#exploring" title="Permalink to this headline">¶</a></h2>
+<p>Use your favorite language to explore your json or csv file.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
+
+name_csv = &#39;your_file.csv&#39;
+results_filter = pd.read_csv(name_csv)
+
+sources = [int(f[-5:]) for f in results_filter[&#39;objectId&#39;]]
+print(&#39;The number of surces that passed our MMA SGRB filter:&#39;,len(results_filter))
+</pre></div>
+</div>
+</section>
+<section id="future-work">
+<h2>Future work:<a class="headerlink" href="#future-work" title="Permalink to this headline">¶</a></h2>
+<p>Add ZTF alerts</p>
+</section>
+<section id="filter-example">
+<h2>Filter example<a class="headerlink" href="#filter-example" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[{
+$project: {
+  _id: 1,
+  candid: 1,
+  objectId: 1,
+  &#39;prv_candidates.jd&#39;: 1,
+  &#39;prv_candidates.magpsf&#39;: 1,
+  &#39;prv_candidates.fid&#39;: 1,
+  &#39;prv_candidates.isdiffpos&#39;: 1,
+  &#39;prv_candidates.diffmaglim&#39;: 1,
+  isdiffpos: &#39;$candidate.isdiffpos&#39;,
+  m_now: &#39;$candidate.magpsf&#39;,
+  m_app: &#39;$candidate.magap&#39;,
+  t_now: &#39;$candidate.jd&#39;,
+  fid_now: &#39;$candidate.fid&#39;,
+  sgscore: &#39;$candidate.sgscore1&#39;,
+  sgscore2: &#39;$candidate.sgscore2&#39;,
+  sgscore3: &#39;$candidate.sgscore3&#39;,
+  srmag: &#39;$candidate.srmag1&#39;,
+  srmag2: &#39;$candidate.srmag2&#39;,
+  srmag3: &#39;$candidate.srmag3&#39;,
+  sgmag: &#39;$candidate.sgmag1&#39;,
+  simag: &#39;$candidate.simag1&#39;,
+  rbscore: &#39;$candidate.rb&#39;,
+  drbscore: &#39;$candidate.drb&#39;,
+  magnr: &#39;$candidate.magnr&#39;,
+  distnr: &#39;$candidate.distnr&#39;,
+  distpsnr1: &#39;$candidate.distpsnr1&#39;,
+  distpsnr2: &#39;$candidate.distpsnr2&#39;,
+  distpsnr3: &#39;$candidate.distpsnr3&#39;,
+  scorr: &#39;$candidate.scorr&#39;,
+  fwhm: &#39;$candidate.fwhm&#39;,
+  elong: &#39;$candidate.elong&#39;,
+  nbad: &#39;$candidate.nbad&#39;,
+  chipsf: &#39;$candidate.chipsf&#39;,
+  gal_lat: &#39;$coordinates.b&#39;,
+  ssdistnr: &#39;$candidate.ssdistnr&#39;,
+  ssmagnr: &#39;$candidate.ssmagnr&#39;,
+  ssnamenr: &#39;$candidate.ssnamenr&#39;,
+  t_start: &#39;$candidate.jdstarthist&#39;,
+  age: {$subtract: [&#39;$candidate.jd&#39;,&#39;$candidate.jdstarthist&#39;]},
+  psfminap: {$subtract: [&#39;$candidate.magpsf&#39;,&#39;$candidate.magap&#39;]}}
+},
+{
+$project: {
+  objectId: 1,
+  t_now: 1,
+  t_start: 1,
+  m_now: 1,
+  fid_now: 1,
+  sgscore: 1,
+  rbscore: 1,
+  drbscore: 1,
+  magnr: 1,
+  distnr: 1,
+  scorr: 1,
+  gal_lat: 1,
+  ssdistnr: 1,
+  ssnamenr: 1,
+  ssmagnr: 1,
+  age: 1,
+  nbad: 1,
+  fwhm: 1,
+  elong: 1,
+  psfminap: 1,
+  prv_candidates: 1,
+  positivesubtraction: {$in: [&#39;$isdiffpos&#39;,[1,&#39;1&#39;,&#39;t&#39;,true]]},
+  real: {$and: [
+	{$gt: [&#39;$drbscore&#39;,0.3]},
+	{$lt: [&#39;$nbad&#39;,5]},
+	{$gt: [&#39;$fwhm&#39;,0.5]},
+	{$lt: [&#39;$fwhm&#39;,5]},
+	{$lt: [{$abs: &#39;$psfminap&#39;},0.75]}]},
+  rock: {$and: [{$gte: [&#39;$ssdistnr&#39;,0]},
+	  	{$lt: [&#39;$ssdistnr&#39;,10]},
+	  	{$lt: [{$abs: &#39;$ssmagnr&#39;},20]}]},
+  young: {$lt: [&#39;$age&#39;,10]},
+  pointunderneath: {$and: [{$gt: [&#39;$sgscore&#39;,0.76]},
+	                   {$lt: [&#39;$distpsnr1&#39;,2]}]},
+  brightstar: {$or:[{$and: [{$lt: [&#39;$distpsnr1&#39;,15]},
+			    {$lt: [&#39;$srmag&#39;,15]},
+			    {$gt: [&#39;$srmag&#39;,0]},
+			    {$gt: [&#39;$sgscore&#39;,0.49]}]},
+		    {$and: [{$lt: [&#39;$distpsnr2&#39;,15]},
+			    {$lt: [&#39;$srmag2&#39;,15]},
+			    {$gt: [&#39;$srmag2&#39;,0]},
+			    {$gt: [&#39;$sgscore2&#39;,0.49]}]},
+		    {$and: [{$lt: [&#39;$distpsnr3&#39;,15]},
+			    {$lt: [&#39;$srmag3&#39;,15]},
+			    {$gt: [&#39;$srmag3&#39;,0]},
+			    {$gt: [&#39;$sgscore3&#39;,0.49]}]},
+		    {$and: [{$eq: [&#39;$sgscore&#39;,0.5]},
+			    {$lt: [&#39;$distpsnr1&#39;,0.5]},
+		    {$or: [{$lt: [&#39;$sgmag&#39;,17]},
+			    {$lt: [&#39;$srmag&#39;,17]},
+			    {$lt: [&#39;$simag&#39;,17]}]}]
+				}]}}},
+{
+$match: {
+  brightstar: false,
+  pointunderneath: false,
+  positivesubtraction: true,
+  real: true,
+  rock: false,
+  young: true
+}
+}]
+</pre></div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          <div class="page-nav">
+            <div class="inner"><ul class="page-nav">
+</ul><div class="footer" role="contentinfo">
+      &#169; Copyright 2020, The Fritz Marshal authors.
+    <br>
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+</div>
+            </div>
+          </div>
+      </page>
+    </div>
+    
+    
+  </body>
+</html>
