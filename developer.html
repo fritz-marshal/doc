@@ -169,8 +169,8 @@
 <li><p>Create your own fork the <a class="reference external" href="https://github.com/fritz-marshal/fritz">fritz repository</a> by clicking the “fork” button.</p></li>
 <li><p><a class="reference external" href="https://help.github.com/en/github/authenticating-to-github/connecting-to-github-with-ssh">Set up SSH authentication with GitHub</a>.</p></li>
 <li><p>Clone (download) your copy of the repository, and set up a remote called <code class="docutils literal notranslate"><span class="pre">upstream</span></code> that points to the main Fritz repository.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:yourname/fritz
-git remote add upstream git@github.com:fritz-marshal/fritz
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:yourname/fritz
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>upstream<span class="w"> </span>git@github.com:fritz-marshal/fritz
 </pre></div>
 </div>
 </li>
@@ -179,9 +179,9 @@ git remote add upstream git@github.com:fritz-marshal/fritz
 <ol>
 <li><p>Download the latest version of Fritz, and create a new branch for your work.</p>
 <p>Here, let’s say we want to contribute some documentation fixes; we’ll call our branch <code class="docutils literal notranslate"><span class="pre">rewrite-contributor-guide</span></code>.</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git checkout master
-git pull upstream master
-git checkout -b rewrite-contributor-guide
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
+git<span class="w"> </span>pull<span class="w"> </span>upstream<span class="w"> </span>master
+git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span>rewrite-contributor-guide
 </pre></div>
 </div>
 </li>
@@ -196,7 +196,7 @@ the way.
 </div>
 </li>
 <li><p>When ready, push your branch to GitHub:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git push origin rewrite-contributor-guide
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>rewrite-contributor-guide
 </pre></div>
 </div>
 <p>Once the branch is uploaded, GitHub should print a URL for turning your branch into a pull request.  Open that URL in your browser, write an informative title and description for your pull request, and submit it.</p>
@@ -208,12 +208,12 @@ the way.
 <section id="setting-up-your-environment">
 <h2>Setting up your environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h2>
 <p>We use flake8 to verify that code complies with <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>.  Please install the git pre-commit hook using:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./fritz developer
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./fritz<span class="w"> </span>developer
 </pre></div>
 </div>
 <p>The pre-commit hook will lint <em>changes</em> made to the source.  To lint
 the entire repository, use:</p>
-<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./fritz lint
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./fritz<span class="w"> </span>lint
 </pre></div>
 </div>
 </section>
