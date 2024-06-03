@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Alerts tutorial</title>
     
-      <link rel="stylesheet" href="_static/pygments.css">
-      <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
           <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-
       <!-- sphinx script_files -->
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 
       
-      <script src="_static/theme-vendors.js"></script>
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
       <script src="_static/theme.js" defer></script>
     
   <link rel="index" title="Index" href="genindex.html" />
@@ -30,7 +25,8 @@
   </head>
 
   <body>
-    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <span class="site-name">Fritz Marshal</span>
@@ -76,43 +72,64 @@
       </p>
       <ul class="">
         
-          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+          <li class="toctree-l1 ">
+            
+              <a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+          <li class="toctree-l1 ">
+            
+              <a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+          <li class="toctree-l1 ">
+            
+              <a href="api.html" class="reference internal ">API</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+          <li class="toctree-l1 ">
+            
+              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+          <li class="toctree-l1 ">
+            
+              <a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+          <li class="toctree-l1 ">
+            
+              <a href="developer.html" class="reference internal ">Developer Guidelines</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+          <li class="toctree-l1 ">
+            
+              <a href="license.html" class="reference internal ">License</a>
+            
 
             
           </li>
@@ -139,10 +156,10 @@
   
 </div>
 <hr>
-          <div class="content" role="main">
+          <div class="content" role="main" v-pre>
             
   <section id="alerts-tutorial">
-<h1>Alerts tutorial<a class="headerlink" href="#alerts-tutorial" title="Permalink to this headline">¶</a></h1>
+<h1>Alerts tutorial<a class="headerlink" href="#alerts-tutorial" title="Link to this heading">¶</a></h1>
 <p>This document will help you navigate through the simulated Rubin alerts ingested in the MongoDB Compass, so that you can try different filtering schemes using the MongoDB syntax, which is compatible with Fritz.
 First a summary of what you’ll do:</p>
 <ul class="simple">
@@ -153,15 +170,15 @@ First a summary of what you’ll do:</p>
 <li><p>Explore your results</p></li>
 </ul>
 <section id="note">
-<h2>0. Note<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
+<h2>0. Note<a class="headerlink" href="#note" title="Link to this heading">¶</a></h2>
 <p>I based most of this work on the tutorial you can find <a class="reference external" href="https://docs.fritz.science/user_guide.html#alert-filters-in-fritz">the alert filters tutorial you can find here</a>, so I recommend looking at it if you run into an issue.</p>
 </section>
 <section id="to-install-mongodb-compass">
-<h2>1. To install MongoDB Compass<a class="headerlink" href="#to-install-mongodb-compass" title="Permalink to this headline">¶</a></h2>
+<h2>1. To install MongoDB Compass<a class="headerlink" href="#to-install-mongodb-compass" title="Link to this heading">¶</a></h2>
 <p>Go to https://www.mongodb.com/products/compass and click in ‘Download now’</p>
 </section>
 <section id="connecting-to-cluster">
-<h2>2. Connecting to cluster<a class="headerlink" href="#connecting-to-cluster" title="Permalink to this headline">¶</a></h2>
+<h2>2. Connecting to cluster<a class="headerlink" href="#connecting-to-cluster" title="Link to this heading">¶</a></h2>
 <p>Once Mongo DB Compass is installed, launch it, and connect to the cluster by</p>
 <ul>
 <li><p>Opening Mongo DB Compass</p></li>
@@ -185,26 +202,23 @@ From https://www.mongodb.com/docs/</p>
 </ul>
 </section>
 <section id="to-make-a-new-filter">
-<h2>3. To make a new filter<a class="headerlink" href="#to-make-a-new-filter" title="Permalink to this headline">¶</a></h2>
+<h2>3. To make a new filter<a class="headerlink" href="#to-make-a-new-filter" title="Link to this heading">¶</a></h2>
 <p>In the Aggregation tab, click on Create New &gt; Pipeline from text. This will promt a new window where you can write/paste your filter.</p>
 <p><img alt="tutorial: pipeline" src="_images/tutorial3.png" /></p>
-<p>At the end of this document there is a filtering example, used by the multi-messenger astronomy (MMA) group to vet short gamma-ray burst (SGRB) candidates. Once you plug in your filter, MongoDB Compass will break it down for you in different steps. This filter has two <span class="math notranslate nohighlight">\(project stages before the \)</span>match stage. You can play around with these to modify your filter.</p>
+<p>At the end of this document there is a filtering example, used by the multi-messenger astronomy (MMA) group to vet short gamma-ray burst (SGRB) candidates. Once you plug in your filter, MongoDB Compass will break it down for you in different steps. This filter has two $project stages before the $match stage. You can play around with these to modify your filter.</p>
 <p><img alt="tutorial: filter steps" src="_images/tutorial4.png" /></p>
 </section>
 <section id="saving-candidates">
-<h2>4. Saving candidates<a class="headerlink" href="#saving-candidates" title="Permalink to this headline">¶</a></h2>
+<h2>4. Saving candidates<a class="headerlink" href="#saving-candidates" title="Link to this heading">¶</a></h2>
 <p>Once you are done with the filtering, you can</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>‘Export to language’ (recommended, as MongoDB Compass is not good for saving your filters) - button next to ‘Create new +’.</p></li>
-<li><p>Save your current filter – Save button next to ‘Create new +’.</p>
-<ol class="simple">
-<li><p>Export your results as a json or csv file – click on the export button next to ‘Run’ and then choose your preferred format.</p></li>
-</ol>
-</li>
+<li><p>Save your current filter – Save button next to ‘Create new +’.
+3. Export your results as a json or csv file – click on the export button next to ‘Run’ and then choose your preferred format.</p></li>
 </ol>
 </section>
 <section id="exploring">
-<h2>5. Exploring<a class="headerlink" href="#exploring" title="Permalink to this headline">¶</a></h2>
+<h2>5. Exploring<a class="headerlink" href="#exploring" title="Link to this heading">¶</a></h2>
 <p>Use your favorite language to explore your json or csv file.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
 
@@ -217,11 +231,11 @@ print(&#39;The number of surces that passed our MMA SGRB filter:&#39;,len(result
 </div>
 </section>
 <section id="future-work">
-<h2>Future work:<a class="headerlink" href="#future-work" title="Permalink to this headline">¶</a></h2>
+<h2>Future work:<a class="headerlink" href="#future-work" title="Link to this heading">¶</a></h2>
 <p>Add ZTF alerts</p>
 </section>
 <section id="filter-example">
-<h2>Filter example<a class="headerlink" href="#filter-example" title="Permalink to this headline">¶</a></h2>
+<h2>Filter example<a class="headerlink" href="#filter-example" title="Link to this heading">¶</a></h2>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[{
 $project: {
   _id: 1,
@@ -341,12 +355,12 @@ $match: {
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, The Fritz Marshal authors.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
 </div>
             </div>
           </div>
       </page>
-    </div>
+    </div></div>
     
     
   </body>

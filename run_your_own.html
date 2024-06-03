@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Run your own Fritz</title>
     
-      <link rel="stylesheet" href="_static/pygments.css">
-      <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
           <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-
       <!-- sphinx script_files -->
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 
       
-      <script src="_static/theme-vendors.js"></script>
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
       <script src="_static/theme.js" defer></script>
     
   <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +27,8 @@
   </head>
 
   <body>
-    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <span class="site-name">Fritz Marshal</span>
@@ -78,13 +74,19 @@
       </p>
       <ul class="current">
         
-          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+          <li class="toctree-l1 ">
+            
+              <a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 current"><a href="#" class="reference internal current">Run your own Fritz</a>
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Run your own Fritz</a>
+            
 
             
               <ul>
@@ -104,31 +106,46 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+          <li class="toctree-l1 ">
+            
+              <a href="api.html" class="reference internal ">API</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+          <li class="toctree-l1 ">
+            
+              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+          <li class="toctree-l1 ">
+            
+              <a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+          <li class="toctree-l1 ">
+            
+              <a href="developer.html" class="reference internal ">Developer Guidelines</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+          <li class="toctree-l1 ">
+            
+              <a href="license.html" class="reference internal ">License</a>
+            
 
             
           </li>
@@ -163,10 +180,10 @@
   
 </div>
 <hr>
-          <div class="content" role="main">
+          <div class="content" role="main" v-pre>
             
   <section id="run-your-own-fritz">
-<h1>Run your own Fritz<a class="headerlink" href="#run-your-own-fritz" title="Permalink to this headline">¶</a></h1>
+<h1>Run your own Fritz<a class="headerlink" href="#run-your-own-fritz" title="Link to this heading">¶</a></h1>
 <p>Clone the repo from <code class="docutils literal notranslate"><span class="pre">GitHub</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/fritz-marshal/fritz.git<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>fritz
 </pre></div>
@@ -183,21 +200,21 @@
 </div>
 <p>Please type <code class="docutils literal notranslate"><span class="pre">./fritz</span> <span class="pre">--help</span></code> to see available commands.</p>
 <section id="configuration">
-<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">fritz.yaml</span></code> file should contain settings for the marshal, including a
 secret token (which must be customized before deployment), and
 authentication tokens.
 Please use the <code class="docutils literal notranslate"><span class="pre">fritz.defaults.yaml</span></code> file for the reference.</p>
 </section>
 <section id="initializing-fritz">
-<h2>Initializing Fritz<a class="headerlink" href="#initializing-fritz" title="Permalink to this headline">¶</a></h2>
+<h2>Initializing Fritz<a class="headerlink" href="#initializing-fritz" title="Link to this heading">¶</a></h2>
 <p>Before Fritz is launched for the first time, it needs to be initialized:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">fritz</span> <span class="n">run</span> <span class="o">--</span><span class="n">init</span>
 </pre></div>
 </div>
 </section>
 <section id="demo-data">
-<h2>Demo data<a class="headerlink" href="#demo-data" title="Permalink to this headline">¶</a></h2>
+<h2>Demo data<a class="headerlink" href="#demo-data" title="Link to this heading">¶</a></h2>
 <p>To load demo data into Fritz, run:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">fritz</span> <span class="n">test</span>
 </pre></div>
@@ -206,13 +223,13 @@ Please use the <code class="docutils literal notranslate"><span class="pre">frit
 you should see a few real alerts that passed test filters among the displayed sources.</p>
 </section>
 <section id="launching-fritz">
-<h2>Launching Fritz<a class="headerlink" href="#launching-fritz" title="Permalink to this headline">¶</a></h2>
+<h2>Launching Fritz<a class="headerlink" href="#launching-fritz" title="Link to this heading">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">./</span><span class="n">fritz</span> <span class="n">run</span>
 </pre></div>
 </div>
 </section>
 <section id="shutting-down-fritz">
-<h2>Shutting down Fritz<a class="headerlink" href="#shutting-down-fritz" title="Permalink to this headline">¶</a></h2>
+<h2>Shutting down Fritz<a class="headerlink" href="#shutting-down-fritz" title="Link to this heading">¶</a></h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./fritz<span class="w"> </span>stop
 </pre></div>
 </div>
@@ -234,12 +251,12 @@ you should see a few real alerts that passed test filters among the displayed so
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, The Fritz Marshal authors.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
 </div>
             </div>
           </div>
       </page>
-    </div>
+    </div></div>
     
     
   </body>

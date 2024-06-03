@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Developer Guidelines</title>
     
-      <link rel="stylesheet" href="_static/pygments.css">
-      <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
           <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-
       <!-- sphinx script_files -->
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 
       
-      <script src="_static/theme-vendors.js"></script>
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
       <script src="_static/theme.js" defer></script>
     
   <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +27,8 @@
   </head>
 
   <body>
-    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <span class="site-name">Fritz Marshal</span>
@@ -78,37 +74,55 @@
       </p>
       <ul class="current">
         
-          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+          <li class="toctree-l1 ">
+            
+              <a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+          <li class="toctree-l1 ">
+            
+              <a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+          <li class="toctree-l1 ">
+            
+              <a href="api.html" class="reference internal ">API</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+          <li class="toctree-l1 ">
+            
+              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+          <li class="toctree-l1 ">
+            
+              <a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 current"><a href="#" class="reference internal current">Developer Guidelines</a>
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Developer Guidelines</a>
+            
 
             
               <ul>
@@ -122,7 +136,10 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+          <li class="toctree-l1 ">
+            
+              <a href="license.html" class="reference internal ">License</a>
+            
 
             
           </li>
@@ -157,12 +174,12 @@
   
 </div>
 <hr>
-          <div class="content" role="main">
+          <div class="content" role="main" v-pre>
             
   <section id="developer-guidelines">
-<h1>Developer Guidelines<a class="headerlink" href="#developer-guidelines" title="Permalink to this headline">¶</a></h1>
+<h1>Developer Guidelines<a class="headerlink" href="#developer-guidelines" title="Link to this heading">¶</a></h1>
 <section id="how-to-contribute">
-<h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Permalink to this headline">¶</a></h2>
+<h2>How to contribute<a class="headerlink" href="#how-to-contribute" title="Link to this heading">¶</a></h2>
 <p>Contributions to Fritz are made through <a class="reference external" href="https://help.github.com/en/github/collaborating-with-issues-and-pull-requests/about-pull-requests">GitHub Pull Requests</a>, a set of proposed commits (or patches).</p>
 <p>To prepare, you should:</p>
 <ul>
@@ -176,7 +193,7 @@ git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </s
 </li>
 </ul>
 <p>Then, for each feature you wish to contribute, create a pull request:</p>
-<ol>
+<ol class="arabic">
 <li><p>Download the latest version of Fritz, and create a new branch for your work.</p>
 <p>Here, let’s say we want to contribute some documentation fixes; we’ll call our branch <code class="docutils literal notranslate"><span class="pre">rewrite-contributor-guide</span></code>.</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>checkout<span class="w"> </span>master
@@ -206,7 +223,7 @@ the way.
 </ol>
 </section>
 <section id="setting-up-your-environment">
-<h2>Setting up your environment<a class="headerlink" href="#setting-up-your-environment" title="Permalink to this headline">¶</a></h2>
+<h2>Setting up your environment<a class="headerlink" href="#setting-up-your-environment" title="Link to this heading">¶</a></h2>
 <p>We use flake8 to verify that code complies with <a class="reference external" href="https://www.python.org/dev/peps/pep-0008/">PEP8</a>.  Please install the git pre-commit hook using:</p>
 <div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>./fritz<span class="w"> </span>developer
 </pre></div>
@@ -234,12 +251,12 @@ the entire repository, use:</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, The Fritz Marshal authors.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
 </div>
             </div>
           </div>
       </page>
-    </div>
+    </div></div>
     
     
   </body>

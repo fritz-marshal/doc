@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Kowalski collection schemas</title>
     
-      <link rel="stylesheet" href="_static/pygments.css">
-      <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
           <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-
       <!-- sphinx script_files -->
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 
       
-      <script src="_static/theme-vendors.js"></script>
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
       <script src="_static/theme.js" defer></script>
     
   <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +27,8 @@
   </head>
 
   <body>
-    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <span class="site-name">Fritz Marshal</span>
@@ -78,25 +74,37 @@
       </p>
       <ul class="current">
         
-          <li class="toctree-l1 "><a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+          <li class="toctree-l1 ">
+            
+              <a href="user_guide.html" class="reference internal ">Fritz User Guide</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+          <li class="toctree-l1 ">
+            
+              <a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+          <li class="toctree-l1 ">
+            
+              <a href="api.html" class="reference internal ">API</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 current"><a href="#" class="reference internal current">Kowalski collection schemas</a>
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Kowalski collection schemas</a>
+            
 
             
               <ul>
@@ -108,19 +116,28 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+          <li class="toctree-l1 ">
+            
+              <a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+          <li class="toctree-l1 ">
+            
+              <a href="developer.html" class="reference internal ">Developer Guidelines</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+          <li class="toctree-l1 ">
+            
+              <a href="license.html" class="reference internal ">License</a>
+            
 
             
           </li>
@@ -155,19 +172,19 @@
   
 </div>
 <hr>
-          <div class="content" role="main">
+          <div class="content" role="main" v-pre>
             
   <section id="kowalski-collection-schemas">
-<h1>Kowalski collection schemas<a class="headerlink" href="#kowalski-collection-schemas" title="Permalink to this headline">¶</a></h1>
+<h1>Kowalski collection schemas<a class="headerlink" href="#kowalski-collection-schemas" title="Link to this heading">¶</a></h1>
 <p>Fritz hosts a number of astronomical catalogs on its Kowalski backend.
 Below you will find a list of available catalogs and the approximate contents of
 individual entries therein (i.e. example documents per MongoDB collection).
 Note that there is no schema enforcement, so specific fields may or may not exist
 for individual documents.</p>
 <section id="catalogs">
-<h2>Catalogs<a class="headerlink" href="#catalogs" title="Permalink to this headline">¶</a></h2>
+<h2>Catalogs<a class="headerlink" href="#catalogs" title="Link to this heading">¶</a></h2>
 <section id="mass-psc">
-<h3>2MASS_PSC<a class="headerlink" href="#mass-psc" title="Permalink to this headline">¶</a></h3>
+<h3>2MASS_PSC<a class="headerlink" href="#mass-psc" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;14430226+6244192&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;ra&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">220.759452</span><span class="p">,</span>
@@ -248,7 +265,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="mass-xsc">
-<h3>2MASS_XSC<a class="headerlink" href="#mass-xsc" title="Permalink to this headline">¶</a></h3>
+<h3>2MASS_XSC<a class="headerlink" href="#mass-xsc" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;23204638-8956429 &quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;jdate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2451828.7145</span><span class="p">,</span>
@@ -658,7 +675,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="allwise">
-<h3>AllWISE<a class="headerlink" href="#allwise" title="Permalink to this headline">¶</a></h3>
+<h3>AllWISE<a class="headerlink" href="#allwise" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$numberLong&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;189301351055692&quot;</span>
@@ -749,7 +766,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="clu-20190625">
-<h3>CLU_20190625<a class="headerlink" href="#clu-20190625" title="Permalink to this headline">¶</a></h3>
+<h3>CLU_20190625<a class="headerlink" href="#clu-20190625" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">713482</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;cluid&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">713482</span><span class="p">,</span>
@@ -882,7 +899,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="first-20141217">
-<h3>FIRST_20141217<a class="headerlink" href="#first-20141217" title="Permalink to this headline">¶</a></h3>
+<h3>FIRST_20141217<a class="headerlink" href="#first-20141217" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5dc3467e37526c469a332880&quot;</span>
@@ -931,7 +948,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="galex">
-<h3>GALEX<a class="headerlink" href="#galex" title="Permalink to this headline">¶</a></h3>
+<h3>GALEX<a class="headerlink" href="#galex" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5e4f4dd9c4c622686b281b30&quot;</span>
@@ -965,7 +982,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="gaia-dr2">
-<h3>Gaia_DR2<a class="headerlink" href="#gaia-dr2" title="Permalink to this headline">¶</a></h3>
+<h3>Gaia_DR2<a class="headerlink" href="#gaia-dr2" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;999368933353362688&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;solution_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1061,7 +1078,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="gaia-dr2-2mass-best-neighbour">
-<h3>Gaia_DR2_2MASS_best_neighbour<a class="headerlink" href="#gaia-dr2-2mass-best-neighbour" title="Permalink to this headline">¶</a></h3>
+<h3>Gaia_DR2_2MASS_best_neighbour<a class="headerlink" href="#gaia-dr2-2mass-best-neighbour" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$numberLong&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;4197791981619356160&quot;</span>
@@ -1105,7 +1122,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="gaia-dr2-wd">
-<h3>Gaia_DR2_WD<a class="headerlink" href="#gaia-dr2-wd" title="Permalink to this headline">¶</a></h3>
+<h3>Gaia_DR2_WD<a class="headerlink" href="#gaia-dr2-wd" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$numberLong&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1944058569339736192&quot;</span>
@@ -1186,7 +1203,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="gaia-dr-light-curves">
-<h3>Gaia_DR_light_curves<a class="headerlink" href="#gaia-dr-light-curves" title="Permalink to this headline">¶</a></h3>
+<h3>Gaia_DR_light_curves<a class="headerlink" href="#gaia-dr-light-curves" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5d420e26af864fd0b46826d5&quot;</span>
@@ -1214,7 +1231,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="gaia-edr3">
-<h3>Gaia_EDR3<a class="headerlink" href="#gaia-edr3" title="Permalink to this headline">¶</a></h3>
+<h3>Gaia_EDR3<a class="headerlink" href="#gaia-edr3" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;46302603606323328&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;solution_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1326,7 +1343,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="iphas-dr2">
-<h3>IPHAS_DR2<a class="headerlink" href="#iphas-dr2" title="Permalink to this headline">¶</a></h3>
+<h3>IPHAS_DR2<a class="headerlink" href="#iphas-dr2" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5d412fc3781972ace824486b&quot;</span>
@@ -1360,7 +1377,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="lamost-dr5-v3">
-<h3>LAMOST_DR5_v3<a class="headerlink" href="#lamost-dr5-v3" title="Permalink to this headline">¶</a></h3>
+<h3>LAMOST_DR5_v3<a class="headerlink" href="#lamost-dr5-v3" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">585216248</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;obsid&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">585216248</span><span class="p">,</span>
@@ -1418,7 +1435,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="nvss-41">
-<h3>NVSS_41<a class="headerlink" href="#nvss-41" title="Permalink to this headline">¶</a></h3>
+<h3>NVSS_41<a class="headerlink" href="#nvss-41" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5dc3360e9cefcc4cb32fc7d2&quot;</span>
@@ -1459,7 +1476,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="ps1-dr1">
-<h3>PS1_DR1<a class="headerlink" href="#ps1-dr1" title="Permalink to this headline">¶</a></h3>
+<h3>PS1_DR1<a class="headerlink" href="#ps1-dr1" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$numberLong&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;96442852916841250&quot;</span>
@@ -1525,7 +1542,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="ps1-strm">
-<h3>PS1_STRM<a class="headerlink" href="#ps1-strm" title="Permalink to this headline">¶</a></h3>
+<h3>PS1_STRM<a class="headerlink" href="#ps1-strm" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1019476000094893&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;objID&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1569,7 +1586,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="rfc-2019d">
-<h3>RFC_2019d<a class="headerlink" href="#rfc-2019d" title="Permalink to this headline">¶</a></h3>
+<h3>RFC_2019d<a class="headerlink" href="#rfc-2019d" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;J2359+0042&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;category&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;N&quot;</span><span class="p">,</span>
@@ -1611,7 +1628,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="tgss-adr1">
-<h3>TGSS_ADR1<a class="headerlink" href="#tgss-adr1" title="Permalink to this headline">¶</a></h3>
+<h3>TGSS_ADR1<a class="headerlink" href="#tgss-adr1" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5dc33a8c1860d303cfc00934&quot;</span>
@@ -1652,7 +1669,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="tns">
-<h3>TNS<a class="headerlink" href="#tns" title="Permalink to this headline">¶</a></h3>
+<h3>TNS<a class="headerlink" href="#tns" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">72839</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;associated_group/s&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ZTF&quot;</span><span class="p">,</span>
@@ -1690,7 +1707,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="ztf-alerts">
-<h3>ZTF_alerts<a class="headerlink" href="#ztf-alerts" title="Permalink to this headline">¶</a></h3>
+<h3>ZTF_alerts<a class="headerlink" href="#ztf-alerts" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5fe2f7b60533f71c0bbf4596&quot;</span>
@@ -1871,7 +1888,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="ztf-alerts-aux">
-<h3>ZTF_alerts_aux<a class="headerlink" href="#ztf-alerts-aux" title="Permalink to this headline">¶</a></h3>
+<h3>ZTF_alerts_aux<a class="headerlink" href="#ztf-alerts-aux" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ZTF18aabptzk&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;cross_matches&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2109,7 +2126,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="ztf-ops">
-<h3>ZTF_ops<a class="headerlink" href="#ztf-ops" title="Permalink to this headline">¶</a></h3>
+<h3>ZTF_ops<a class="headerlink" href="#ztf-ops" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5fe2f18a095ec1a17abffce2&quot;</span>
@@ -2153,7 +2170,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="cfht-w3-photozs">
-<h3>cfht_w3_photozs<a class="headerlink" href="#cfht-w3-photozs" title="Permalink to this headline">¶</a></h3>
+<h3>cfht_w3_photozs<a class="headerlink" href="#cfht-w3-photozs" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5238493</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2221,7 +2238,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="galaxy-redshifts-20200522">
-<h3>galaxy_redshifts_20200522<a class="headerlink" href="#galaxy-redshifts-20200522" title="Permalink to this headline">¶</a></h3>
+<h3>galaxy_redshifts_20200522<a class="headerlink" href="#galaxy-redshifts-20200522" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3341943</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;z&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.12342000007629395</span><span class="p">,</span>
@@ -2248,7 +2265,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="legacysurveys-photoz-dr7">
-<h3>legacysurveys_photoz_DR7<a class="headerlink" href="#legacysurveys-photoz-dr7" title="Permalink to this headline">¶</a></h3>
+<h3>legacysurveys_photoz_DR7<a class="headerlink" href="#legacysurveys-photoz-dr7" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$oid&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;5d43fb005a14fae85f48d335&quot;</span>
@@ -2288,7 +2305,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="milliquas-v6">
-<h3>milliquas_v6<a class="headerlink" href="#milliquas-v6" title="Permalink to this headline">¶</a></h3>
+<h3>milliquas_v6<a class="headerlink" href="#milliquas-v6" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SDSS J235959.98+344449.6&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;RA&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">359.9999552</span><span class="p">,</span>
@@ -2326,7 +2343,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="mzls-ellipticals">
-<h3>mzls_ellipticals<a class="headerlink" href="#mzls-ellipticals" title="Permalink to this headline">¶</a></h3>
+<h3>mzls_ellipticals<a class="headerlink" href="#mzls-ellipticals" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2394376</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;created_at&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2415,7 +2432,7 @@ for individual documents.</p>
 </div>
 </section>
 <section id="sdss-eliipticals">
-<h3>sdss_eliipticals<a class="headerlink" href="#sdss-eliipticals" title="Permalink to this headline">¶</a></h3>
+<h3>sdss_eliipticals<a class="headerlink" href="#sdss-eliipticals" title="Link to this heading">¶</a></h3>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">    </span><span class="nt">&quot;$numberLong&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1237655744019825607&quot;</span>
@@ -2461,12 +2478,12 @@ for individual documents.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, The Fritz Marshal authors.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
 </div>
             </div>
           </div>
       </page>
-    </div>
+    </div></div>
     
     
   </body>

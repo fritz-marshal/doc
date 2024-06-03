@@ -1,28 +1,23 @@
 <!DOCTYPE html>
-<html >
+<html  lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="viewport" content="width=device-width, initial-scale=1" />
 
       <title>Fritz User Guide</title>
     
-      <link rel="stylesheet" href="_static/pygments.css">
-      <link rel="stylesheet" href="_static/theme.css">
-      <link rel="stylesheet" href="_static/sphinx_press_theme.css">
+          <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+          <link rel="stylesheet" href="_static/theme.css " type="text/css" />
           <link rel="stylesheet" href="_static/custom.css" type="text/css" />
       
-      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-
       <!-- sphinx script_files -->
-        <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/language_data.js"></script>
-        <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
-        <script type="text/x-mathjax-config">MathJax.Hub.Config({"tex2jax": {"inlineMath": [["\\(", "\\)"]], "displayMath": [["\\[", "\\]"]], "processRefs": false, "processEnvironments": false}})</script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=9a2dae69"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
 
       
-      <script src="_static/theme-vendors.js"></script>
+      <!-- bundled in js (rollup iife) -->
+      <!-- <script src="_static/theme-vendors.js"></script> -->
       <script src="_static/theme.js" defer></script>
     
   <link rel="index" title="Index" href="genindex.html" />
@@ -32,7 +27,8 @@
   </head>
 
   <body>
-    <div id="app" class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
+    <div id="app">
+    <div class="theme-container" :class="pageClasses"><navbar @toggle-sidebar="toggleSidebar">
   <router-link to="index.html" class="home-link">
     
       <span class="site-name">Fritz Marshal</span>
@@ -78,7 +74,10 @@
       </p>
       <ul class="current">
         
-          <li class="toctree-l1 current"><a href="#" class="reference internal current">Fritz User Guide</a>
+          <li class="toctree-l1 current">
+            
+              <a href="#" class="reference internal current">Fritz User Guide</a>
+            
 
             
               <ul>
@@ -94,37 +93,55 @@
           </li>
 
         
-          <li class="toctree-l1 "><a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+          <li class="toctree-l1 ">
+            
+              <a href="run_your_own.html" class="reference internal ">Run your own Fritz</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="api.html" class="reference internal ">API</a>
+          <li class="toctree-l1 ">
+            
+              <a href="api.html" class="reference internal ">API</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+          <li class="toctree-l1 ">
+            
+              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+          <li class="toctree-l1 ">
+            
+              <a href="technical_implementation.html" class="reference internal ">Technical implementation</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="developer.html" class="reference internal ">Developer Guidelines</a>
+          <li class="toctree-l1 ">
+            
+              <a href="developer.html" class="reference internal ">Developer Guidelines</a>
+            
 
             
           </li>
 
         
-          <li class="toctree-l1 "><a href="license.html" class="reference internal ">License</a>
+          <li class="toctree-l1 ">
+            
+              <a href="license.html" class="reference internal ">License</a>
+            
 
             
           </li>
@@ -159,10 +176,10 @@
   
 </div>
 <hr>
-          <div class="content" role="main">
+          <div class="content" role="main" v-pre>
             
   <section id="fritz-user-guide">
-<h1>Fritz User Guide<a class="headerlink" href="#fritz-user-guide" title="Permalink to this headline">¶</a></h1>
+<h1>Fritz User Guide<a class="headerlink" href="#fritz-user-guide" title="Link to this heading">¶</a></h1>
 <p><a class="reference external" href="https://github.com/fritz-marshal/fritz">Fritz</a> is the science data platform for the
 <a class="reference external" href="https://ztf.caltech.edu">Zwicky Transient Facility (ZTF)</a> Phase II.</p>
 <p>It implements an end-to-end, scalable, API-first system for Time-domain Astronomy, featuring</p>
@@ -181,11 +198,11 @@ which handles the rest of the stack.
 The schematic overview of our system is shown below:</p>
 <p><img alt="img/fritz.png" src="_images/fritz.jpg" /></p>
 <section id="quick-start">
-<h2>Quick start<a class="headerlink" href="#quick-start" title="Permalink to this headline">¶</a></h2>
+<h2>Quick start<a class="headerlink" href="#quick-start" title="Link to this heading">¶</a></h2>
 <section id="a-quick-tour-of-fritz-from-the-user-perspective">
-<h3>A quick tour of Fritz from the user perspective<a class="headerlink" href="#a-quick-tour-of-fritz-from-the-user-perspective" title="Permalink to this headline">¶</a></h3>
+<h3>A quick tour of Fritz from the user perspective<a class="headerlink" href="#a-quick-tour-of-fritz-from-the-user-perspective" title="Link to this heading">¶</a></h3>
 <section id="user-profile">
-<h4>User profile<a class="headerlink" href="#user-profile" title="Permalink to this headline">¶</a></h4>
+<h4>User profile<a class="headerlink" href="#user-profile" title="Link to this heading">¶</a></h4>
 <p>Newly invited <code class="docutils literal notranslate"><span class="pre">Fritz</span></code> users are first taken to the Profile page.
 Here, you can update your user info, preferences, and manage tokens to
 <a class="reference external" href="https://docs.fritz.science/api.html">interact with <code class="docutils literal notranslate"><span class="pre">Fritz</span></code> programmatically</a>.
@@ -197,13 +214,13 @@ alert stream access.</p>
 <p>We use OAuth for user authentication.</p>
 </section>
 <section id="dashboard">
-<h4>Dashboard<a class="headerlink" href="#dashboard" title="Permalink to this headline">¶</a></h4>
+<h4>Dashboard<a class="headerlink" href="#dashboard" title="Link to this heading">¶</a></h4>
 <p>On the Dashboard, the landing page, the user can see a collection of configurable widgets displaying the
 information on the most popular and latest saved sources, the newsfeed, conditions at telescopes and so on.</p>
 <p><img alt="lsst-ws-dashboard" src="https://user-images.githubusercontent.com/7557205/113781577-c0b9a080-96e5-11eb-8f08-5dd59c00cf01.gif" /></p>
 </section>
 <section id="groups-and-filters">
-<h4>Groups and filters<a class="headerlink" href="#groups-and-filters" title="Permalink to this headline">¶</a></h4>
+<h4>Groups and filters<a class="headerlink" href="#groups-and-filters" title="Link to this heading">¶</a></h4>
 <p>New <code class="docutils literal notranslate"><span class="pre">Fritz</span></code> users are added to one or more groups.
 Users can also create groups themselves and request admission to groups they are not a member of.
 <img alt="lsst-ws-group-admission" src="https://user-images.githubusercontent.com/7557205/113792878-d20da780-96fb-11eb-8e5d-359bd0e34807.gif" /></p>
@@ -231,7 +248,7 @@ or implement <a class="reference external" href="https://docs.fritz.science/user
 <p>Finally, we provide public alert databases for filter design and debugging.</p>
 </section>
 <section id="candidates-and-sources">
-<h4>Candidates and Sources<a class="headerlink" href="#candidates-and-sources" title="Permalink to this headline">¶</a></h4>
+<h4>Candidates and Sources<a class="headerlink" href="#candidates-and-sources" title="Link to this heading">¶</a></h4>
 <p>Alerts passing a filter are posted to Fritz’s SkyPortal backend as Candidates
 and appear on the Scanning page (for the corresponding filter groups).</p>
 <p>Candidates do not have to originate from <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> and could be posted (manually) via the API.</p>
@@ -281,7 +298,7 @@ However, <code class="docutils literal notranslate"><span class="pre">Fritz</spa
 <p><img alt="archive-20210601" src="https://user-images.githubusercontent.com/7557205/120433545-36319e00-c330-11eb-9399-e68146a05d8b.gif" /></p>
 </section>
 <section id="mobile-experience">
-<h4>Mobile experience<a class="headerlink" href="#mobile-experience" title="Permalink to this headline">¶</a></h4>
+<h4>Mobile experience<a class="headerlink" href="#mobile-experience" title="Link to this heading">¶</a></h4>
 <p>Fritz’s interfaces are mobile-friendly, so the app will work as expected on your phone or tablet:</p>
 <table>
 <tr>
@@ -292,7 +309,7 @@ However, <code class="docutils literal notranslate"><span class="pre">Fritz</spa
 </section>
 </section>
 <section id="using-the-api">
-<h3>Using the API<a class="headerlink" href="#using-the-api" title="Permalink to this headline">¶</a></h3>
+<h3>Using the API<a class="headerlink" href="#using-the-api" title="Link to this heading">¶</a></h3>
 <p>An API enables access to most of the underlying functionality of Fritz/SkyPortal/Kowalski.
 The workflows described above are all enabled by specific API calls.
 The complete OpenAPI specification is available at <a class="reference external" href="https://docs.fritz.science/api.html">https://docs.fritz.science/api.html</a>.</p>
@@ -354,10 +371,10 @@ access Fritz programmatically as follows.</p>
 </section>
 </section>
 <section id="alert-filters-in-fritz">
-<h2>Alert filters in <code class="docutils literal notranslate"><span class="pre">Fritz</span></code><a class="headerlink" href="#alert-filters-in-fritz" title="Permalink to this headline">¶</a></h2>
+<h2>Alert filters in <code class="docutils literal notranslate"><span class="pre">Fritz</span></code><a class="headerlink" href="#alert-filters-in-fritz" title="Link to this heading">¶</a></h2>
 <p>This section describes how to define alert stream filters within <code class="docutils literal notranslate"><span class="pre">Fritz</span></code> and provides some examples for reference.</p>
 <section id="introduction">
-<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
+<h3>Introduction<a class="headerlink" href="#introduction" title="Link to this heading">¶</a></h3>
 <p><a class="reference external" href="https://github.com/ZwickyTransientFacility/ztf-avro-alert">ZTF alerts</a> are
 <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/aae8ac/meta">generated at IPAC</a> based on difference
 imaging analysis and are distributed to the world at low latency via a Kafka alert stream.
@@ -370,7 +387,7 @@ scanning page.</p>
 <p>Note: for a detailed description of the ZTF alerts and their contents, please see
 <a class="reference external" href="https://github.com/ZwickyTransientFacility/ztf-avro-alert">here</a>.</p>
 <section id="implementation-of-filters-as-mongodb-aggregation-pipelines">
-<h4>Implementation of Filters as MongoDB Aggregation Pipelines<a class="headerlink" href="#implementation-of-filters-as-mongodb-aggregation-pipelines" title="Permalink to this headline">¶</a></h4>
+<h4>Implementation of Filters as MongoDB Aggregation Pipelines<a class="headerlink" href="#implementation-of-filters-as-mongodb-aggregation-pipelines" title="Link to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> uses <a class="reference external" href="https://mongodb.com"><code class="docutils literal notranslate"><span class="pre">MongoDB</span></code></a>, a document-based NoSQL database, on the backend.</p>
 <ul class="simple">
 <li><p>For a very brief introduction into <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code>, we recommend watching
@@ -407,7 +424,7 @@ which can include field paths, literals, system variables, expression objects, a
 Expressions can be nested.</p>
 </section>
 <section id="testing-your-filter">
-<h4>Testing your filter<a class="headerlink" href="#testing-your-filter" title="Permalink to this headline">¶</a></h4>
+<h4>Testing your filter<a class="headerlink" href="#testing-your-filter" title="Link to this heading">¶</a></h4>
 <p>To ease the process of writing and debugging the filters, we have set up two live <em>public</em> <code class="docutils literal notranslate"><span class="pre">MongoDB</span> <span class="pre">Atlas</span></code> databases
 in the cloud:</p>
 <ul class="simple">
@@ -424,7 +441,7 @@ databases, that can be then plugged into <code class="docutils literal notransla
 <p>Filters will be managed on a dedicated page on <code class="docutils literal notranslate"><span class="pre">Fritz</span></code>. A detailed description of the interface and its capabilities
 (including, for example, filter versioning and diff’ing) will be covered elsewhere – please stay tuned.</p>
 <section id="mongodb-compass">
-<h5>MongoDB Compass<a class="headerlink" href="#mongodb-compass" title="Permalink to this headline">¶</a></h5>
+<h5>MongoDB Compass<a class="headerlink" href="#mongodb-compass" title="Link to this heading">¶</a></h5>
 <p>Download and install MongoDB Compass for your system from <a class="reference external" href="https://www.mongodb.com/try/download/compass">here</a>.</p>
 <p>The connection string to access the first sample public alert database:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mongodb://ztf:FritzZwicky@fritz-test-shard-00-00-uas9d.gcp.mongodb.net:27017,fritz-test-shard-00-01-uas9d.gcp.mongodb.net:27017,fritz-test-shard-00-02-uas9d.gcp.mongodb.net:27017/test?authSource=admin&amp;replicaSet=fritz-test-shard-0&amp;readPreference=primary&amp;appname=MongoDB%20Compass&amp;ssl=true
@@ -455,7 +472,7 @@ JSON.</p>
 </section>
 </section>
 <section id="upstream-aggregation-pipeline-stages">
-<h4>“Upstream” aggregation pipeline stages<a class="headerlink" href="#upstream-aggregation-pipeline-stages" title="Permalink to this headline">¶</a></h4>
+<h4>“Upstream” aggregation pipeline stages<a class="headerlink" href="#upstream-aggregation-pipeline-stages" title="Link to this heading">¶</a></h4>
 <p>[OPTIONAL READ]</p>
 <p>The upstream “massaging” mentioned above is performed by <code class="docutils literal notranslate"><span class="pre">Fritz</span></code> for each alert and includes:</p>
 <ul class="simple">
@@ -581,11 +598,11 @@ and applies ACLs to the detection history stored in <code class="docutils litera
 filters in Compass, the users must take care of that – all the examples below come with the upstream stages prepended.</p>
 </section>
 <section id="limitations">
-<h4>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h4>
+<h4>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">¶</a></h4>
 <p><code class="docutils literal notranslate"><span class="pre">$lookup</span></code>, <code class="docutils literal notranslate"><span class="pre">$unionWith</span></code>, <code class="docutils literal notranslate"><span class="pre">$out</span></code>, and <code class="docutils literal notranslate"><span class="pre">$merge</span></code> stages are not allowed in the user-defined part of the filters.</p>
 </section>
 <section id="alert-data-augmentation">
-<h4>Alert data augmentation<a class="headerlink" href="#alert-data-augmentation" title="Permalink to this headline">¶</a></h4>
+<h4>Alert data augmentation<a class="headerlink" href="#alert-data-augmentation" title="Link to this heading">¶</a></h4>
 <p>Fritz’s Kowalski backend augments the alert data with the following: [as of January 2021]</p>
 <ul class="simple">
 <li><p>Galactic coordinates</p></li>
@@ -606,7 +623,7 @@ filters in Compass, the users must take care of that – all the examples below 
 </ul>
 </li>
 </ul>
-<p>For the detailed description of the available catalogs, see <span class="xref myst">here</span></p>
+<p>For the detailed description of the available catalogs, see <a class="reference internal" href="#catalogs.html"><span class="xref myst">here</span></a></p>
 <ul class="simple">
 <li><p>Machine learning scores:</p>
 <ul>
@@ -620,7 +637,7 @@ filters in Compass, the users must take care of that – all the examples below 
 </li>
 </ul>
 <section id="acai">
-<h5>ACAI<a class="headerlink" href="#acai" title="Permalink to this headline">¶</a></h5>
+<h5>ACAI<a class="headerlink" href="#acai" title="Link to this heading">¶</a></h5>
 <p>In November 2020, we deployed a set of new phenomenological deep learning classifiers called
 ACAI (Alert-Classifying AI; publication in prep.).
 The system consists of 5 binary classifiers:</p>
@@ -643,11 +660,11 @@ mixed and matched and applied alongside other alert features.</p>
 </section>
 </section>
 <section id="filter-examples">
-<h3>Filter examples<a class="headerlink" href="#filter-examples" title="Permalink to this headline">¶</a></h3>
+<h3>Filter examples<a class="headerlink" href="#filter-examples" title="Link to this heading">¶</a></h3>
 <p>Let us explore some examples! The provided JSON files contain prepended upstream stages, but they are not shown in the
 text below for brevity.</p>
 <section id="simple-filter">
-<h4>Simple filter<a class="headerlink" href="#simple-filter" title="Permalink to this headline">¶</a></h4>
+<h4>Simple filter<a class="headerlink" href="#simple-filter" title="Link to this heading">¶</a></h4>
 <p>Let us start with a very simplistic example:</p>
 <p><a class="reference download internal" download="" href="_downloads/3a45ff49357d80c6aaf7e59d4f9a6ecc/fritz_filter_101.json"><code class="xref download docutils literal notranslate"><span class="pre">fritz_filter_101.json</span></code></a></p>
 <p>The first user-defined <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/aggregation/match/"><code class="docutils literal notranslate"><span class="pre">$match</span></code></a>
@@ -686,7 +703,7 @@ that don’t have any matches with the <code class="docutils literal notranslate
 <p>This alert will be posted to the candidates page with these annotations.</p>
 </section>
 <section id="acai-hosted-filter">
-<h4>ACAI-hosted filter<a class="headerlink" href="#acai-hosted-filter" title="Permalink to this headline">¶</a></h4>
+<h4>ACAI-hosted filter<a class="headerlink" href="#acai-hosted-filter" title="Link to this heading">¶</a></h4>
 <p>Let us build a filter that primarily relies on the ACAI ML models to select transients that are confidently
 classified as “hosted” (and nothing else), and are a positive subtraction (<code class="docutils literal notranslate"><span class="pre">candidate.isdiffpos</span></code>) and
 not a known Solar system object (<code class="docutils literal notranslate"><span class="pre">candidate.ssdistnr</span></code>):</p>
@@ -719,7 +736,7 @@ not a known Solar system object (<code class="docutils literal notranslate"><spa
 </div>
 </section>
 <section id="clu-filter">
-<h4>CLU filter<a class="headerlink" href="#clu-filter" title="Permalink to this headline">¶</a></h4>
+<h4>CLU filter<a class="headerlink" href="#clu-filter" title="Link to this heading">¶</a></h4>
 <p>Now that we’ve looked at basic examples, let us explore a more complex case and build a filter for
 the <a class="reference external" href="https://ui.adsabs.harvard.edu/abs/2020arXiv200409029D/abstract">Census of the Local Universe</a> program.</p>
 <p>As a reference, we will use the filter definition (as of July 10, 2020)
@@ -1309,7 +1326,7 @@ maximum and minimum magnitudes in the <code class="docutils literal notranslate"
 </pre></div>
 </div>
 <p>Let us take a closer look at a few of the fields defined above:</p>
-<ol class="simple">
+<ol class="arabic simple">
 <li><p>In the definition of <code class="docutils literal notranslate"><span class="pre">m_max_index</span></code>,
 the <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/aggregation/indexOfArray/"><code class="docutils literal notranslate"><span class="pre">$indexOfArray</span></code></a>
 operator returns the index of the maximum value of the <code class="docutils literal notranslate"><span class="pre">magpsf</span></code> field in the detection history:</p></li>
@@ -1319,7 +1336,7 @@ operator returns the index of the maximum value of the <code class="docutils lit
 <li><p>the <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/aggregation/max/"><code class="docutils literal notranslate"><span class="pre">$max</span></code></a> operator takes the maximum of that
 array</p></li>
 </ul>
-<ol class="simple">
+<ol class="arabic simple" start="2">
 <li><p>In the definition of <code class="docutils literal notranslate"><span class="pre">stationary</span></code>, we evaluate a boolean statement (expressed using the<code class="docutils literal notranslate"><span class="pre">$and</span></code> operator)
 on each entry in the full detection history stored in the <code class="docutils literal notranslate"><span class="pre">prv_candidates</span></code> array using the
 <a class="reference external" href="https://docs.mongodb.com/manual/reference/operator/aggregation/map/"><code class="docutils literal notranslate"><span class="pre">$map</span></code></a> operator.</p></li>
@@ -1506,7 +1523,7 @@ stage based on the values of the boolean fields defined above:</p>
 </div>
 </section>
 <section id="bts-rcf-program-simplified-filter">
-<h4>BTS/RCF program (simplified) filter<a class="headerlink" href="#bts-rcf-program-simplified-filter" title="Permalink to this headline">¶</a></h4>
+<h4>BTS/RCF program (simplified) filter<a class="headerlink" href="#bts-rcf-program-simplified-filter" title="Link to this heading">¶</a></h4>
 <p>As another example, below you will find a simplified version of the Bright Transient Survey filter
 (the Redshift Completeness Factor program)</p>
 <p><a class="reference download internal" download="" href="_downloads/7635b578501ac8a5f11574b26308387e/fritz_filter_rcf_simple.json"><code class="xref download docutils literal notranslate"><span class="pre">fritz_filter_rcf.json</span></code></a></p>
@@ -1963,13 +1980,13 @@ stage based on the values of the boolean fields defined above:</p>
 </div>
 </section>
 <section id="bts-rcf-program-full-filter">
-<h4>BTS/RCF program full filter<a class="headerlink" href="#bts-rcf-program-full-filter" title="Permalink to this headline">¶</a></h4>
+<h4>BTS/RCF program full filter<a class="headerlink" href="#bts-rcf-program-full-filter" title="Link to this heading">¶</a></h4>
 <p>Here you will find the full version (as of December 2020) of the Bright Transient Survey filter
 (the Redshift Completeness Factor program)</p>
 <p><a class="reference download internal" download="" href="_downloads/362b617616293d2d5c513ba054d22d43/fritz_filter_rcf.json"><code class="xref download docutils literal notranslate"><span class="pre">fritz_filter_rcf.json</span></code></a></p>
 </section>
 <section id="fast-transients-program-filter">
-<h4>Fast Transients program filter<a class="headerlink" href="#fast-transients-program-filter" title="Permalink to this headline">¶</a></h4>
+<h4>Fast Transients program filter<a class="headerlink" href="#fast-transients-program-filter" title="Link to this heading">¶</a></h4>
 <p>In this example, we will see how to adapt the Fast Transients’ program filter that has been using Kowalski for the
 initial search.</p>
 <p><a class="reference download internal" download="" href="_downloads/0d9e822457e27108abb8cb59fd37715c/fritz_filter_fast.json"><code class="xref download docutils literal notranslate"><span class="pre">fritz_filter_fast.json</span></code></a></p>
@@ -2491,7 +2508,7 @@ number of logical expressions would be evaluated on the query result:</p>
 </section>
 </section>
 <section id="watch-lists">
-<h3>Watch lists<a class="headerlink" href="#watch-lists" title="Permalink to this headline">¶</a></h3>
+<h3>Watch lists<a class="headerlink" href="#watch-lists" title="Link to this heading">¶</a></h3>
 <p>Fritz’s alert stream filters allow implementing watch lists for sets of objects of interest.</p>
 <p>In the example below, we define two named sky positions of interest. The coordinates are given in degrees.
 Any alert from an object within 2 arcseconds from these positions will pass this filter.</p>
@@ -2771,9 +2788,9 @@ Any alert from an object within 2 arcseconds from these positions will pass this
 </div>
 </section>
 <section id="tips-and-tricks">
-<h3>Tips and tricks<a class="headerlink" href="#tips-and-tricks" title="Permalink to this headline">¶</a></h3>
+<h3>Tips and tricks<a class="headerlink" href="#tips-and-tricks" title="Link to this heading">¶</a></h3>
 <section id="prv-candidates-array-sorting">
-<h4><code class="docutils literal notranslate"><span class="pre">prv_candidates</span></code> array sorting<a class="headerlink" href="#prv-candidates-array-sorting" title="Permalink to this headline">¶</a></h4>
+<h4><code class="docutils literal notranslate"><span class="pre">prv_candidates</span></code> array sorting<a class="headerlink" href="#prv-candidates-array-sorting" title="Link to this heading">¶</a></h4>
 <p>The <code class="docutils literal notranslate"><span class="pre">prv_candidates</span></code> are stored as a set and are thus not sorted. To do that, you may use the following stages
 immediately after the default <code class="docutils literal notranslate"><span class="pre">Fritz</span></code>’s upstream stages:</p>
 <div class="highlight-js notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
@@ -2824,7 +2841,7 @@ immediately after the default <code class="docutils literal notranslate"><span c
 </section>
 </section>
 <section id="feedback">
-<h2>Feedback<a class="headerlink" href="#feedback" title="Permalink to this headline">¶</a></h2>
+<h2>Feedback<a class="headerlink" href="#feedback" title="Link to this heading">¶</a></h2>
 <p>Please start by searching existing issues <a class="reference external" href="https://github.com/fritz-marshal/fritz/issues">here</a>.
 If the issue has already been reported, feel free to add to the existing discussion or to propose solutions.</p>
 <p>If you found an as-yet-unreported problem, or you have a feature request,
@@ -2849,12 +2866,12 @@ that indicates its development priority.</p>
 </ul><div class="footer" role="contentinfo">
       &#169; Copyright 2020, The Fritz Marshal authors.
     <br>
-    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.4.5 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a>.
+    Created using <a href="http://sphinx-doc.org/">Sphinx</a> 7.3.7 with <a href="https://github.com/schettino72/sphinx_press_theme">Press Theme</a> 0.9.1.
 </div>
             </div>
           </div>
       </page>
-    </div>
+    </div></div>
     
     
   </body>
