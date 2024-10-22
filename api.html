@@ -21,7 +21,7 @@
       "href": "https://skyportal.io/docs"
     },
     "title": "Fritz: SkyPortal API",
-    "version": "0.9.dev0+git20241007.18a80de"
+    "version": "1.0.0"
   },
   "security": [
     {
@@ -31349,7 +31349,8 @@
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -46859,6 +46860,7 @@
             "type": "object",
             "default": null,
             "description": "Misc. alternative metadata stored in JSON format, e.g. `{'calibration': {'source': 'ps1','color_term': 0.012}, 'photometry_method': 'allstar', 'method_reference': 'Masci et al. (2015)'}`",
+            "additionalProperties": {},
             "nullable": true
           },
           "flux": {
@@ -47179,6 +47181,7 @@
             "type": "object",
             "default": null,
             "description": "Misc. alternative metadata stored in JSON format, e.g. `{'calibration': {'source': 'ps1','color_term': 0.012}, 'photometry_method': 'allstar', 'method_reference': 'Masci et al. (2015)'}`",
+            "additionalProperties": {},
             "nullable": true
           },
           "mag": {
@@ -49653,7 +49656,8 @@
             "type": "string"
           },
           "data": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {}
           }
         },
         "required": [
