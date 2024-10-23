@@ -21381,6 +21381,7 @@
     },
     "/api/db_stats": {
       "get": {
+        "summary": "Retrieve basic DB statistics",
         "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Retrieve basic DB statistics",
         "tags": [
           "system_info"
@@ -24434,6 +24435,7 @@
     },
     "/api/alerts/{object_id}": {
       "get": {
+        "summary": "Retrieve an object from Kowalski by objectId",
         "description": "Retrieve an object from Kowalski by objectId",
         "tags": [
           "alerts",
@@ -24503,6 +24505,7 @@
     },
     "/api/alerts": {
       "get": {
+        "summary": "Retrieve objects from Kowalski by objectId/position",
         "description": "Retrieve objects from Kowalski by objectId and or position",
         "tags": [
           "alerts",
@@ -24603,6 +24606,7 @@
     },
     "/api/alerts/{objectId}": {
       "post": {
+        "summary": "Save ZTF objectId from Kowalski as source in SkyPortal",
         "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Save ZTF objectId from Kowalski as source in SkyPortal",
         "tags": [
           "alerts",
@@ -24664,6 +24668,7 @@
     },
     "/api/alerts_aux/{object_id}": {
       "get": {
+        "summary": "Retrieve aux data for an objectId from Kowalski",
         "description": "Retrieve aux data for an objectId from Kowalski",
         "tags": [
           "alerts",
@@ -24733,6 +24738,7 @@
     "/api/alerts_cutouts/{object_id}": {
       "get": {
         "summary": "Serve alert cutout as fits or png",
+        "description": "Serve alert cutout as fits or png",
         "tags": [
           "alerts",
           "kowalski"
@@ -24854,6 +24860,7 @@
     "/api/alerts_triplets/{object_id}": {
       "get": {
         "summary": "Serve alert cutouts as a triplet",
+        "description": "Serve alert cutouts as a triplet",
         "tags": [
           "alerts",
           "kowalski"
@@ -24916,7 +24923,8 @@
     },
     "/api/archive": {
       "get": {
-        "summary": "Retrieve archival light curve data from Kowalski/Gloria by position",
+        "summary": "Retrieve archival light curve data by position",
+        "description": "Retrieve archival light curve data from Kowalski/Gloria by position",
         "tags": [
           "archive",
           "kowalski"
@@ -25103,7 +25111,8 @@
     },
     "/api/archive/catalogs": {
       "get": {
-        "summary": "Retrieve available catalog names from Kowalski/Gloria/Melman",
+        "summary": "Retrieve available catalog names from Kowalski",
+        "description": "Retrieve available catalog names from Kowalski/Gloria/Melman",
         "tags": [
           "archive",
           "kowalski"
@@ -25149,7 +25158,8 @@
     },
     "/api/archive/cross_match": {
       "get": {
-        "summary": "Retrieve data from available catalogs on Kowalski/Gloria/Melman by position",
+        "summary": "Retrieve data from available catalogs in Kowalski by position",
+        "description": "Retrieve data from available catalogs on Kowalski/Gloria/Melman by position",
         "tags": [
           "archive",
           "kowalski"
@@ -25235,7 +25245,8 @@
     },
     "/api/archive/features": {
       "post": {
-        "summary": "Retrieve archival SCoPe features from Kowalski/Gloria/Melman by position, post as annotation",
+        "summary": "Retrieve archival SCoPe features by position, post as annotation",
+        "description": "Retrieve archival SCoPe features from Kowalski/Gloria/Melman by position, post as annotation",
         "tags": [
           "features",
           "kowalski"
@@ -25320,6 +25331,7 @@
     },
     "/api/filters/{filter_id}/v": {
       "get": {
+        "summary": "Retrieve a filter as stored on Kowalski",
         "description": "Retrieve a filter as stored on Kowalski",
         "tags": [
           "filters",
@@ -25376,6 +25388,7 @@
         }
       },
       "post": {
+        "summary": "POST a new filter version",
         "description": "POST a new filter version.",
         "tags": [
           "filters",
@@ -25429,6 +25442,7 @@
         }
       },
       "patch": {
+        "summary": "Update a filter on Kowalski",
         "description": "Update a filter on Kowalski",
         "tags": [
           "filters",
@@ -25507,6 +25521,7 @@
         }
       },
       "delete": {
+        "summary": "Delete a filter on Kowalski",
         "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Delete a filter on Kowalski",
         "tags": [
           "filters",
