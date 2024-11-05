@@ -28,7 +28,16 @@
       "token": []
     }
   ],
-  "servers": [],
+  "servers": [
+    {
+      "description": "Production",
+      "url": "https://fritz.science"
+    },
+    {
+      "description": "Preview/Testing",
+      "url": "https://preview.fritz.science"
+    }
+  ],
   "paths": {
     "/api/allocation/report/{instrument_id}": {
       "get": {
@@ -32964,6 +32973,10 @@
           "not_if_tns_classified": {
             "type": "boolean",
             "description": "If true, the followup request will not be executed if any object within radius is already classified as SN in TNS."
+          },
+          "not_if_tns_reported": {
+            "type": "number",
+            "description": "If there are any sources within radius with TNS reports, and the source has been discovered within before this many hours from the current time, the followup request will not be executed."
           },
           "ignore_source_group_ids": {
             "type": "array",
