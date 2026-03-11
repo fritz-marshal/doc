@@ -189,13 +189,8 @@
 </pre></div>
 </div>
 <p>All operations are started via the <code class="docutils literal notranslate"><span class="pre">fritz</span></code> script.</p>
-<p>Before proceeding, you may want to create/activate a virtual environment, for example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>fritz-env
-<span class="nb">source</span><span class="w"> </span>fritz-env/bin/activate
-</pre></div>
-</div>
-<p>Make sure the requirements to run it are met, e.g.:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span>requirements.txt
+<p>Before proceeding, you may want to create/activate a virtual environment and install dependencies, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync<span class="w"> </span>--inexact
 </pre></div>
 </div>
 <p>Please type <code class="docutils literal notranslate"><span class="pre">./fritz</span> <span class="pre">--help</span></code> to see available commands.</p>

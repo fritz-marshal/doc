@@ -19168,7 +19168,50 @@
         }
       },
       "patch": {
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>"
+        "summary": "Update a source",
+        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Update a source",
+        "tags": [
+          "sources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjNoID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "delete": {
         "summary": "Delete a source",
@@ -24356,6 +24399,32 @@
               "type": "boolean"
             },
             "description": "Include users with expired accounts in the results."
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "nullable": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "username",
+                "createdAt"
+              ]
+            },
+            "description": "Field to sort by. Options are 'username' (alphabetical, default) or 'createdAt' (creation date).\n"
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "nullable": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            },
+            "description": "Sort order - 'asc' for ascending (default) or 'desc' for descending."
           }
         ],
         "responses": {
@@ -27799,7 +27868,9 @@
         "type": "object",
         "properties": {
           "payload": {
-            "description": "Content of the catalog query request."
+            "type": "object",
+            "description": "Content of the catalog query request.",
+            "additionalProperties": {}
           },
           "status": {
             "type": "string",
@@ -32887,6 +32958,10 @@
             "type": "integer",
             "description": "ID of the Filter's Stream."
           },
+          "altdata": {
+            "description": "Arbitrary additional JSON data associated with the Filter.",
+            "nullable": true
+          },
           "group_id": {
             "type": "integer",
             "description": "ID of the Filter's Group."
@@ -32970,6 +33045,10 @@
           "stream_id": {
             "type": "integer",
             "description": "ID of the Filter's Stream."
+          },
+          "altdata": {
+            "description": "Arbitrary additional JSON data associated with the Filter.",
+            "nullable": true
           },
           "group_id": {
             "type": "integer",
@@ -33427,7 +33506,9 @@
             "description": "ID of the target Obj."
           },
           "payload": {
-            "description": "Content of the followup request."
+            "type": "object",
+            "description": "Content of the followup request.",
+            "additionalProperties": {}
           },
           "status": {
             "type": "string",
@@ -51777,6 +51858,12 @@
               "description": "Instances in which a group saved this Obj."
             }
           },
+          "super_objs": {
+            "type": "array",
+            "items": {
+              "description": "SuperObj entries associated with this Obj."
+            }
+          },
           "users": {
             "type": "array",
             "items": {}
@@ -52425,6 +52512,12 @@
               "description": "Instances in which a group saved this Obj."
             }
           },
+          "super_objs": {
+            "type": "array",
+            "items": {
+              "description": "SuperObj entries associated with this Obj."
+            }
+          },
           "users": {
             "type": "array",
             "items": {}
@@ -52906,6 +52999,12 @@
               "description": "Instances in which a group saved this Obj."
             }
           },
+          "super_objs": {
+            "type": "array",
+            "items": {
+              "description": "SuperObj entries associated with this Obj."
+            }
+          },
           "users": {
             "type": "array",
             "items": {}
@@ -53085,6 +53184,132 @@
         ],
         "additionalProperties": false
       },
+      "ObjToSuperObj": {
+        "type": "object",
+        "properties": {
+          "obj_id": {
+            "type": "string",
+            "description": "ID of the associated Obj."
+          },
+          "super_obj_id": {
+            "type": "integer",
+            "description": "ID of the associated SuperObj."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "obj_id",
+          "super_obj_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleObjToSuperObj": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ObjToSuperObj"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfObjToSuperObjs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjToSuperObj"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ObjToSuperObjNoID": {
+        "type": "object",
+        "properties": {
+          "obj_id": {
+            "type": "string",
+            "description": "ID of the associated Obj."
+          },
+          "super_obj_id": {
+            "type": "integer",
+            "description": "ID of the associated SuperObj."
+          }
+        },
+        "required": [
+          "obj_id",
+          "super_obj_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleObjToSuperObjNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/ObjToSuperObjNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfObjToSuperObjNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjToSuperObjNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
       "ObservationExternalAPIHandlerPost": {
         "type": "object",
         "properties": {
@@ -53157,7 +53382,9 @@
             "description": "ID of the GcnEvent."
           },
           "payload": {
-            "description": "Content of the observation plan request."
+            "type": "object",
+            "description": "Content of the observation plan request.",
+            "additionalProperties": {}
           },
           "status": {
             "type": "string",
@@ -54318,8 +54545,10 @@
             "description": "List of stream IDs to which photometry points will be visible."
           },
           "altdata": {
+            "type": "object",
             "default": null,
             "description": "Misc. alternative metadata stored in JSON format, e.g. `{'calibration': {'source': 'ps1','color_term': 0.012}, 'photometry_method': 'allstar', 'method_reference': 'Masci et al. (2015)'}`. Can be a list of dicts or a single dict which will be broadcast to all values.",
+            "additionalProperties": {},
             "nullable": true
           },
           "magsys": {
@@ -54459,8 +54688,10 @@
             "description": "List of stream IDs to which photometry points will be visible."
           },
           "altdata": {
+            "type": "object",
             "default": null,
             "description": "Misc. alternative metadata stored in JSON format, e.g. `{'calibration': {'source': 'ps1','color_term': 0.012}, 'photometry_method': 'allstar', 'method_reference': 'Masci et al. (2015)'}`. Can be a list of dicts or a single dict which will be broadcast to all values.",
+            "additionalProperties": {},
             "nullable": true
           },
           "magsys": {
@@ -62487,7 +62718,9 @@
             "description": "ID of the classical assignment that generated this spectrum, if any."
           },
           "altdata": {
-            "description": "Miscellaneous alternative metadata."
+            "type": "object",
+            "description": "Miscellaneous alternative metadata.",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -63135,7 +63368,9 @@
             "description": "ID of the classical assignment that generated this spectrum, if any."
           },
           "altdata": {
-            "description": "Miscellaneous alternative metadata."
+            "type": "object",
+            "description": "Miscellaneous alternative metadata.",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -64192,6 +64427,140 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/StreamUserNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "SuperObj": {
+        "type": "object",
+        "properties": {
+          "objs": {
+            "type": "array",
+            "items": {
+              "description": "Obj entries associated with this SuperObj."
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the super-object (e.g., its AT name from the Transient Name Server).",
+            "nullable": true
+          },
+          "is_roid": {
+            "type": "boolean",
+            "description": "Boolean indicating whether the super-object is a moving object.",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "additionalProperties": false
+      },
+      "SingleSuperObj": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SuperObj"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfSuperObjs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuperObj"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "SuperObjNoID": {
+        "type": "object",
+        "properties": {
+          "objs": {
+            "type": "array",
+            "items": {
+              "description": "Obj entries associated with this SuperObj."
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the super-object (e.g., its AT name from the Transient Name Server).",
+            "nullable": true
+          },
+          "is_roid": {
+            "type": "boolean",
+            "description": "Boolean indicating whether the super-object is a moving object.",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SingleSuperObjNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/SuperObjNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfSuperObjNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuperObjNoID"
             }
           }
         },
@@ -67153,7 +67522,9 @@
         "type": "object",
         "properties": {
           "payload": {
-            "description": "Content of the default follow-up request."
+            "type": "object",
+            "description": "Content of the default follow-up request.",
+            "additionalProperties": {}
           },
           "allocation_id": {
             "type": "integer",
@@ -67193,7 +67564,9 @@
         "type": "object",
         "properties": {
           "payload": {
-            "description": "Content of the default observation plan request."
+            "type": "object",
+            "description": "Content of the default observation plan request.",
+            "additionalProperties": {}
           },
           "allocation_id": {
             "type": "integer",
@@ -67216,7 +67589,9 @@
         "type": "object",
         "properties": {
           "payload": {
-            "description": "Content of the default survey efficiency analysis."
+            "type": "object",
+            "description": "Content of the default survey efficiency analysis.",
+            "additionalProperties": {}
           },
           "default_observationplan_request_id": {
             "type": "integer",
@@ -67248,6 +67623,7 @@
             "nullable": true
           },
           "catalogData": {
+            "type": "string",
             "description": "Catalog data Ascii string"
           }
         },
@@ -67279,7 +67655,10 @@
           "catalog_data": {
             "type": "array",
             "description": "Galaxy catalog data",
-            "items": {}
+            "items": {
+              "type": "object",
+              "additionalProperties": {}
+            }
           }
         },
         "required": [
@@ -67295,6 +67674,7 @@
             "description": "UTC event timestamp"
           },
           "text": {
+            "type": "string",
             "description": "GCN Event tag"
           }
         },
@@ -67353,7 +67733,9 @@
             "description": "The instrument name associated with the fields"
           },
           "observationData": {
-            "description": "Observation data dictionary list"
+            "type": "object",
+            "description": "Observation data dictionary list",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -67370,7 +67752,9 @@
             "description": "The instrument ID associated with the fields"
           },
           "observationData": {
-            "description": "Observation data Ascii string"
+            "type": "object",
+            "description": "Observation data Ascii string",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -67406,7 +67790,9 @@
             }
           },
           "observation_plan_data": {
-            "description": "Observation plan data json"
+            "type": "object",
+            "description": "Observation plan data json",
+            "additionalProperties": {}
           }
         },
         "required": [
@@ -67446,7 +67832,9 @@
             "description": "Spatial catalog name."
           },
           "catalogData": {
-            "description": "Catalog data Ascii string"
+            "type": "object",
+            "description": "Catalog data Ascii string",
+            "additionalProperties": {}
           }
         },
         "additionalProperties": false
@@ -67461,7 +67849,10 @@
           "catalog_data": {
             "type": "array",
             "description": "Spatial catalog data",
-            "items": {}
+            "items": {
+              "type": "object",
+              "additionalProperties": {}
+            }
           }
         },
         "additionalProperties": false

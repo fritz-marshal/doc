@@ -182,9 +182,11 @@ First a summary of what you’ll do:</p>
 <p>Once Mongo DB Compass is installed, launch it, and connect to the cluster by</p>
 <ul>
 <li><p>Opening Mongo DB Compass</p></li>
-<li><p>Copy the following into the box under New Connection, and click Connect.  <br/>
-mongodb+srv://alert_digger:WhereIsTheKN&#64;cluster0.s0ada.mongodb.net/test  <br/></p>
-<p><img alt="tutorial: cluster info" src="_images/tutorial1.png" /></p>
+<li><p>Copy the following into the box under New Connection, and click Connect. <br/>
+mongodb+srv://alert_digger:WhereIsTheKN&#64;cluster0.s0ada.mongodb.net/test <br/></p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> ![tutorial: cluster info](./data/filter_examples/tutorial1.png)
+</pre></div>
+</div>
 </li>
 <li><p>To see the alerts (around 4000 of them) navigate in the left menu to the folder ZTF &gt; lsst_800</p>
 <p><img alt="tutorial: alerts" src="_images/tutorial2.png" /></p>
@@ -213,16 +215,14 @@ From https://www.mongodb.com/docs/</p>
 <p>Once you are done with the filtering, you can</p>
 <ol class="arabic simple">
 <li><p>‘Export to language’ (recommended, as MongoDB Compass is not good for saving your filters) - button next to ‘Create new +’.</p></li>
-<li><p>Save your current filter – Save button next to ‘Create new +’.
-3. Export your results as a json or csv file – click on the export button next to ‘Run’ and then choose your preferred format.</p></li>
+<li><p>Save your current filter – Save button next to ‘Create new +’. 3. Export your results as a json or csv file – click on the export button next to ‘Run’ and then choose your preferred format.</p></li>
 </ol>
 </section>
 <section id="exploring">
 <h2>5. Exploring<a class="headerlink" href="#exploring" title="Link to this heading">¶</a></h2>
 <p>Use your favorite language to explore your json or csv file.</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>import pandas as pd
-
-name_csv = &#39;your_file.csv&#39;
+<p>import pandas as pd</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>name_csv = &#39;your_file.csv&#39;
 results_filter = pd.read_csv(name_csv)
 
 sources = [int(f[-5:]) for f in results_filter[&#39;objectId&#39;]]
