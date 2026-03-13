@@ -25260,6 +25260,635 @@
         }
       }
     },
+    "/api/kowalski/filters/{filter_id}/v": {
+      "get": {
+        "summary": "Retrieve a filter as stored on Kowalski",
+        "description": "Retrieve a filter as stored on Kowalski",
+        "tags": [
+          "filters",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "status",
+                    "message",
+                    "data"
+                  ],
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "success"
+                      ]
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "POST a new filter version",
+        "description": "POST a new filter version.",
+        "tags": [
+          "filters",
+          "kowalski"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterNoID"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "required": [
+                            "filter_id",
+                            "pipeline"
+                          ],
+                          "properties": {
+                            "pipeline": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              },
+                              "description": "user-defined aggregation pipeline stages in MQL",
+                              "minItems": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a filter on Kowalski",
+        "description": "Update a filter on Kowalski",
+        "tags": [
+          "filters",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "filter_id"
+                ],
+                "properties": {
+                  "filter_id": {
+                    "type": "integer",
+                    "description": "[fritz] science program filter id for this user group id",
+                    "minimum": 1
+                  },
+                  "active": {
+                    "type": "boolean",
+                    "description": "activate or deactivate filter"
+                  },
+                  "active_fid": {
+                    "description": "set fid as active version",
+                    "type": "string",
+                    "minLength": 6,
+                    "maxLength": 6
+                  },
+                  "autosave": {
+                    "type": "boolean | dict",
+                    "description": "automatically save passing candidates to filter's group"
+                  },
+                  "update_annotations": {
+                    "type": "boolean",
+                    "description": "update annotations for existing candidates"
+                  },
+                  "auto_followup": {
+                    "type": "boolean | dict",
+                    "description": "automatically create follow-up requests for passing and autosaved candidates"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a filter on Kowalski",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Delete a filter on Kowalski",
+        "tags": [
+          "filters",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kowalski/archive": {
+      "get": {
+        "summary": "Retrieve archival light curve data by position",
+        "description": "Retrieve archival light curve data from Kowalski/Gloria by position",
+        "tags": [
+          "archive",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "lc_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": true,
+            "schema": {
+              "type": "str"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ra",
+            "required": false,
+            "schema": {
+              "type": "float"
+            },
+            "description": "RA in degrees"
+          },
+          {
+            "in": "query",
+            "name": "dec",
+            "required": false,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Dec. in degrees"
+          },
+          {
+            "in": "query",
+            "name": "radius",
+            "required": false,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Max distance from specified (RA, Dec) (capped at 1 deg)"
+          },
+          {
+            "in": "query",
+            "name": "radius_units",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Distance units (either \"deg\", \"arcmin\", or \"arcsec\")"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "retrieved light curve data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          },
+                          "description": "array of light curves"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Post ZTF light curve data from a Kowalski instance to SkyPortal",
+        "tags": [
+          "archive",
+          "kowalski"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "obj_id": {
+                        "type": "str",
+                        "description": "target obj_id to save photometry to. create new if None."
+                      },
+                      "catalog": {
+                        "type": "str",
+                        "description": "Kowalski catalog name to pull light curves from.",
+                        "required": true
+                      },
+                      "light_curve_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "Light curves IDs in catalog on Kowalski.",
+                        "required": true,
+                        "minItems": 1
+                      },
+                      "group_ids": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        },
+                        "description": "group ids to save source to. defaults to all user groups",
+                        "required": false,
+                        "minItems": 1
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "obj_id": {
+                              "type": "string",
+                              "description": "The SkyPortal Obj the light curve was posted to."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kowalski/archive/catalogs": {
+      "get": {
+        "summary": "Retrieve available catalog names from Kowalski",
+        "description": "Retrieve available catalog names from Kowalski/Gloria/Melman",
+        "tags": [
+          "archive",
+          "kowalski"
+        ],
+        "responses": {
+          "200": {
+            "description": "retrieved catalog names",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "str"
+                          },
+                          "description": "array of catalog names"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kowalski/archive/cross_match": {
+      "get": {
+        "summary": "Retrieve data from available catalogs in Kowalski by position",
+        "description": "Retrieve data from available catalogs on Kowalski/Gloria/Melman by position",
+        "tags": [
+          "archive",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ra",
+            "required": true,
+            "schema": {
+              "type": "float"
+            },
+            "description": "RA in degrees"
+          },
+          {
+            "in": "query",
+            "name": "dec",
+            "required": true,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Dec. in degrees"
+          },
+          {
+            "in": "query",
+            "name": "radius",
+            "required": true,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Maximum distance in `radius_units` from specified (RA, Dec) (capped at 1 deg)"
+          },
+          {
+            "in": "query",
+            "name": "radius_units",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "deg",
+                "arcmin",
+                "arcsec"
+              ]
+            },
+            "description": "Distance units (either \"deg\", \"arcmin\", or \"arcsec\")"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "retrieved source data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "description": "cross matched sources per catalog"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/kowalski/archive/features": {
+      "post": {
+        "summary": "Retrieve archival SCoPe features by position, post as annotation",
+        "description": "Retrieve archival SCoPe features from Kowalski/Gloria/Melman by position, post as annotation",
+        "tags": [
+          "features",
+          "kowalski"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "str"
+            },
+            "description": "object ID"
+          },
+          {
+            "in": "query",
+            "name": "ra",
+            "required": true,
+            "schema": {
+              "type": "float"
+            },
+            "description": "RA in degrees"
+          },
+          {
+            "in": "query",
+            "name": "dec",
+            "required": true,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Dec. in degrees"
+          },
+          {
+            "in": "query",
+            "name": "catalog",
+            "required": false,
+            "schema": {
+              "type": "str"
+            },
+            "description": "default is ZTF_source_features_DR5"
+          },
+          {
+            "in": "query",
+            "name": "radius",
+            "required": false,
+            "schema": {
+              "type": "float"
+            },
+            "description": "Max distance from specified (RA, Dec) (capped at 1 deg). Default is 2"
+          },
+          {
+            "in": "query",
+            "name": "radius_units",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Distance units (either \"deg\", \"arcmin\", or \"arcsec\"). Default is arcsec"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/archive": {
       "get": {
         "summary": "Retrieve archival light curve data by position",
@@ -25661,227 +26290,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/filters/{filter_id}/v": {
-      "get": {
-        "summary": "Retrieve a filter as stored on Kowalski",
-        "description": "Retrieve a filter as stored on Kowalski",
-        "tags": [
-          "filters",
-          "kowalski"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "status",
-                    "message",
-                    "data"
-                  ],
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "enum": [
-                        "success"
-                      ]
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "data": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "POST a new filter version",
-        "description": "POST a new filter version.",
-        "tags": [
-          "filters",
-          "kowalski"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "required": [
-                            "filter_id",
-                            "pipeline"
-                          ],
-                          "properties": {
-                            "pipeline": {
-                              "type": "array",
-                              "items": {
-                                "type": "object"
-                              },
-                              "description": "user-defined aggregation pipeline stages in MQL",
-                              "minItems": 1
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update a filter on Kowalski",
-        "description": "Update a filter on Kowalski",
-        "tags": [
-          "filters",
-          "kowalski"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "filter_id"
-                ],
-                "properties": {
-                  "filter_id": {
-                    "type": "integer",
-                    "description": "[fritz] science program filter id for this user group id",
-                    "minimum": 1
-                  },
-                  "active": {
-                    "type": "boolean",
-                    "description": "activate or deactivate filter"
-                  },
-                  "active_fid": {
-                    "description": "set fid as active version",
-                    "type": "string",
-                    "minLength": 6,
-                    "maxLength": 6
-                  },
-                  "autosave": {
-                    "type": "boolean | dict",
-                    "description": "automatically save passing candidates to filter's group"
-                  },
-                  "update_annotations": {
-                    "type": "boolean",
-                    "description": "update annotations for existing candidates"
-                  },
-                  "auto_followup": {
-                    "type": "boolean | dict",
-                    "description": "automatically create follow-up requests for passing and autosaved candidates"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a filter on Kowalski",
-        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Delete a filter on Kowalski",
-        "tags": [
-          "filters",
-          "kowalski"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
