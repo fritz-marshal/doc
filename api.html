@@ -555,9 +555,8 @@
                     {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "New default analysis ID"
+                        "data": {
+                          "$ref": "#/components/schemas/DefaultAnalysis"
                         }
                       }
                     }
@@ -731,7 +730,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AnalysisService"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -924,13 +935,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New AnalysisService ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/AnalysisService"
                         }
                       }
                     }
@@ -1025,13 +1030,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1287,13 +1286,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1549,13 +1542,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1618,7 +1605,7 @@
                 "type": "object",
                 "properties": {
                   "download": {
-                    "type": "bool",
+                    "type": "boolean",
                     "description": "Download the results as a file\n"
                   },
                   "plot_kwargs": {
@@ -1635,11 +1622,23 @@
         },
         "responses": {
           "200": {
-            "description": "Requested analysis file",
+            "description": "Requested analysis product. For product_type=corner returns a PNG\nimage; for product_type=plots returns binary plot data; for\nproduct_type=results returns either a JSON file download or a\nJSON-wrapped result payload.\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -1927,7 +1926,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ScanReportItem"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2047,7 +2058,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ScanReport"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2195,7 +2218,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2809,7 +2844,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -2952,11 +2999,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -3677,13 +3720,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New default follow-up request ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/DefaultFollowupRequest"
                         }
                       }
                     }
@@ -3818,13 +3855,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New default gcn tag ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/DefaultGcnTag"
                         }
                       }
                     }
@@ -4392,7 +4423,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FollowupRequest"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -4705,7 +4748,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FollowupRequest"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -4927,13 +4982,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New follow-up request ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/FollowupRequest"
                         }
                       }
                     }
@@ -4976,7 +5025,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/FollowupRequest"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5458,7 +5519,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EarthquakePrediction"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5532,7 +5605,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EarthquakeMeasured"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5568,7 +5653,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EarthquakeMeasured"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5604,7 +5701,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5749,7 +5858,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Comment"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -5982,13 +6103,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "comment_id": {
-                              "type": "integer",
-                              "description": "New comment ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Comment"
                         }
                       }
                     }
@@ -6075,7 +6190,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Comment"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -6234,13 +6361,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "comment_id": {
-                              "type": "integer",
-                              "description": "New comment ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Comment"
                         }
                       }
                     }
@@ -7011,7 +7132,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -7087,7 +7223,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -7208,18 +7356,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New Earthquake ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EarthquakeEvent"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -8192,7 +8341,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GcnTag"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -8230,18 +8394,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New GcnEvent Tag ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GcnTag"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -8315,7 +8480,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/GcnProperty"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -8363,7 +8543,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GcnEventHandlerGet"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GcnEvent"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -8567,7 +8759,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GcnEventHandlerGet"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "events": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/GcnEvent"
+                              }
+                            },
+                            "totalMatches": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -8604,18 +8819,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New GcnEvent ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GcnEvent"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -8665,37 +8881,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "the id of the confirmed_source_in_gcn"
-                            },
-                            "obj_id": {
-                              "type": "string",
-                              "description": "the source_id of the source"
-                            },
-                            "dateobs": {
-                              "type": "string",
-                              "description": "dateobs of the GCN evn"
-                            },
-                            "confirmed": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether the source is confirmed (True) or rejected (False)"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/SingleSourcesConfirmedInGCN"
                 }
               }
             }
@@ -8785,13 +8971,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the source_confirmed_in_gcn"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                         }
                       }
                     }
@@ -8867,13 +9047,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the modified source_confirmed_in_gcn"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                         }
                       }
                     }
@@ -8923,25 +9097,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the deleted source_confirmed_in_gcn"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -9001,25 +9157,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "integer",
-                                "description": "the id of the confirmed_source_in_gcn"
-                              },
-                              "obj_id": {
-                                "type": "string",
-                                "description": "the source_id of the source"
-                              },
-                              "dateobs": {
-                                "type": "string",
-                                "description": "dateobs of the GCN evn"
-                              },
-                              "confirmed": {
-                                "type": "boolean",
-                                "description": "Whether the source is confirmed (True) or rejected (False)"
-                              }
-                            }
+                            "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                           }
                         }
                       }
@@ -9501,7 +9639,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PhotStat"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PhotStat"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -9539,7 +9689,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PhotStat"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -9577,7 +9739,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PhotStat"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -9993,7 +10167,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/LocalizationProperty"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10038,9 +10227,10 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "application/fits": {
                 "schema": {
-                  "$ref": "#/components/schemas/LocalizationHandlerGet"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -10096,7 +10286,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LocalizationHandlerGet"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Localization"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10274,17 +10476,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "group_id": {
-                              "type": "integer",
-                              "description": "Group ID"
-                            },
-                            "stream_id": {
-                              "type": "integer",
-                              "description": "Stream ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/GroupStream"
                         }
                       }
                     }
@@ -10391,21 +10583,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "group_id": {
-                              "type": "integer",
-                              "description": "Group ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            },
-                            "admin": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user is group admin"
-                            }
-                          }
+                          "$ref": "#/components/schemas/GroupUser"
                         }
                       }
                     }
@@ -10463,7 +10641,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GroupUser"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10553,7 +10743,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GroupUser"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10600,23 +10802,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "allOf": [
-                            {
-                              "$ref": "#/components/schemas/Group"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "users": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/User"
-                                  },
-                                  "description": "List of group users"
-                                }
-                              }
-                            }
-                          ]
+                          "$ref": "#/components/schemas/Group"
                         }
                       }
                     }
@@ -10666,7 +10852,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Group"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10922,7 +11120,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/MMADetector"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -11042,13 +11252,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New mmadetector ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/MMADetector"
                         }
                       }
                     }
@@ -11137,7 +11341,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/MMADetectorSpectrum"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -11237,9 +11453,44 @@
                 "type": "integer"
               }
             },
-            "description": "If provided, filter only spectra saved to one of these group IDs."
+            "description": "If provided, filter only spectra saved to one of these group IDs.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MMADetectorSpectrum"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload an MMA Detector Spectrum",
@@ -11269,13 +11520,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New mmadetector spectrum ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/MMADetectorSpectrum"
                         }
                       }
                     }
@@ -11364,7 +11609,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/MMADetectorTimeInterval"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -11463,9 +11720,44 @@
                 "type": "integer"
               }
             },
-            "description": "If provided, filter only time_interval saved to one of these group IDs."
+            "description": "If provided, filter only time_interval saved to one of these group IDs.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MMADetectorTimeInterval"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload an MMA Detector Time Interval",
@@ -11983,7 +12275,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -12321,7 +12625,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Instrument"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -12367,7 +12683,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -14046,7 +14374,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ObservingRun"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -14156,13 +14496,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Observing Run ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObservingRun"
                         }
                       }
                     }
@@ -14650,7 +14984,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SingleObservationPlanRequest"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -15509,12 +15855,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/SinglePhotometryFlux"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/SinglePhotometryMag"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Photometry"
+                        }
+                      }
                     }
                   ]
                 }
@@ -15569,7 +15920,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -15606,7 +15969,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -15821,13 +16196,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the photomety_validation"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometryValidation"
                         }
                       }
                     }
@@ -15894,13 +16263,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the modified photometry_validation"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometryValidation"
                         }
                       }
                     }
@@ -16130,13 +16493,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New photometric series ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometricSeries"
                         }
                       }
                     }
@@ -16678,10 +17035,7 @@
                           "type": "object",
                           "properties": {
                             "series": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/PhotometricSeries"
-                              }
+                              "$ref": "#/components/schemas/ArrayOfPhotometricSeriess"
                             },
                             "totalMatches": {
                               "type": "integer"
@@ -16843,13 +17197,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New photometric series ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometricSeries"
                         }
                       }
                     }
@@ -16939,14 +17287,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "sources": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Obj"
-                              }
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Obj"
                           }
                         }
                       }
@@ -17096,7 +17439,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Shift"
+                  "$ref": "#/components/schemas/SingleShift"
                 }
               }
             }
@@ -17142,7 +17485,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Shift"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -17299,40 +17654,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Shift"
-                            },
-                            "name": {
-                              "type": "string",
-                              "description": "New Shift's name"
-                            },
-                            "start_date": {
-                              "type": "string",
-                              "description": "New Shift's start date"
-                            },
-                            "end_date": {
-                              "type": "string",
-                              "description": "New Shift's end date"
-                            },
-                            "shift_admins": {
-                              "type": "array",
-                              "items": {
-                                "type": "integer"
-                              },
-                              "description": "New Shift's admins IDs"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "New Shift's description"
-                            },
-                            "required_users_number": {
-                              "type": "integer",
-                              "description": "The number of users required to join this shift for it to be considered full"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Shift"
                         }
                       }
                     }
@@ -17405,25 +17727,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "shift_id": {
-                              "type": "integer",
-                              "description": "Shift ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            },
-                            "admin": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user is shift admin"
-                            },
-                            "needs_replacement": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user needs replacement or not"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ShiftUser"
                         }
                       }
                     }
@@ -17483,7 +17787,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/ShiftUser"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -17550,7 +17866,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -17620,12 +17948,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryFluxs"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryMags"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Photometry"
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -18031,11 +18367,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -18156,12 +18488,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryFluxs"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryMags"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Photometry"
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -18200,7 +18540,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -18285,19 +18637,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
-                          }
+                          "$ref": "#/components/schemas/Spectrum"
                         }
                       }
                     }
@@ -19081,18 +19421,23 @@
                       "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "origin": {
-                            "type": "string"
-                          },
-                          "color": {
-                            "type": "number"
-                          },
-                          "abs_mag": {
-                            "type": "number"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "origin": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "number"
+                              },
+                              "abs_mag": {
+                                "type": "number"
+                              }
+                            }
                           }
                         }
                       }
@@ -19302,17 +19647,29 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "ra": {
-                      "type": "number",
-                      "description": "Right ascension of the object"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
                     },
-                    "dec": {
-                      "type": "number",
-                      "description": "Declination of the object"
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "ra": {
+                              "type": "number",
+                              "description": "Right ascension of the object"
+                            },
+                            "dec": {
+                              "type": "number",
+                              "description": "Declination of the object"
+                            }
+                          }
+                        }
+                      }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -19490,7 +19847,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Annotation"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -19559,7 +19928,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Annotation"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -19628,7 +20009,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Annotation"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -19707,7 +20100,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Annotation"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -20376,7 +20781,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Obj"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -21229,7 +21646,38 @@
               "type": "string"
             }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "source_exists": {
+                              "type": "boolean"
+                            },
+                            "message": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/source_exists": {
@@ -21267,7 +21715,38 @@
             },
             "description": "Radius for spatial filtering if ra & dec are provided (in decimal degrees)"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "source_exists": {
+                              "type": "boolean"
+                            },
+                            "message": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/source_notifications": {
@@ -21325,13 +21804,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "description": "New SourceNotification ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourceNotification"
                         }
                       }
                     }
@@ -21534,7 +22007,39 @@
               "type": "integer"
             }
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SpatialCatalog"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "delete": {
         "summary": "Delete a Spatial Catalog",
@@ -21580,7 +22085,42 @@
         "description": "Retrieve all SpatialCatalogs",
         "tags": [
           "spatial catalogs"
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SpatialCatalog"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Ingest a Spatial Catalog",
@@ -21715,7 +22255,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Spectrum"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -21752,7 +22304,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -21954,9 +22518,44 @@
             "schema": {
               "type": "string"
             },
-            "description": "Arrow-parseable date string (e.g. 2020-01-01). If provided,\nonly return sources that have comments after this time."
+            "description": "Arrow-parseable date string (e.g. 2020-01-01). If provided,\nonly return sources that have comments after this time.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload spectrum",
@@ -22034,7 +22633,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpectrumNoID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SpectrumNoID"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -22217,18 +22828,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
                           }
                         }
                       }
@@ -22328,7 +22930,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Spectrum"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -22365,7 +22979,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Success"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -22567,9 +23193,44 @@
             "schema": {
               "type": "string"
             },
-            "description": "Arrow-parseable date string (e.g. 2020-01-01). If provided,\nonly return sources that have comments after this time."
+            "description": "Arrow-parseable date string (e.g. 2020-01-01). If provided,\nonly return sources that have comments after this time.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload spectrum",
@@ -22647,7 +23308,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpectrumNoID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SpectrumNoID"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -22779,18 +23452,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
                           }
                         }
                       }
@@ -22860,17 +23524,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "stream_id": {
-                              "type": "integer",
-                              "description": "Stream ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/StreamUser"
                         }
                       }
                     }
@@ -22997,7 +23651,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Stream"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -23109,13 +23775,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New stream ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Stream"
                         }
                       }
                     }
@@ -24004,7 +24664,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Thumbnail"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -24343,7 +25015,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SharingServiceSubmission"
+                  "$ref": "#/components/schemas/SingleSharingServiceSubmission"
                 }
               }
             }
@@ -24520,7 +25192,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SharingServiceSubmission"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -24584,7 +25268,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SharingServiceCoauthor"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -24711,7 +25407,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SharingServiceGroup"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -24834,7 +25542,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SharingServiceGroupAutoPublisher"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -25063,13 +25783,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Sharing Service ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SingleSharingService"
                         }
                       }
                     }
@@ -25988,7 +26702,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PublicSourcePage"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -26127,7 +26856,22 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/PublicRelease"
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -76051,42 +76795,6 @@
         },
         "additionalProperties": false
       },
-      "GcnEventHandlerGet": {
-        "type": "object",
-        "properties": {
-          "tags": {
-            "type": "array",
-            "description": "Event tags",
-            "items": {
-              "type": "string"
-            }
-          },
-          "dateobs": {
-            "type": "string",
-            "description": "UTC event timestamp"
-          },
-          "localizations": {
-            "type": "array",
-            "description": "Healpix localizations",
-            "items": {
-              "type": "object",
-              "additionalProperties": {}
-            }
-          },
-          "notices": {
-            "type": "array",
-            "description": "VOEvent XML notices",
-            "items": {
-              "type": "string"
-            }
-          },
-          "lightcurve": {
-            "type": "string",
-            "description": "URL for light curve"
-          }
-        },
-        "additionalProperties": false
-      },
       "GcnHandlerPut": {
         "type": "object",
         "properties": {
@@ -76101,32 +76809,6 @@
           "json": {
             "type": "string",
             "description": "JSON notice content."
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocalizationHandlerGet": {
-        "type": "object",
-        "properties": {
-          "localization_name": {
-            "type": "string",
-            "description": "Localization name"
-          },
-          "dateobs": {
-            "type": "string",
-            "description": "UTC event timestamp"
-          },
-          "flat_2d": {
-            "type": "array",
-            "description": "Flattened 2D healpix map",
-            "items": {
-              "type": "number"
-            }
-          },
-          "contour": {
-            "type": "object",
-            "description": "GeoJSON contours of healpix map",
-            "additionalProperties": {}
           }
         },
         "additionalProperties": false
