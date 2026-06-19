@@ -30,12 +30,12 @@
   ],
   "servers": [
     {
-      "url": "http://localhost:5000",
-      "description": "Development server"
+      "description": "Production",
+      "url": "https://fritz.science"
     },
     {
-      "url": "https://skyportal.io",
-      "description": "Production server"
+      "description": "Preview/Testing",
+      "url": "https://preview.fritz.science"
     }
   ],
   "paths": {
@@ -575,9 +575,8 @@
                     {
                       "type": "object",
                       "properties": {
-                        "id": {
-                          "type": "integer",
-                          "description": "New default analysis ID"
+                        "data": {
+                          "$ref": "#/components/schemas/DefaultAnalysis"
                         }
                       }
                     }
@@ -751,7 +750,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/AnalysisService"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -944,13 +955,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New AnalysisService ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/AnalysisService"
                         }
                       }
                     }
@@ -1045,13 +1050,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1270,6 +1269,9 @@
                   },
                   "input_filters": {
                     "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
                     "description": "Filters to apply to the input data"
                   },
                   "analysis_parameters": {
@@ -1304,13 +1306,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1529,6 +1525,9 @@
                   },
                   "input_filters": {
                     "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
                     "description": "Filters to apply to the input data"
                   },
                   "analysis_parameters": {
@@ -1563,13 +1562,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "analysis_id": {
-                              "type": "integer",
-                              "description": "New analysis ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObjAnalysis"
                         }
                       }
                     }
@@ -1632,7 +1625,7 @@
                 "type": "object",
                 "properties": {
                   "download": {
-                    "type": "bool",
+                    "type": "boolean",
                     "description": "Download the results as a file\n"
                   },
                   "plot_kwargs": {
@@ -1649,11 +1642,23 @@
         },
         "responses": {
           "200": {
-            "description": "Requested analysis file",
+            "description": "Requested analysis product. For product_type=corner returns a PNG\nimage; for product_type=plots returns binary plot data; for\nproduct_type=results returns either a JSON file download or a\nJSON-wrapped result payload.\n",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -3735,13 +3740,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New default follow-up request ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/DefaultFollowupRequest"
                         }
                       }
                     }
@@ -3876,13 +3875,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New default gcn tag ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/DefaultGcnTag"
                         }
                       }
                     }
@@ -4666,7 +4659,10 @@
             "name": "magnitudeRange",
             "nullable": true,
             "schema": {
-              "type": "list"
+              "type": "array",
+              "items": {
+                "type": "number"
+              }
             },
             "description": "lowest and highest magnitude to return, e.g. \"(12,9)\"\n"
           },
@@ -5035,13 +5031,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New follow-up request ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/FollowupRequest"
                         }
                       }
                     }
@@ -5522,7 +5512,7 @@
             "name": "catalog_name",
             "required": true,
             "schema": {
-              "type": "str"
+              "type": "string"
             }
           }
         ],
@@ -6200,13 +6190,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "comment_id": {
-                              "type": "integer",
-                              "description": "New comment ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Comment"
                         }
                       }
                     }
@@ -6464,13 +6448,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "comment_id": {
-                              "type": "integer",
-                              "description": "New comment ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Comment"
                         }
                       }
                     }
@@ -7488,18 +7466,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New Earthquake ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/EarthquakeEvent"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -8525,18 +8504,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New GcnEvent Tag ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GcnTag"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -8949,18 +8929,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                },
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "properties": {
-                      "gcnevent_id": {
-                        "type": "integer",
-                        "description": "New GcnEvent ID"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/GcnEvent"
+                        }
                       }
                     }
-                  }
+                  ]
                 }
               }
             }
@@ -9010,37 +8991,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "the id of the confirmed_source_in_gcn"
-                            },
-                            "obj_id": {
-                              "type": "string",
-                              "description": "the source_id of the source"
-                            },
-                            "dateobs": {
-                              "type": "string",
-                              "description": "dateobs of the GCN evn"
-                            },
-                            "confirmed": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether the source is confirmed (True) or rejected (False)"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/SingleSourcesConfirmedInGCN"
                 }
               }
             }
@@ -9130,13 +9081,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the source_confirmed_in_gcn"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                         }
                       }
                     }
@@ -9212,13 +9157,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the modified source_confirmed_in_gcn"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                         }
                       }
                     }
@@ -9268,25 +9207,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the deleted source_confirmed_in_gcn"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -9346,22 +9267,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "id": {
-                              "type": "integer",
-                              "description": "the id of the confirmed_source_in_gcn"
-                            },
-                            "obj_id": {
-                              "type": "string",
-                              "description": "the source_id of the source"
-                            },
-                            "dateobs": {
-                              "type": "string",
-                              "description": "dateobs of the GCN evn"
-                            },
-                            "confirmed": {
-                              "type": "boolean",
-                              "description": "Whether the source is confirmed (True) or rejected (False)"
-                            }
+                            "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                           }
                         }
                       }
@@ -9893,7 +9799,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PhotStat"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -9931,7 +9849,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/PhotStat"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -10407,9 +10337,10 @@
         "responses": {
           "200": {
             "content": {
-              "application/json": {
+              "application/fits": {
                 "schema": {
-                  "$ref": "#/components/schemas/LocalizationHandlerGet"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -10655,17 +10586,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "group_id": {
-                              "type": "integer",
-                              "description": "Group ID"
-                            },
-                            "stream_id": {
-                              "type": "integer",
-                              "description": "Stream ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/GroupStream"
                         }
                       }
                     }
@@ -10772,21 +10693,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "group_id": {
-                              "type": "integer",
-                              "description": "Group ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            },
-                            "admin": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user is group admin"
-                            }
-                          }
+                          "$ref": "#/components/schemas/GroupUser"
                         }
                       }
                     }
@@ -11005,23 +10912,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "allOf": [
-                            {
-                              "$ref": "#/components/schemas/Group"
-                            },
-                            {
-                              "type": "object",
-                              "properties": {
-                                "users": {
-                                  "type": "array",
-                                  "items": {
-                                    "$ref": "#/components/schemas/User"
-                                  },
-                                  "description": "List of group users"
-                                }
-                              }
-                            }
-                          ]
+                          "$ref": "#/components/schemas/Group"
                         }
                       }
                     }
@@ -11471,13 +11362,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New mmadetector ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/MMADetector"
                         }
                       }
                     }
@@ -11662,7 +11547,7 @@
             "in": "query",
             "name": "detectorIDs",
             "nullable": true,
-            "type": "list",
+            "type": "array",
             "items": {
               "type": "integer"
             },
@@ -11673,14 +11558,49 @@
             "name": "groupIDs",
             "nullable": true,
             "schema": {
-              "type": "list",
+              "type": "array",
               "items": {
                 "type": "integer"
               }
             },
-            "description": "If provided, filter only spectra saved to one of these group IDs."
+            "description": "If provided, filter only spectra saved to one of these group IDs.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MMADetectorSpectrum"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload an MMA Detector Spectrum",
@@ -11710,13 +11630,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New mmadetector spectrum ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/MMADetectorSpectrum"
                         }
                       }
                     }
@@ -11900,7 +11814,7 @@
             "in": "query",
             "name": "detectorIDs",
             "nullable": true,
-            "type": "list",
+            "type": "array",
             "items": {
               "type": "integer"
             },
@@ -11911,14 +11825,49 @@
             "name": "groupIDs",
             "nullable": true,
             "schema": {
-              "type": "list",
+              "type": "array",
               "items": {
                 "type": "integer"
               }
             },
-            "description": "If provided, filter only time_interval saved to one of these group IDs."
+            "description": "If provided, filter only time_interval saved to one of these group IDs.\n"
           }
-        ]
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/MMADetectorTimeInterval"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       },
       "post": {
         "summary": "Upload an MMA Detector Time Interval",
@@ -13183,9 +13132,7 @@
                             "hsc::i",
                             "hsc::i2",
                             "hsc::z",
-                            "hsc::y",
-                            "swiftxrt",
-                            "nicerxti"
+                            "hsc::y"
                           ]
                         },
                         "description": "List of filters on the instrument. If the instrument has no filters (e.g., because it is a spectrograph), leave blank or pass the empty list.",
@@ -13193,76 +13140,69 @@
                       },
                       "sensitivity_data": {
                         "type": "object",
-                        "properties": {
-                          "filter_name": {
-                            "type": "object",
-                            "properties": {
-                              "limiting_magnitude": {
-                                "type": "number"
-                              },
-                              "magsys": {
-                                "type": "string"
-                              },
-                              "exposure_time": {
-                                "type": "number",
-                                "description": "Exposure time in seconds.\n"
-                              }
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "limiting_magnitude": {
+                              "type": "number"
+                            },
+                            "magsys": {
+                              "type": "string"
+                            },
+                            "exposure_time": {
+                              "type": "number",
+                              "description": "Exposure time in seconds."
                             }
                           }
                         },
-                        "description": "List of filters and associated limiting magnitude and exposure time.\nSensitivity_data filters must be a subset of the instrument filters.\nLimiting magnitude assumed to be AB magnitude.\n"
+                        "description": "Map of filter name to its limiting magnitude and exposure time.\nSensitivity_data filters must be a subset of the instrument filters.\nLimiting magnitude assumed to be AB magnitude.\n"
                       },
                       "configuration_data": {
                         "type": "object",
-                        "properties": {
-                          "filter_name": {
-                            "type": "object",
-                            "properties": {
-                              "filt_change_time": {
-                                "type": "number",
-                                "description": "Time in seconds to change filters\n"
-                              },
-                              "readout": {
-                                "type": "number",
-                                "description": "Time in seconds to readout camera\n"
-                              },
-                              "overhead_per_exposure": {
-                                "type": "number",
-                                "description": "Non-readout overheads, e.g. instrument settling times, in seconds.\n"
-                              },
-                              "slew_rate": {
-                                "type": "number",
-                                "description": "Slew rate for the telescope in deg/s.\n"
-                              }
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "filt_change_time": {
+                              "type": "number",
+                              "description": "Time in seconds to change filters"
+                            },
+                            "readout": {
+                              "type": "number",
+                              "description": "Time in seconds to readout camera"
+                            },
+                            "overhead_per_exposure": {
+                              "type": "number",
+                              "description": "Non-readout overheads, e.g. instrument settling times, in seconds.\n"
+                            },
+                            "slew_rate": {
+                              "type": "number",
+                              "description": "Slew rate for the telescope in deg/s."
                             }
                           }
                         },
                         "description": "Instrument configuration properties such as instrument overhead, filter change time, readout, etc.\n"
                       },
                       "field_data": {
-                        "type": "dict",
-                        "items": {
-                          "type": "array"
-                        },
+                        "type": "object",
                         "description": "List of ID, RA, and Dec for each field.\n"
                       },
                       "field_region": {
-                        "type": "str",
+                        "type": "string",
                         "description": "Serialized version of a regions.Region describing\nthe shape of the instrument field. Note: should\nonly include field_region or field_fov_type.\n"
                       },
                       "references": {
-                        "type": "dict",
-                        "items": {
-                          "type": "array"
-                        },
+                        "type": "object",
                         "description": "List of filter, and limiting magnitude for each reference.\n"
                       },
                       "field_fov_type": {
-                        "type": "str",
+                        "type": "string",
                         "description": "Option for instrument field shape. Must be either\ncircle or rectangle. Note: should only\ninclude field_region or field_fov_type.\n"
                       },
                       "field_fov_attributes": {
-                        "type": "list",
+                        "type": "array",
+                        "items": {
+                          "type": "number"
+                        },
                         "description": "Option for instrument field shape parameters.\nSingle float radius in degrees in case of circle or\nlist of two floats (height and width) in case of\na rectangle.\n"
                       }
                     }
@@ -13759,7 +13699,7 @@
             "name": "observationStatus",
             "nullable": true,
             "schema": {
-              "type": "str"
+              "type": "string"
             },
             "description": "Whether to include queued or executed observations.\nDefaults to executed.\n"
           },
@@ -13813,7 +13753,56 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArrayOfExecutedObservations"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "observations": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/ExecutedObservation"
+                              }
+                            },
+                            "totalMatches": {
+                              "type": "integer"
+                            },
+                            "geojson": {
+                              "type": "array",
+                              "items": {
+                                "type": "object"
+                              },
+                              "nullable": true
+                            },
+                            "field_ids": {
+                              "type": "array",
+                              "items": {
+                                "type": "integer"
+                              },
+                              "nullable": true
+                            },
+                            "probability": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "area": {
+                              "type": "number",
+                              "nullable": true
+                            },
+                            "min_observations_per_field": {
+                              "type": "integer",
+                              "nullable": true
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -14666,13 +14655,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Observing Run ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ObservingRun"
                         }
                       }
                     }
@@ -16054,12 +16037,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/SinglePhotometryFlux"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/SinglePhotometryMag"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/Photometry"
+                        }
+                      }
                     }
                   ]
                 }
@@ -16390,13 +16378,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the photomety_validation"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometryValidation"
                         }
                       }
                     }
@@ -16463,13 +16445,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the modified photometry_validation"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometryValidation"
                         }
                       }
                     }
@@ -16699,13 +16675,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New photometric series ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometricSeries"
                         }
                       }
                     }
@@ -16818,7 +16788,7 @@
             "name": "rejectedObjectIDs",
             "nullable": true,
             "schema": {
-              "type": "str"
+              "type": "string"
             },
             "description": "Comma-separated string of object IDs not to be returned,\nuseful in cases where you are looking for new objects passing a query.\n"
           },
@@ -17247,10 +17217,7 @@
                           "type": "object",
                           "properties": {
                             "series": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/PhotometricSeries"
-                              }
+                              "$ref": "#/components/schemas/ArrayOfPhotometricSeriess"
                             },
                             "totalMatches": {
                               "type": "integer"
@@ -17412,13 +17379,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New photometric series ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/PhotometricSeries"
                         }
                       }
                     }
@@ -17875,37 +17836,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Shift"
-                            },
-                            "name": {
-                              "type": "string",
-                              "description": "New Shift's name"
-                            },
-                            "start_date": {
-                              "type": "string",
-                              "description": "New Shift's start date"
-                            },
-                            "end_date": {
-                              "type": "string",
-                              "description": "New Shift's end date"
-                            },
-                            "shift_admins": {
-                              "type": "array",
-                              "description": "New Shift's admins IDs"
-                            },
-                            "description": {
-                              "type": "string",
-                              "description": "New Shift's description"
-                            },
-                            "required_users_number": {
-                              "type": "integer",
-                              "description": "The number of users required to join this shift for it to be considered full"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Shift"
                         }
                       }
                     }
@@ -17978,25 +17909,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "shift_id": {
-                              "type": "integer",
-                              "description": "Shift ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            },
-                            "admin": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user is shift admin"
-                            },
-                            "needs_replacement": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether user needs replacement or not"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ShiftUser"
                         }
                       }
                     }
@@ -18217,12 +18130,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryFluxs"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryMags"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Photometry"
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -18628,11 +18549,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -18753,12 +18670,20 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "oneOf": [
+                  "allOf": [
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryFluxs"
+                      "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "$ref": "#/components/schemas/ArrayOfPhotometryMags"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Photometry"
+                          }
+                        }
+                      }
                     }
                   ]
                 }
@@ -18869,6 +18794,16 @@
               "type": "string"
             },
             "description": "The order to sort the spectra by. Defaults to asc.\nOptions are: asc, desc\n"
+          },
+          {
+            "in": "query",
+            "name": "includeOriginalFile",
+            "required": false,
+            "default": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "If true, include the raw uploaded spectrum file\n(original_file_string) in each spectrum. Defaults to false;\nwhen omitted, that field is neither loaded nor returned.\n"
           }
         ],
         "responses": {
@@ -18884,19 +18819,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
-                          }
+                          "$ref": "#/components/schemas/Spectrum"
                         }
                       }
                     }
@@ -19680,18 +19603,23 @@
                       "$ref": "#/components/schemas/Success"
                     },
                     {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "origin": {
-                            "type": "string"
-                          },
-                          "color": {
-                            "type": "number"
-                          },
-                          "abs_mag": {
-                            "type": "number"
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "origin": {
+                                "type": "string"
+                              },
+                              "color": {
+                                "type": "number"
+                              },
+                              "abs_mag": {
+                                "type": "number"
+                              }
+                            }
                           }
                         }
                       }
@@ -21149,7 +21077,7 @@
             "name": "rejectedSourceIDs",
             "nullable": true,
             "schema": {
-              "type": "str"
+              "type": "string"
             },
             "description": "Comma-separated string of object IDs not to be returned, useful in cases where you are looking for new sources passing a query."
           },
@@ -21169,7 +21097,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "types": "string"
+                "type": "string"
               }
             },
             "description": "additional name for the same object"
@@ -21278,7 +21206,7 @@
             "name": "group_ids",
             "nullable": true,
             "schema": {
-              "type": "list",
+              "type": "array",
               "items": {
                 "type": "integer"
               }
@@ -22058,13 +21986,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "description": "New SourceNotification ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SourceNotification"
                         }
                       }
                     }
@@ -22998,7 +22920,10 @@
             "in": "query",
             "name": "filters",
             "schema": {
-              "type": "list"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             },
             "required": true,
             "description": "List of filters\n"
@@ -23060,6 +22985,16 @@
               "type": "ISO UTC date string"
             },
             "description": "Maximum UTC date of range in ISOT format. If None,\nopen ended range.\n"
+          },
+          {
+            "in": "query",
+            "name": "includeOriginalFile",
+            "required": false,
+            "default": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "If true, include the raw uploaded spectrum file\n(original_file_string) in each spectrum. Defaults to false;\nwhen omitted, that field is neither loaded nor returned.\n"
           }
         ],
         "responses": {
@@ -23075,18 +23010,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
                           }
                         }
                       }
@@ -23683,6 +23609,16 @@
               "type": "ISO UTC date string"
             },
             "description": "Maximum UTC date of range in ISOT format. If None,\nopen ended range.\n"
+          },
+          {
+            "in": "query",
+            "name": "includeOriginalFile",
+            "required": false,
+            "default": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "If true, include the raw uploaded spectrum file\n(original_file_string) in each spectrum. Defaults to false;\nwhen omitted, that field is neither loaded nor returned.\n"
           }
         ],
         "responses": {
@@ -23698,18 +23634,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "obj_id": {
-                              "type": "string",
-                              "description": "The ID of the requested Obj"
-                            },
-                            "spectra": {
-                              "type": "array",
-                              "items": {
-                                "$ref": "#/components/schemas/Spectrum"
-                              }
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/Spectrum"
                           }
                         }
                       }
@@ -23779,17 +23706,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "stream_id": {
-                              "type": "integer",
-                              "description": "Stream ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/StreamUser"
                         }
                       }
                     }
@@ -24040,13 +23957,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New stream ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/Stream"
                         }
                       }
                     }
@@ -26086,13 +25997,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New Sharing Service ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/SingleSharingService"
                         }
                       }
                     }
@@ -26793,7 +26698,19 @@
                   "groupIDsAndAdmin": {
                     "type": "array",
                     "items": {
-                      "type": "array"
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "integer"
+                          },
+                          {
+                            "type": "boolean"
+                          }
+                        ]
+                      },
+                      "minItems": 2,
+                      "maxItems": 2
                     },
                     "description": "Array of 2-element arrays `[groupID, admin]` where `groupID`\nis the ID of a group that the new user will be added to and\n`admin` is a boolean indicating whether they will be an admin in\nthat group, e.g. `[[group_id_1, true], [group_id_2, false]]`\n"
                   }
@@ -27558,771 +27475,6 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/filters/{filter_id}": {
-      "get": {
-        "summary": "Get a filter",
-        "description": "Retrieve a filter",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleFilter"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>POST a new filter.",
-        "tags": [
-          "filters"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New filter ID"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update a filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Update filter name",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Delete a filter",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/surveys/{survey}/alerts": {
-      "get": {
-        "summary": "Retrieve alerts from Boom for a given survey",
-        "description": "Retrieve alerts from Boom by objectId (single or comma-separated list),\ncandid, or sky position (ra/dec/radius/radius_units). Positional queries\nand objectId filtering can be combined.\n",
-        "tags": [
-          "alerts",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "survey",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Survey name (e.g. ZTF, LSST)"
-          },
-          {
-            "in": "query",
-            "name": "objectId",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Single objectId or comma-separated list of objectIds"
-          },
-          {
-            "in": "query",
-            "name": "candid",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "Alert candid. Can be combined with objectId."
-          },
-          {
-            "in": "query",
-            "name": "ra",
-            "required": false,
-            "schema": {
-              "type": "number"
-            },
-            "description": "RA in degrees"
-          },
-          {
-            "in": "query",
-            "name": "dec",
-            "required": false,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Declination in degrees"
-          },
-          {
-            "in": "query",
-            "name": "radius",
-            "required": false,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Search radius (capped at 1 deg). Units set by radius_units."
-          },
-          {
-            "in": "query",
-            "name": "radius_units",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "deg",
-                "arcmin",
-                "arcsec"
-              ]
-            },
-            "description": "Units for radius"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "retrieved alert(s)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "object"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/surveys/{survey}/objects/{object_id}": {
-      "get": {
-        "summary": "Retrieve object-level data for an objectId from Boom",
-        "description": "Retrieves object-level auxiliary data for a given objectId from Boom.\nData is fetched from the `<SURVEY>_alerts_aux` collection, which stores\none document per object and contains previous candidates,\nforced-photometry history, non-detections, and cross-matches.\nAlso appends the most recent alert detection(s) from the alerts\ncollection when they are absent from prv_candidates.\n",
-        "tags": [
-          "alerts",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "survey",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Survey name (e.g. ZTF, LSST)"
-          },
-          {
-            "in": "path",
-            "name": "object_id",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "includePrvCandidates",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            },
-            "default": true
-          },
-          {
-            "in": "query",
-            "name": "includeFpHists",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            },
-            "default": true
-          },
-          {
-            "in": "query",
-            "name": "includePrvNondetections",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            },
-            "default": true
-          },
-          {
-            "in": "query",
-            "name": "includeAllFields",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            },
-            "default": false
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "retrieved object-level data",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Import an alert from Boom for a given survey and object ID",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Import an alert from Boom for a given survey and object ID",
-        "tags": [
-          "alerts",
-          "boom"
-        ]
-      }
-    },
-    "/api/boom/surveys/{survey}/alerts/cutouts": {
-      "get": {
-        "summary": "Serve Boom alert cutout(s) as JSON (FITS) or PNG",
-        "description": "When file_format=png (default): renders a single cutout type as a PNG image.\nThe `cutout` parameter is required in this mode.\n\nWhen file_format=fits: fetches all three cutouts from Boom\nand returns the raw payload as JSON (keys: cutoutScience,\ncutoutTemplate, cutoutDifference). No server-side processing is\napplied; the caller receives exactly what Boom returned.\n",
-        "tags": [
-          "alerts",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "survey",
-            "description": "Survey name (e.g. ZTF, LSST)",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "candid",
-            "description": "Alert candid. Mutually exclusive with objectId.",
-            "required": false,
-            "schema": {
-              "type": "integer"
-            }
-          },
-          {
-            "in": "query",
-            "name": "objectId",
-            "description": "Object ID. Mutually exclusive with candid.",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "which",
-            "description": "Which alert to use when querying by objectId.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "first",
-                "last",
-                "brightest",
-                "faintest"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "file_format",
-            "description": "fits (default): return raw Boom JSON with all three cutouts.\npng: render a single cutout as a PNG image (requires `cutout`).\n",
-            "required": false,
-            "default": "png",
-            "schema": {
-              "type": "string",
-              "enum": [
-                "fits",
-                "png"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "cutout",
-            "description": "PNG mode only: which cutout to render.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "science",
-                "template",
-                "difference"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "interval",
-            "description": "PNG mode only: normalisation interval.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "min_max",
-                "zscale"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "stretch",
-            "description": "PNG mode only: stretch function.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "linear",
-                "log",
-                "asinh",
-                "sqrt"
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "cmap",
-            "description": "PNG mode only: colour map.",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "bone",
-                "gray",
-                "cividis",
-                "viridis",
-                "magma"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "retrieved cutout(s)",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object"
-                        }
-                      }
-                    }
-                  ]
-                }
-              },
-              "image/png": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "retrieval failed",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Save or replace cutout thumbnails for an existing source",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Fetches cutout images from Boom for a given alert (identified by\ncandid or objectId + which) and stores them as thumbnails for the\ncorresponding source in SkyPortal. All existing thumbnails of types\nnew/ref/sub for that source are replaced. Returns an error if the\nobject does not already exist as a source.\n",
-        "tags": [
-          "alerts",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "survey",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Survey name (e.g. ZTF, LSST)"
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "objectId"
-                ],
-                "properties": {
-                  "objectId": {
-                    "type": "string",
-                    "description": "Object ID of the existing source"
-                  },
-                  "candid": {
-                    "type": "integer",
-                    "description": "Alert candid to use for the cutout. Mutually exclusive with `which`.\n"
-                  },
-                  "which": {
-                    "type": "string",
-                    "enum": [
-                      "first",
-                      "last",
-                      "brightest",
-                      "faintest"
-                    ],
-                    "default": "last",
-                    "description": "When querying by objectId, which alert to use. Ignored when `candid` is provided.\n"
-                  },
-                  "band": {
-                    "type": "string",
-                    "description": "Optional band filter (e.g. g, r, i for LSST)"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/archive/catalogs": {
-      "get": {
-        "summary": "List non-survey catalog names available in Boom",
-        "description": "Returns the cached list of reference catalog names from Boom\n(i.e. all catalogs whose names do not start with a known survey\nprefix such as ZTF_, LSST_, PTF_, PGIR_, or WNTR_).\nThe list is refreshed automatically every hour.\n",
-        "tags": [
-          "archive",
-          "boom"
-        ],
-        "responses": {
-          "200": {
-            "description": "list of catalog names",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/archive/cross_match": {
-      "get": {
-        "summary": "Cross-match a position against all reference catalogs in Boom",
-        "description": "Retrieves the cached list of non-survey catalogs from Boom (refreshed\nevery hour), then runs a positional cone-search against every reference\ncatalog in parallel.\n",
-        "tags": [
-          "archive",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "ra",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "RA in degrees (0 \u2264 RA < 360)"
-          },
-          {
-            "in": "query",
-            "name": "dec",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Declination in degrees (-90 \u2264 Dec \u2264 90)"
-          },
-          {
-            "in": "query",
-            "name": "radius",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Search radius, capped at 1 deg. Units set by radius_units."
-          },
-          {
-            "in": "query",
-            "name": "radius_units",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "deg",
-                "arcmin",
-                "arcsec"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "cross-matched sources keyed by catalog name",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object"
-                        }
-                      }
-                    }
-                  ]
                 }
               }
             }
@@ -61850,7 +61002,7 @@
                 }
               }
             ],
-            "description": "The bandpass of the observation(s). Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Null values not allowed. Allowed values: `bessellux`, `bessellb`, `bessellv`, `bessellr`, `besselli`, `standard::u`, `standard::b`, `standard::v`, `standard::r`, `standard::i`, `desu`, `desg`, `desr`, `desi`, `desz`, `desy`, `sdssu`, `sdssg`, `sdssr`, `sdssi`, `sdssz`, `f435w`, `f475w`, `f555w`, `f606w`, `f625w`, `f775w`, `f850lp`, `nicf110w`, `nicf160w`, `f098m`, `f105w`, `f110w`, `f125w`, `f127m`, `f139m`, `f140w`, `f153m`, `f160w`, `f218w`, `f225w`, `f275w`, `f300x`, `f336w`, `f350lp`, `f390w`, `f689m`, `f763m`, `f845m`, `f438w`, `uvf475w`, `uvf555w`, `uvf606w`, `uvf625w`, `uvf775w`, `uvf814w`, `uvf850lp`, `kepler`, `cspb`, `csphs`, `csphd`, `cspjs`, `cspjd`, `cspv3009`, `cspv3014`, `cspv9844`, `cspys`, `cspyd`, `cspg`, `cspi`, `cspk`, `cspr`, `cspu`, `f070w`, `f090w`, `f115w`, `f150w`, `f200w`, `f277w`, `f356w`, `f444w`, `f140m`, `f162m`, `f182m`, `f210m`, `f250m`, `f300m`, `f335m`, `f360m`, `f410m`, `f430m`, `f460m`, `f480m`, `f560w`, `f770w`, `f1000w`, `f1130w`, `f1280w`, `f1500w`, `f1800w`, `f2100w`, `f2550w`, `f1065c`, `f1140c`, `f1550c`, `f2300c`, `lsstu`, `lsstg`, `lsstr`, `lssti`, `lsstz`, `lssty`, `keplercam::us`, `keplercam::b`, `keplercam::v`, `keplercam::r`, `keplercam::i`, `4shooter2::us`, `4shooter2::b`, `4shooter2::v`, `4shooter2::r`, `4shooter2::i`, `f062`, `f087`, `f106`, `f129`, `f158`, `f184`, `f213`, `f146`, `ztfg`, `ztfr`, `ztfi`, `uvot::b`, `uvot::u`, `uvot::uvm2`, `uvot::uvw1`, `uvot::uvw2`, `uvot::v`, `uvot::white`, `ps1::open`, `ps1::g`, `ps1::r`, `ps1::i`, `ps1::z`, `ps1::y`, `ps1::w`, `atlasc`, `atlaso`, `2massj`, `2massh`, `2massks`, `gaia::gbp`, `gaia::g`, `gaia::grp`, `gaia::grvs`, `tess`, `galex::fuv`, `galex::nuv`, `gotob`, `gotog`, `gotol`, `gotor`, `skymapperu`, `skymapperg`, `skymapperr`, `skymapperi`, `skymapperz`, `ztf::g`, `ztf::r`, `ztf::i`, `megacam6::g`, `megacam6::r`, `megacam6::i`, `megacam6::i2`, `megacam6::z`, `hsc::g`, `hsc::r`, `hsc::r2`, `hsc::i`, `hsc::i2`, `hsc::z`, `hsc::y`, `swiftxrt`, `nicerxti`"
+            "description": "The bandpass of the observation(s). Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Null values not allowed. Allowed values: `bessellux`, `bessellb`, `bessellv`, `bessellr`, `besselli`, `standard::u`, `standard::b`, `standard::v`, `standard::r`, `standard::i`, `desu`, `desg`, `desr`, `desi`, `desz`, `desy`, `sdssu`, `sdssg`, `sdssr`, `sdssi`, `sdssz`, `f435w`, `f475w`, `f555w`, `f606w`, `f625w`, `f775w`, `f850lp`, `nicf110w`, `nicf160w`, `f098m`, `f105w`, `f110w`, `f125w`, `f127m`, `f139m`, `f140w`, `f153m`, `f160w`, `f218w`, `f225w`, `f275w`, `f300x`, `f336w`, `f350lp`, `f390w`, `f689m`, `f763m`, `f845m`, `f438w`, `uvf475w`, `uvf555w`, `uvf606w`, `uvf625w`, `uvf775w`, `uvf814w`, `uvf850lp`, `kepler`, `cspb`, `csphs`, `csphd`, `cspjs`, `cspjd`, `cspv3009`, `cspv3014`, `cspv9844`, `cspys`, `cspyd`, `cspg`, `cspi`, `cspk`, `cspr`, `cspu`, `f070w`, `f090w`, `f115w`, `f150w`, `f200w`, `f277w`, `f356w`, `f444w`, `f140m`, `f162m`, `f182m`, `f210m`, `f250m`, `f300m`, `f335m`, `f360m`, `f410m`, `f430m`, `f460m`, `f480m`, `f560w`, `f770w`, `f1000w`, `f1130w`, `f1280w`, `f1500w`, `f1800w`, `f2100w`, `f2550w`, `f1065c`, `f1140c`, `f1550c`, `f2300c`, `lsstu`, `lsstg`, `lsstr`, `lssti`, `lsstz`, `lssty`, `keplercam::us`, `keplercam::b`, `keplercam::v`, `keplercam::r`, `keplercam::i`, `4shooter2::us`, `4shooter2::b`, `4shooter2::v`, `4shooter2::r`, `4shooter2::i`, `f062`, `f087`, `f106`, `f129`, `f158`, `f184`, `f213`, `f146`, `ztfg`, `ztfr`, `ztfi`, `uvot::b`, `uvot::u`, `uvot::uvm2`, `uvot::uvw1`, `uvot::uvw2`, `uvot::v`, `uvot::white`, `ps1::open`, `ps1::g`, `ps1::r`, `ps1::i`, `ps1::z`, `ps1::y`, `ps1::w`, `atlasc`, `atlaso`, `2massj`, `2massh`, `2massks`, `gaia::gbp`, `gaia::g`, `gaia::grp`, `gaia::grvs`, `tess`, `galex::fuv`, `galex::nuv`, `gotob`, `gotog`, `gotol`, `gotor`, `skymapperu`, `skymapperg`, `skymapperr`, `skymapperi`, `skymapperz`, `ztf::g`, `ztf::r`, `ztf::i`, `megacam6::g`, `megacam6::r`, `megacam6::i`, `megacam6::i2`, `megacam6::z`, `hsc::g`, `hsc::r`, `hsc::r2`, `hsc::i`, `hsc::i2`, `hsc::z`, `hsc::y`"
           },
           "obj_id": {
             "oneOf": [
@@ -62161,7 +61313,7 @@
                 }
               }
             ],
-            "description": "The bandpass of the observation(s). Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Null values not allowed. Allowed values: `bessellux`, `bessellb`, `bessellv`, `bessellr`, `besselli`, `standard::u`, `standard::b`, `standard::v`, `standard::r`, `standard::i`, `desu`, `desg`, `desr`, `desi`, `desz`, `desy`, `sdssu`, `sdssg`, `sdssr`, `sdssi`, `sdssz`, `f435w`, `f475w`, `f555w`, `f606w`, `f625w`, `f775w`, `f850lp`, `nicf110w`, `nicf160w`, `f098m`, `f105w`, `f110w`, `f125w`, `f127m`, `f139m`, `f140w`, `f153m`, `f160w`, `f218w`, `f225w`, `f275w`, `f300x`, `f336w`, `f350lp`, `f390w`, `f689m`, `f763m`, `f845m`, `f438w`, `uvf475w`, `uvf555w`, `uvf606w`, `uvf625w`, `uvf775w`, `uvf814w`, `uvf850lp`, `kepler`, `cspb`, `csphs`, `csphd`, `cspjs`, `cspjd`, `cspv3009`, `cspv3014`, `cspv9844`, `cspys`, `cspyd`, `cspg`, `cspi`, `cspk`, `cspr`, `cspu`, `f070w`, `f090w`, `f115w`, `f150w`, `f200w`, `f277w`, `f356w`, `f444w`, `f140m`, `f162m`, `f182m`, `f210m`, `f250m`, `f300m`, `f335m`, `f360m`, `f410m`, `f430m`, `f460m`, `f480m`, `f560w`, `f770w`, `f1000w`, `f1130w`, `f1280w`, `f1500w`, `f1800w`, `f2100w`, `f2550w`, `f1065c`, `f1140c`, `f1550c`, `f2300c`, `lsstu`, `lsstg`, `lsstr`, `lssti`, `lsstz`, `lssty`, `keplercam::us`, `keplercam::b`, `keplercam::v`, `keplercam::r`, `keplercam::i`, `4shooter2::us`, `4shooter2::b`, `4shooter2::v`, `4shooter2::r`, `4shooter2::i`, `f062`, `f087`, `f106`, `f129`, `f158`, `f184`, `f213`, `f146`, `ztfg`, `ztfr`, `ztfi`, `uvot::b`, `uvot::u`, `uvot::uvm2`, `uvot::uvw1`, `uvot::uvw2`, `uvot::v`, `uvot::white`, `ps1::open`, `ps1::g`, `ps1::r`, `ps1::i`, `ps1::z`, `ps1::y`, `ps1::w`, `atlasc`, `atlaso`, `2massj`, `2massh`, `2massks`, `gaia::gbp`, `gaia::g`, `gaia::grp`, `gaia::grvs`, `tess`, `galex::fuv`, `galex::nuv`, `gotob`, `gotog`, `gotol`, `gotor`, `skymapperu`, `skymapperg`, `skymapperr`, `skymapperi`, `skymapperz`, `ztf::g`, `ztf::r`, `ztf::i`, `megacam6::g`, `megacam6::r`, `megacam6::i`, `megacam6::i2`, `megacam6::z`, `hsc::g`, `hsc::r`, `hsc::r2`, `hsc::i`, `hsc::i2`, `hsc::z`, `hsc::y`, `swiftxrt`, `nicerxti`"
+            "description": "The bandpass of the observation(s). Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Null values not allowed. Allowed values: `bessellux`, `bessellb`, `bessellv`, `bessellr`, `besselli`, `standard::u`, `standard::b`, `standard::v`, `standard::r`, `standard::i`, `desu`, `desg`, `desr`, `desi`, `desz`, `desy`, `sdssu`, `sdssg`, `sdssr`, `sdssi`, `sdssz`, `f435w`, `f475w`, `f555w`, `f606w`, `f625w`, `f775w`, `f850lp`, `nicf110w`, `nicf160w`, `f098m`, `f105w`, `f110w`, `f125w`, `f127m`, `f139m`, `f140w`, `f153m`, `f160w`, `f218w`, `f225w`, `f275w`, `f300x`, `f336w`, `f350lp`, `f390w`, `f689m`, `f763m`, `f845m`, `f438w`, `uvf475w`, `uvf555w`, `uvf606w`, `uvf625w`, `uvf775w`, `uvf814w`, `uvf850lp`, `kepler`, `cspb`, `csphs`, `csphd`, `cspjs`, `cspjd`, `cspv3009`, `cspv3014`, `cspv9844`, `cspys`, `cspyd`, `cspg`, `cspi`, `cspk`, `cspr`, `cspu`, `f070w`, `f090w`, `f115w`, `f150w`, `f200w`, `f277w`, `f356w`, `f444w`, `f140m`, `f162m`, `f182m`, `f210m`, `f250m`, `f300m`, `f335m`, `f360m`, `f410m`, `f430m`, `f460m`, `f480m`, `f560w`, `f770w`, `f1000w`, `f1130w`, `f1280w`, `f1500w`, `f1800w`, `f2100w`, `f2550w`, `f1065c`, `f1140c`, `f1550c`, `f2300c`, `lsstu`, `lsstg`, `lsstr`, `lssti`, `lsstz`, `lssty`, `keplercam::us`, `keplercam::b`, `keplercam::v`, `keplercam::r`, `keplercam::i`, `4shooter2::us`, `4shooter2::b`, `4shooter2::v`, `4shooter2::r`, `4shooter2::i`, `f062`, `f087`, `f106`, `f129`, `f158`, `f184`, `f213`, `f146`, `ztfg`, `ztfr`, `ztfi`, `uvot::b`, `uvot::u`, `uvot::uvm2`, `uvot::uvw1`, `uvot::uvw2`, `uvot::v`, `uvot::white`, `ps1::open`, `ps1::g`, `ps1::r`, `ps1::i`, `ps1::z`, `ps1::y`, `ps1::w`, `atlasc`, `atlaso`, `2massj`, `2massh`, `2massks`, `gaia::gbp`, `gaia::g`, `gaia::grp`, `gaia::grvs`, `tess`, `galex::fuv`, `galex::nuv`, `gotob`, `gotog`, `gotol`, `gotor`, `skymapperu`, `skymapperg`, `skymapperr`, `skymapperi`, `skymapperz`, `ztf::g`, `ztf::r`, `ztf::i`, `megacam6::g`, `megacam6::r`, `megacam6::i`, `megacam6::i2`, `megacam6::z`, `hsc::g`, `hsc::r`, `hsc::r2`, `hsc::i`, `hsc::i2`, `hsc::z`, `hsc::y`"
           },
           "obj_id": {
             "oneOf": [
@@ -63238,9 +62390,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "maxLength": 13,
             "description": "Filter with which the observation was taken.",
@@ -63762,9 +62912,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "maxLength": 13,
             "description": "Filter with which the observation was taken.",
@@ -64291,9 +63439,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "maxLength": 13,
             "description": "Filter with which the observation was taken.",
@@ -64631,9 +63777,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "type": "string"
           },
@@ -65011,9 +64155,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "type": "string"
           },
@@ -65444,9 +64586,7 @@
               "hsc::i",
               "hsc::i2",
               "hsc::z",
-              "hsc::y",
-              "swiftxrt",
-              "nicerxti"
+              "hsc::y"
             ],
             "maxLength": 13,
             "description": "Filter with which the observation was taken.",
@@ -77998,32 +77138,6 @@
           "json": {
             "type": "string",
             "description": "JSON notice content."
-          }
-        },
-        "additionalProperties": false
-      },
-      "LocalizationHandlerGet": {
-        "type": "object",
-        "properties": {
-          "localization_name": {
-            "type": "string",
-            "description": "Localization name"
-          },
-          "dateobs": {
-            "type": "string",
-            "description": "UTC event timestamp"
-          },
-          "flat_2d": {
-            "type": "array",
-            "description": "Flattened 2D healpix map",
-            "items": {
-              "type": "number"
-            }
-          },
-          "contour": {
-            "type": "object",
-            "description": "GeoJSON contours of healpix map",
-            "additionalProperties": {}
           }
         },
         "additionalProperties": false
