@@ -1063,7 +1063,7 @@
         }
       }
     },
-    "/api/{analysis_resource_type}/{analysis_id}/analysis": {
+    "/api/{analysis_resource_type}/{obj_id_path}/analysis/{analysis_id}": {
       "get": {
         "summary": "Get an Analysis by id",
         "description": "Retrieve an Analysis by id",
@@ -1155,37 +1155,9 @@
             }
           }
         }
-      },
-      "delete": {
-        "summary": "Delete an Analysis.",
-        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
-        "tags": [
-          "analysis"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "analysis_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          }
-        }
       }
     },
-    "/api/{analysis_resource_type}/{analysis_id}": {
+    "/api/{analysis_resource_type}/{obj_id_path}/analysis": {
       "get": {
         "summary": "Get all Analyses",
         "description": "Retrieve all Analyses",
@@ -1322,7 +1294,37 @@
         }
       }
     },
-    "/api/{analysis_resource_type}/analysis/{analysis_id}": {
+    "/api/{analysis_resource_type}/{analysis_id}/analysis": {
+      "delete": {
+        "summary": "Delete an Analysis.",
+        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
+        "tags": [
+          "analysis"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/{analysis_resource_type}/analysis/{obj_id_path}": {
       "get": {
         "summary": "Get an Analysis by id",
         "description": "Retrieve an Analysis by id",
@@ -1409,34 +1411,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete an Analysis.",
-        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
-        "tags": [
-          "analysis"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "analysis_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -1581,6 +1555,36 @@
         }
       }
     },
+    "/api/{analysis_resource_type}/analysis/{analysis_id}": {
+      "delete": {
+        "summary": "Delete an Analysis.",
+        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
+        "tags": [
+          "analysis"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/{analysis_resource_type}/analysis/{analysis_id}/{product_type}/{plot_number}": {
       "get": {
         "summary": "Get analysis products",
@@ -1613,7 +1617,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "What type of data to retrieve:\nmust be one of \"corner\", \"results\", or \"plot\"\n"
+            "description": "What type of data to retrieve:\nmust be one of \"results\" or \"plot\"\n"
           },
           {
             "in": "path",
@@ -9018,24 +9022,9 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "the id of the confirmed_source_in_gcn"
-                            },
-                            "obj_id": {
-                              "type": "string",
-                              "description": "the source_id of the source"
-                            },
-                            "dateobs": {
-                              "type": "string",
-                              "description": "dateobs of the GCN evn"
-                            },
-                            "confirmed": {
-                              "type": "boolean",
-                              "description": "Boolean indicating whether the source is confirmed (True) or rejected (False)"
-                            }
+                          "type": "array",
+                          "items": {
+                            "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                           }
                         }
                       }
@@ -9346,22 +9335,7 @@
                         "data": {
                           "type": "array",
                           "items": {
-                            "id": {
-                              "type": "integer",
-                              "description": "the id of the confirmed_source_in_gcn"
-                            },
-                            "obj_id": {
-                              "type": "string",
-                              "description": "the source_id of the source"
-                            },
-                            "dateobs": {
-                              "type": "string",
-                              "description": "dateobs of the GCN evn"
-                            },
-                            "confirmed": {
-                              "type": "boolean",
-                              "description": "Whether the source is confirmed (True) or rejected (False)"
-                            }
+                            "$ref": "#/components/schemas/SourcesConfirmedInGCN"
                           }
                         }
                       }
@@ -13813,7 +13787,30 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArrayOfExecutedObservations"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "observations": {
+                              "type": "array",
+                              "items": {
+                                "$ref": "#/components/schemas/ExecutedObservation"
+                              }
+                            },
+                            "totalMatches": {
+                              "type": "integer"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
