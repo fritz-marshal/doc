@@ -2177,6 +2177,83 @@
         }
       }
     },
+    "/api/candidates/bulk_delete": {
+      "post": {
+        "summary": "Bulk-delete old, unsaved candidates",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Delete objects that appear as candidates, are not currently saved as\nan active source in any group, and whose most recent candidate\n`passed_at` is older than `maxAgeMonths`. Deleting the object cascades\nto its candidates, photometry, annotations, thumbnails, etc. System\nadmin only. Intended to be driven periodically via the Recurring API.\n",
+        "tags": [
+          "candidates"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "maxAgeMonths": {
+                    "type": "integer",
+                    "description": "Delete objects whose most recent candidate `passed_at` is\nolder than this many months. Defaults to 6.\n"
+                  },
+                  "batchSize": {
+                    "type": "integer",
+                    "description": "Maximum number of objects to delete in this call (deleted\noldest-first). Defaults to 1000.\n"
+                  },
+                  "dryRun": {
+                    "type": "boolean",
+                    "description": "If true, only report how many objects would be deleted,\nwithout deleting anything. Defaults to false.\n"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "deleted": {
+                              "type": "integer",
+                              "description": "Number of objects deleted in this call."
+                            },
+                            "remaining": {
+                              "type": "integer",
+                              "description": "Number of matching objects still to delete."
+                            },
+                            "dryRun": {
+                              "type": "boolean"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/candidates/{obj_id}": {
       "head": {
         "summary": "Check if a Candidate exists",
@@ -10335,6 +10412,85 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/phot_stats/aggregate": {
+      "get": {
+        "summary": "Bulk photometry statistics for plotting",
+        "description": "Return a compact set of PhotStat scalar fields across many accessible\nsources, optionally down-selected by classification, for bulk\nvisualization (e.g. plotting peak magnitude against rise rate for all\nsources classified as SN Ia). Each source is colored by its\nhighest-probability classification. Call without xField/yField to get\nthe list of plottable fields only.\n",
+        "tags": [
+          "photometry"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "xField",
+            "schema": {
+              "type": "string"
+            },
+            "description": "PhotStat field for the x axis (see the returned `fields`)."
+          },
+          {
+            "in": "query",
+            "name": "yField",
+            "schema": {
+              "type": "string"
+            },
+            "description": "PhotStat field for the y axis."
+          },
+          {
+            "in": "query",
+            "name": "zField",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Optional PhotStat field for a third (z) axis."
+          },
+          {
+            "in": "query",
+            "name": "classifications",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated classification names to down-select sources\n(matches any). Omit to include all accessible sources.\n"
+          },
+          {
+            "in": "query",
+            "name": "classificationProbThreshold",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Only count classifications at or above this probability."
+          },
+          {
+            "in": "query",
+            "name": "maxMatches",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Maximum number of points to return (default 20000, capped at\n100000). If more match, the response is truncated.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -19311,6 +19467,22 @@
           },
           {
             "in": "query",
+            "name": "mag_min",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Brightest (smallest) offset-star magnitude to allow. Defaults to the\nfacility value when omitted.\n"
+          },
+          {
+            "in": "query",
+            "name": "mag_limit",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Faintest (largest) offset-star magnitude to allow. Defaults to the\nfacility value when omitted.\n"
+          },
+          {
+            "in": "query",
             "name": "as_json",
             "schema": {
               "type": "boolean"
@@ -19364,6 +19536,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/finder_chart/facilities": {
+      "get": {
+        "summary": "Get finding chart facility parameters",
+        "description": "Retrieve the per-facility default parameters used to generate finding\ncharts (offset-star magnitude range, search radius, minimum\nseparation). Used by the frontend to populate the finder-chart form.\n",
+        "tags": [
+          "sources",
+          "finding chart"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "description": "Object keyed by facility name; each value holds\nradius_degrees, mag_limit (faint end), mag_min\n(bright end), and min_sep_arcsec."
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -21355,6 +21561,15 @@
               "type": "string"
             },
             "description": "Only return sources that were saved after this UTC datetime.\n"
+          },
+          {
+            "in": "query",
+            "name": "savedByCurrentUser",
+            "nullable": true,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Only return sources that were saved by the requesting user.\n"
           },
           {
             "in": "query",
@@ -23760,7 +23975,7 @@
     "/api/streams/{stream_id}/users": {
       "post": {
         "summary": "Grant stream access to a user",
-        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Grant stream access to a user",
+        "description": "Grant stream access to a user. System admins may add any user; a\nnon-admin user may add only themselves, and only to an auto-join\nstream.\n",
         "tags": [
           "streams",
           "users"
@@ -24639,6 +24854,195 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams/{team_id}": {
+      "get": {
+        "summary": "Get a team",
+        "description": "Retrieve a team, its groups, and its derived member roster",
+        "tags": [
+          "teams"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "team_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a team",
+        "description": "<b>Permission(s) required:</b> <em>Manage teams (or System admin)</em><br><br>Update a team's fields and/or its set of groups. When `group_ids` is\nprovided it replaces the team's groups; the user must be an admin of\neach group added or removed.\n",
+        "tags": [
+          "teams"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "team_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a team",
+        "description": "<b>Permission(s) required:</b> <em>Manage teams (or System admin)</em><br><br>Delete a team (does not affect its groups or their data)",
+        "tags": [
+          "teams"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "team_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/teams": {
+      "get": {
+        "summary": "Get all accessible teams",
+        "description": "Retrieve all teams the current user can access",
+        "tags": [
+          "teams"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new team",
+        "description": "<b>Permission(s) required:</b> <em>Manage teams (or System admin)</em><br><br>Create a team from a set of existing groups. The current user must be\nan admin of each group added to the team.\n",
+        "tags": [
+          "teams"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "group_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -40841,6 +41245,13 @@
               "$ref": "#/components/schemas/Filter"
             }
           },
+          "teams": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/Team"
+            }
+          },
           "shifts": {
             "type": "array",
             "readOnly": true,
@@ -40963,6 +41374,10 @@
           "private": {
             "type": "boolean",
             "description": "Boolean indicating whether group is invisible to non-members."
+          },
+          "auto_accept_requests": {
+            "type": "boolean",
+            "description": "Boolean indicating whether requests to join the group are automatically accepted."
           },
           "single_user_group": {
             "type": "boolean",
@@ -43506,6 +43921,13 @@
               "$ref": "#/components/schemas/Filter"
             }
           },
+          "teams": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/Team"
+            }
+          },
           "shifts": {
             "type": "array",
             "readOnly": true,
@@ -43628,6 +44050,10 @@
           "private": {
             "type": "boolean",
             "description": "Boolean indicating whether group is invisible to non-members."
+          },
+          "auto_accept_requests": {
+            "type": "boolean",
+            "description": "Boolean indicating whether requests to join the group are automatically accepted."
           },
           "single_user_group": {
             "type": "boolean",
@@ -46622,6 +47048,164 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/GroupTaxonomyNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "GroupTeam": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              }
+            ],
+            "readOnly": true
+          },
+          "team": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Team"
+              }
+            ],
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "group_id",
+          "team_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleGroupTeam": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GroupTeam"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfGroupTeams": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupTeam"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "GroupTeamNoID": {
+        "type": "object",
+        "properties": {
+          "group": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              }
+            ],
+            "readOnly": true
+          },
+          "team": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Team"
+              }
+            ],
+            "readOnly": true
+          },
+          "group_id": {
+            "type": "integer"
+          },
+          "team_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "group_id",
+          "team_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleGroupTeamNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/GroupTeamNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfGroupTeamNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GroupTeamNoID"
             }
           }
         },
@@ -64117,6 +64701,10 @@
               "$ref": "#/components/schemas/PhotometryValidation"
             }
           },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          },
           "mjd": {
             "type": "number",
             "description": "MJD of the observation."
@@ -64388,10 +64976,6 @@
           "dec": {
             "type": "number",
             "nullable": true
-          },
-          "id": {
-            "type": "integer",
-            "description": "Unique object identifier."
           }
         },
         "required": [
@@ -73222,6 +73806,10 @@
             "type": "object",
             "additionalProperties": true
           },
+          "auto_join": {
+            "type": "boolean",
+            "description": "Boolean indicating whether any user may add themselves to this stream. Auto-join streams are visible to all users."
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -73489,6 +74077,10 @@
             "nullable": true,
             "type": "object",
             "additionalProperties": true
+          },
+          "auto_join": {
+            "type": "boolean",
+            "description": "Boolean indicating whether any user may add themselves to this stream. Auto-join streams are visible to all users."
           }
         },
         "required": [
@@ -74977,6 +75569,200 @@
         ],
         "additionalProperties": false
       },
+      "Team": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the team."
+          },
+          "nickname": {
+            "type": "string",
+            "description": "Short team nickname.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Longer description of the team.",
+            "nullable": true
+          },
+          "primary_color": {
+            "type": "string",
+            "description": "Hex color used to theme the app banner when this team is active.",
+            "nullable": true
+          },
+          "secondary_color": {
+            "type": "string",
+            "description": "Hex accent color for this team's theme.",
+            "nullable": true
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "URL of a logo shown in place of the SkyPortal logo when active.",
+            "nullable": true
+          },
+          "background_url": {
+            "type": "string",
+            "description": "URL of a background image for this team.",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "SingleTeam": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/Team"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfTeams": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Team"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "TeamNoID": {
+        "type": "object",
+        "properties": {
+          "groups": {
+            "type": "array",
+            "readOnly": true,
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the team."
+          },
+          "nickname": {
+            "type": "string",
+            "description": "Short team nickname.",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "description": "Longer description of the team.",
+            "nullable": true
+          },
+          "primary_color": {
+            "type": "string",
+            "description": "Hex color used to theme the app banner when this team is active.",
+            "nullable": true
+          },
+          "secondary_color": {
+            "type": "string",
+            "description": "Hex accent color for this team's theme.",
+            "nullable": true
+          },
+          "logo_url": {
+            "type": "string",
+            "description": "URL of a logo shown in place of the SkyPortal logo when active.",
+            "nullable": true
+          },
+          "background_url": {
+            "type": "string",
+            "description": "URL of a background image for this team.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "SingleTeamNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/TeamNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfTeamNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeamNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
       "Telescope": {
         "type": "object",
         "properties": {
@@ -75218,12 +76004,16 @@
               "dr8",
               "ls",
               "ps1",
+              "sm",
+              "hst",
+              "chandra",
+              "jwst",
               "new_gz",
               "ref_gz",
               "sub_gz",
               null
             ],
-            "maxLength": 6,
+            "maxLength": 7,
             "description": "Thumbnail type (e.g., ref, new, sub, ls, ps1, ...)",
             "nullable": true,
             "type": "string"
@@ -75249,7 +76039,8 @@
           },
           "is_grayscale": {
             "type": "boolean",
-            "description": "Boolean indicating whether the thumbnail is (mostly) grayscale or not."
+            "description": "Whether the thumbnail is (mostly) grayscale. NULL until a remote (public_url-only) thumbnail is classified by the thumbnail_queue service.",
+            "nullable": true
           },
           "id": {
             "type": "integer",
@@ -75327,12 +76118,16 @@
               "dr8",
               "ls",
               "ps1",
+              "sm",
+              "hst",
+              "chandra",
+              "jwst",
               "new_gz",
               "ref_gz",
               "sub_gz",
               null
             ],
-            "maxLength": 6,
+            "maxLength": 7,
             "description": "Thumbnail type (e.g., ref, new, sub, ls, ps1, ...)",
             "nullable": true,
             "type": "string"
@@ -75358,7 +76153,8 @@
           },
           "is_grayscale": {
             "type": "boolean",
-            "description": "Boolean indicating whether the thumbnail is (mostly) grayscale or not."
+            "description": "Whether the thumbnail is (mostly) grayscale. NULL until a remote (public_url-only) thumbnail is classified by the thumbnail_queue service.",
+            "nullable": true
           }
         },
         "required": [
