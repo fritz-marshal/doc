@@ -2375,6 +2375,84 @@
         }
       }
     },
+    "/api/brokers/{broker_id}/cone_search": {
+      "get": {
+        "summary": "Cross-match a position against a broker's archival catalogs",
+        "description": "Positional cone-search against a broker's reference catalogs (e.g. Gaia, PS1, AllWISE), dispatched to the broker's provider. Returns matched sources keyed by catalog name.",
+        "tags": [
+          "brokers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "broker_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ra",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "RA in degrees (0 <= ra < 360)."
+          },
+          {
+            "in": "query",
+            "name": "dec",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "Declination in degrees (-90 <= dec <= 90)."
+          },
+          {
+            "in": "query",
+            "name": "radius",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "radius_units",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "deg",
+                "arcmin",
+                "arcsec"
+              ],
+              "default": "arcsec"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/brokers/{broker_id}/alerts/{alert_id}/photometry": {
       "get": {
         "summary": "Display photometry for an object (DB + on-demand broker)",
@@ -29627,137 +29705,6 @@
         },
         "responses": {
           "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object"
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/archive/catalogs": {
-      "get": {
-        "summary": "List non-survey catalog names available in Boom",
-        "description": "Returns the cached list of reference catalog names from Boom\n(i.e. all catalogs whose names do not start with a known survey\nprefix such as ZTF_, LSST_, PTF_, PGIR_, or WNTR_).\nThe list is refreshed automatically every hour.\n",
-        "tags": [
-          "archive",
-          "boom"
-        ],
-        "responses": {
-          "200": {
-            "description": "list of catalog names",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "array",
-                          "items": {
-                            "type": "string"
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/boom/archive/cross_match": {
-      "get": {
-        "summary": "Cross-match a position against all reference catalogs in Boom",
-        "description": "Retrieves the cached list of non-survey catalogs from Boom (refreshed\nevery hour), then runs a positional cone-search against every reference\ncatalog in parallel.\n",
-        "tags": [
-          "archive",
-          "boom"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "ra",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "RA in degrees (0 \u2264 RA < 360)"
-          },
-          {
-            "in": "query",
-            "name": "dec",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Declination in degrees (-90 \u2264 Dec \u2264 90)"
-          },
-          {
-            "in": "query",
-            "name": "radius",
-            "required": true,
-            "schema": {
-              "type": "number"
-            },
-            "description": "Search radius, capped at 1 deg. Units set by radius_units."
-          },
-          {
-            "in": "query",
-            "name": "radius_units",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "enum": [
-                "deg",
-                "arcmin",
-                "arcsec"
-              ]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "cross-matched sources keyed by catalog name",
             "content": {
               "application/json": {
                 "schema": {
