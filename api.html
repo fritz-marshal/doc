@@ -28328,6 +28328,69 @@
         }
       }
     },
+    "/api/boom/surveys/{survey}/objects/{object_id}/photometry": {
+      "get": {
+        "summary": "Display photometry for an object (DB + on-demand broker)",
+        "description": "Return an object's photometry for display: the persisted,\naccess-controlled photometry from the database merged with photometry\nfetched on demand from the broker (deduped by instrument/filter/mjd,\nso the broker only augments saved points). The broker half is held in\na Valkey read-through cache keyed by the object and the requester's\naccess scope, and is never written to the database.\n",
+        "tags": [
+          "photometry",
+          "boom"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "survey",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "object_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/boom/surveys/{survey}/objects/{object_id}": {
       "get": {
         "summary": "Retrieve object-level data for an objectId from Boom",
