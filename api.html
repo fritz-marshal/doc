@@ -1980,6 +1980,53 @@
         }
       }
     },
+    "/api/brokers/{broker_id}/filters/{filter_id}/validate": {
+      "post": {
+        "summary": "Validate a broker filter version for activation",
+        "description": "Run the broker's activation validation for a filter version without changing state, and record the result on the filter so it can be activated (skyportal gates activation on this).",
+        "tags": [
+          "brokers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "broker_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/brokers/{broker_id}/filter_modules/{name})?": {
       "get": {
         "summary": "Broker filter-building vocabulary",
@@ -11469,6 +11516,22 @@
               "type": "number"
             },
             "description": "Only count classifications at or above this probability."
+          },
+          {
+            "in": "query",
+            "name": "group_id",
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Restrict to sources saved to this group (an alternative to\nclassification-based selection).\n"
+          },
+          {
+            "in": "query",
+            "name": "obj_ids",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated object IDs to restrict to (an alternative to\nclassification-based selection).\n"
           },
           {
             "in": "query",
@@ -23706,6 +23769,72 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/spectra/bulk": {
+      "post": {
+        "summary": "Bulk spectra for a set of sources",
+        "description": "Return slim spectra (wavelengths/fluxes/observed_at) plus per-source\nphase anchors (redshift, first-detection and peak MJD, TNS discovery\ndate) for a set of accessible sources selected by group, explicit\nobject list, and/or classification. Powers the phase-stacked spectra\nview without one request per source.\n",
+        "tags": [
+          "spectra"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "group_id": {
+                    "type": "integer",
+                    "description": "Restrict to sources saved to this group."
+                  },
+                  "obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Restrict to these object IDs (also accepts a comma-separated string)."
+                  },
+                  "classifications": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Restrict to sources with any of these (non-ML) classifications."
+                  },
+                  "classificationProbThreshold": {
+                    "type": "number",
+                    "description": "Only count classifications at or above this probability."
+                  },
+                  "maxSources": {
+                    "type": "integer",
+                    "description": "Max sources to fetch spectra for (default 200, capped at 1000)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -63186,7 +63315,7 @@
             "items": {
               "type": "integer"
             },
-            "description": "List of group IDs to which photometry points will be visible. If 'all', will be shared with site-wide public group (visible to all users who can view associated source)."
+            "description": "List of group IDs to which photometry points will be visible. If 'all', will be shared with sitewide public group (visible to all users who can view associated source)."
           },
           "stream_ids": {
             "type": "array",
@@ -63497,7 +63626,7 @@
             "items": {
               "type": "integer"
             },
-            "description": "List of group IDs to which photometry points will be visible. If 'all', will be shared with site-wide public group (visible to all users who can view associated source)."
+            "description": "List of group IDs to which photometry points will be visible. If 'all', will be shared with sitewide public group (visible to all users who can view associated source)."
           },
           "stream_ids": {
             "type": "array",
