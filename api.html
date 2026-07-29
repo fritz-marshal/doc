@@ -121,6 +121,24 @@
               "type": "integer"
             },
             "description": "Page number for paginated query results. Defaults to 1"
+          },
+          {
+            "in": "query",
+            "name": "sortBy",
+            "nullable": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Field to sort by. Can be one of: created_at, modified, status, gcnevent_id. Defaults to created_at.\n"
+          },
+          {
+            "in": "query",
+            "name": "sortOrder",
+            "nullable": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sort order. Can be one of: asc, desc. Defaults to asc.\n"
           }
         ],
         "responses": {
@@ -309,9 +327,48 @@
             "name": "instrument_id",
             "nullable": true,
             "schema": {
-              "type": "number"
+              "type": "integer"
             },
             "description": "Instrument ID to retrieve allocations for"
+          },
+          {
+            "in": "query",
+            "name": "apiType",
+            "nullable": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "api_classname",
+                "api_classname_obsplan"
+              ]
+            },
+            "description": "Restrict to allocations whose instrument has the given API type set\n"
+          },
+          {
+            "in": "query",
+            "name": "apiImplements",
+            "nullable": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "update",
+                "delete",
+                "get",
+                "submit",
+                "send",
+                "remove",
+                "retrieve",
+                "queued",
+                "remove_queue",
+                "prepare_payload",
+                "send_skymap",
+                "queued_skymap",
+                "remove_skymap",
+                "retrieve_log",
+                "update_status"
+              ]
+            },
+            "description": "Restrict to allocations whose instrument API implements the given\nmethod. Requires apiType to be specified.\n"
           }
         ],
         "responses": {
@@ -5479,15 +5536,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -5504,6 +5552,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FilterPatchBody"
               }
             }
           }
@@ -5573,10 +5631,11 @@
           "filters"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
+                "$ref": "#/components/schemas/FilterPostBody"
               }
             }
           }
@@ -5594,13 +5653,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New filter ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/FilterPostResponse"
                         }
                       }
                     }
@@ -13289,31 +13342,11 @@
           "listings"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "user_id": {
-                    "type": "integer",
-                    "required": false,
-                    "description": "ID of user that you want to add the listing to.\nIf not given, will default to the associated user object that is posting.\n"
-                  },
-                  "obj_id": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "list_name": {
-                    "type": "string",
-                    "required": true,
-                    "description": "Listing name for this item, e.g., \"favorites\".\nMultiple objects can be saved by the same user to different\nlists, where the list names are user-defined.\nList name must be a non-empty string starting with an\nalphanumeric character or underscore.\n(it must match the regex: /^\\w+/)\n"
-                  },
-                  "params": {
-                    "type": "object",
-                    "required": false,
-                    "description": "Optional parameters for \"watchlist\" type listings, when searching for new candidates around a given object.\nFor example, if you want to search for new candidates around a given object, you can specify the search radius\nand the number of candidates to return.\nThe parameters are passed to the microservice that is responsible for processing the listing.\nThe microservice will return a list of candidates that match the given parameters, and ingest them.\n"
-                  }
-                }
+                "$ref": "#/components/schemas/ListingPostBody"
               }
             }
           }
@@ -13331,13 +13364,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New listing ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ListingPostResponse"
                         }
                       }
                     }
@@ -13366,30 +13393,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "user_id": {
-                    "type": "integer",
-                    "required": true
-                  },
-                  "obj_id": {
-                    "type": "string",
-                    "required": true
-                  },
-                  "list_name": {
-                    "type": "string",
-                    "required": true,
-                    "description": "Listing name for this item, e.g., \"favorites\".\nMultiple objects can be saved by the same user to different\nlists, where the list names are user-defined.\nList name must be a non-empty string starting with an\nalphanumeric character or underscore.\n(it must match the regex: /^\\w+/)\n"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -13397,6 +13400,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ListingPatchBody"
               }
             }
           }
@@ -13513,24 +13526,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string",
-                    "description": "One of either 'accepted', 'declined', or 'pending'."
-                  }
-                },
-                "required": [
-                  "status"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -13538,6 +13533,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GroupAdmissionRequestPatchBody"
               }
             }
           }
@@ -13621,22 +13626,11 @@
           "users"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "groupID": {
-                    "type": "integer"
-                  },
-                  "userID": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "groupID",
-                  "userID"
-                ]
+                "$ref": "#/components/schemas/GroupAdmissionRequestPostBody"
               }
             }
           }
@@ -13654,13 +13648,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New group admission request ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/GroupAdmissionRequestPostResponse"
                         }
                       }
                     }
@@ -13742,29 +13730,11 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "start_date": {
-                    "type": "string",
-                    "description": "Arrow-parseable date string (e.g. 2020-01-01).\n"
-                  },
-                  "end_date": {
-                    "type": "string",
-                    "description": "Arrow-parseable date string (e.g. 2020-01-01).\n"
-                  },
-                  "logs": {
-                    "type": "object",
-                    "description": "Nested JSON containing the log messages.\n"
-                  }
-                },
-                "required": [
-                  "start_date",
-                  "end_date",
-                  "logs"
-                ]
+                "$ref": "#/components/schemas/InstrumentLogPostBody"
               }
             }
           }
@@ -13782,26 +13752,11 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "The id of the InstrumentLog"
-                            }
-                          }
+                          "$ref": "#/components/schemas/InstrumentLogPostResponse"
                         }
                       }
                     }
                   ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -13885,24 +13840,6 @@
             "description": "The instrument ID to update the status for"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "status": {
-                    "type": "string",
-                    "description": "The status of the instrument\n"
-                  }
-                },
-                "required": [
-                  "status"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -13919,6 +13856,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstrumentStatusPutBody"
               }
             }
           }
@@ -14641,55 +14588,11 @@
           "invitations"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "userEmail": {
-                    "type": "string"
-                  },
-                  "role": {
-                    "type": "string",
-                    "description": "The role the new user will have in the system.\nIf provided, must be one of either \"Full user\" or \"View only\".\nDefaults to \"Full user\".\n"
-                  },
-                  "streamIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of IDs of streams invited user will be given access to. If\nnot provided, user will be granted access to all streams associated\nwith the groups specified by `groupIDs`.\n"
-                  },
-                  "groupIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of IDs of groups invited user will be added to. If `streamIDs`\nis not provided, invited user will be given accesss to all streams\nassociated with the groups specified by this field.\n"
-                  },
-                  "groupAdmin": {
-                    "type": "array",
-                    "items": {
-                      "type": "boolean"
-                    },
-                    "description": "List of booleans indicating whether user should be granted admin\nstatus for respective specified group(s). Defaults to all false.\n"
-                  },
-                  "canSave": {
-                    "type": "array",
-                    "items": {
-                      "type": "boolean"
-                    },
-                    "description": "List of booleans indicating whether user should be able to save\nsources to respective specified group(s). Defaults to all true.\n"
-                  },
-                  "userExpirationDate": {
-                    "type": "string",
-                    "description": "Arrow-parseable date string (e.g. 2020-01-01). Set a user's expiration\ndate, after which the user's account will be deactivated and will be unable\nto access the application.\n"
-                  }
-                },
-                "required": [
-                  "userEmail",
-                  "groupIDs"
-                ]
+                "$ref": "#/components/schemas/InvitationPostBody"
               }
             }
           }
@@ -14707,13 +14610,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "string",
-                              "description": "New invitation ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/InvitationPostResponse"
                         }
                       }
                     }
@@ -14732,36 +14629,6 @@
         "tags": [
           "invitations"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
-                  },
-                  "streamIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
-                  },
-                  "role": {
-                    "type": "string"
-                  },
-                  "userExpirationDate": {
-                    "type": "string",
-                    "description": "Arrow-parseable date string (e.g. 2020-01-01). Set a user's expiration\ndate, after which the user's account will be deactivated and will be unable\nto access the application.\n"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -14769,6 +14636,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InvitationPatchBody"
               }
             }
           }
@@ -16869,28 +16746,6 @@
         "tags": [
           "object tags"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Tag name (letters and numbers only)"
-                  },
-                  "color": {
-                    "type": "string",
-                    "description": "Hex color code (e.g.,"
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -16931,6 +16786,16 @@
               }
             }
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjTagOptionPostBody"
+              }
+            }
+          }
         }
       }
     },
@@ -16951,28 +16816,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "New tag name"
-                  },
-                  "color": {
-                    "type": "string",
-                    "description": "New hex color code (e.g.,"
-                  }
-                },
-                "required": [
-                  "name"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -16998,6 +16841,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjTagOptionPatchBody"
               }
             }
           }
@@ -17110,37 +16963,6 @@
         "tags": [
           "object tags"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "objtagoption_id": {
-                    "type": "integer",
-                    "description": "ID of the tag option to associate"
-                  },
-                  "obj_id": {
-                    "type": "string",
-                    "description": "ID of the object to tag"
-                  },
-                  "group_ids": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "IDs of groups that can access this tag association"
-                  }
-                },
-                "required": [
-                  "objtagoption_id",
-                  "obj_id",
-                  "group_ids"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -17178,6 +17000,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjTagPostBody"
               }
             }
           }
@@ -18780,41 +18612,6 @@
           "photometry",
           "spectra"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "photometryIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "IDs of the photometry data to be shared. If `spectrumIDs` is not\nprovided, this is required.\n"
-                  },
-                  "spectrumIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "IDs of the spectra to be shared. If `photometryIDs` is not provided, this is required."
-                  },
-                  "groupIDs": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of IDs of groups data will be shared with. To share data with\na single user, specify their single user group ID here.\n"
-                  }
-                },
-                "required": [
-                  "groupIDs"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -18822,6 +18619,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharingPostBody"
               }
             }
           }
@@ -19582,43 +19389,11 @@
           "recurring apis"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "endpoint": {
-                    "type": "string",
-                    "description": "Endpoint of the API call."
-                  },
-                  "method": {
-                    "type": "string",
-                    "description": "HTTP method of the API call."
-                  },
-                  "next_call": {
-                    "type": "datetime",
-                    "description": "Time of the next API call."
-                  },
-                  "call_delay": {
-                    "type": "number",
-                    "description": "Delay until next API call in days."
-                  },
-                  "number_of_retries": {
-                    "type": "integer",
-                    "description": "Number of retries before service is deactivated."
-                  },
-                  "payload": {
-                    "type": "object",
-                    "description": "Payload of the API call."
-                  }
-                },
-                "required": [
-                  "endpoint",
-                  "method",
-                  "next_call",
-                  "call_delay",
-                  "payload"
-                ]
+                "$ref": "#/components/schemas/RecurringAPIPostBody"
               }
             }
           }
@@ -19636,13 +19411,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New RecurringAPI ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/RecurringAPIPostResponse"
                         }
                       }
                     }
@@ -20786,27 +20555,6 @@
             "description": "ID of object to indicate source labelling for\n"
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of IDs of groups to indicate labelling for\n"
-                  }
-                },
-                "required": [
-                  "groupIds"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -20814,6 +20562,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceLabelsPostBody"
               }
             }
           }
@@ -20835,27 +20593,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of IDs of groups to indicate scanning for\n"
-                  }
-                },
-                "required": [
-                  "groupIds"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -20863,6 +20600,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceLabelsDeleteBody"
               }
             }
           }
@@ -21799,34 +21546,15 @@
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the underlying data.\nThis would be a string for an object ID,\nor an integer for other data types,\ne.g., a spectrum.\n"
+            "description": "The ID of the underlying data.\nThis would be a string for an object ID,\nor an integer for other data types,\ne.g., a spectrum."
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "origin": {
-                    "type": "string",
-                    "description": "String describing the source of this information.\nOnly one Annotation per origin is allowed, although\neach Annotation can have multiple fields.\nTo add/change data, use the update method instead\nof trying to post another Annotation from this origin.\nOrigin must be a non-empty string starting with an\nalphanumeric character or underscore.\n(it must match the regex: /^\\w+/)\n"
-                  },
-                  "data": {
-                    "type": "object"
-                  },
-                  "group_ids": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of group IDs corresponding to which groups should be\nable to view annotation. Defaults to all of requesting user's\ngroups.\n"
-                  }
-                },
-                "required": [
-                  "origin",
-                  "data"
-                ]
+                "$ref": "#/components/schemas/AnnotationPostBody"
               }
             }
           }
@@ -21844,13 +21572,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "annotation_id": {
-                              "type": "integer",
-                              "description": "New annotation ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/AnnotationPostResponse"
                         }
                       }
                     }
@@ -21895,31 +21617,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/AnnotationNoID"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "group_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer"
-                        },
-                        "description": "List of group IDs corresponding to which groups should be\nable to view the annotation.\n"
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -21936,6 +21633,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationPutBody"
               }
             }
           }
@@ -22085,31 +21792,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "allOf": [
-                  {
-                    "$ref": "#/components/schemas/AnnotationNoID"
-                  },
-                  {
-                    "type": "object",
-                    "properties": {
-                      "group_ids": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer"
-                        },
-                        "description": "List of group IDs corresponding to which groups should be\nable to view the annotation.\n"
-                      }
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -22126,6 +21808,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnnotationPutBody"
               }
             }
           }
@@ -23431,50 +23123,6 @@
         "tags": [
           "sources"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "objId": {
-                    "type": "string",
-                    "description": "ID of the object in question."
-                  },
-                  "inviteGroupIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of group IDs to save or invite to save specified source.\n"
-                  },
-                  "unsaveGroupIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of group IDs from which specified source is to be unsaved.\n"
-                  }
-                },
-                "required": [
-                  "objId"
-                ],
-                "anyOf": [
-                  {
-                    "required": [
-                      "inviteGroupIds"
-                    ]
-                  },
-                  {
-                    "required": [
-                      "unsaveGroupIds"
-                    ]
-                  }
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -23482,6 +23130,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceGroupsPostBody"
               }
             }
           }
@@ -23505,31 +23163,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "groupID": {
-                    "type": "integer"
-                  },
-                  "active": {
-                    "type": "boolean"
-                  },
-                  "requested": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "groupID",
-                  "active",
-                  "requested"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -23537,6 +23170,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SourceGroupsPatchBody"
               }
             }
           }
@@ -25164,18 +24807,11 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "user_id": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "user_id"
-                ]
+                "$ref": "#/components/schemas/StreamUserPostBody"
               }
             }
           }
@@ -25193,17 +24829,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "stream_id": {
-                              "type": "integer",
-                              "description": "Stream ID"
-                            },
-                            "user_id": {
-                              "type": "integer",
-                              "description": "User ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/StreamUserPostResponse"
                         }
                       }
                     }
@@ -25308,41 +24934,12 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "altdata": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/Stream"
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -25353,6 +24950,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StreamPatchBody"
               }
             }
           }
@@ -25422,21 +25029,11 @@
           "streams"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "altdata": {
-                    "type": "object"
-                  }
-                },
-                "required": [
-                  "name"
-                ]
+                "$ref": "#/components/schemas/StreamPostBody"
               }
             }
           }
@@ -25454,13 +25051,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New stream ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/StreamPostResponse"
                         }
                       }
                     }
@@ -25867,15 +25458,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TaxonomyNoID"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -25892,6 +25474,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaxonomyPutBody"
               }
             }
           }
@@ -25961,44 +25553,11 @@
           "taxonomies"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "Short string to make this taxonomy memorable\nto end users.\n"
-                  },
-                  "hierarchy": {
-                    "type": "object",
-                    "description": "Nested JSON describing the taxonomy\nwhich should be validated against\na schema before entry\n"
-                  },
-                  "group_ids": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    },
-                    "description": "List of group IDs corresponding to which groups should be\nable to view comment. Defaults to all of requesting\nuser's groups.\n"
-                  },
-                  "version": {
-                    "type": "string",
-                    "description": "Semantic version of this taxonomy name\n"
-                  },
-                  "provenance": {
-                    "type": "string",
-                    "description": "Identifier (e.g., URL or git hash) that\nuniquely ties this taxonomy back\nto an origin or place of record\n"
-                  },
-                  "isLatest": {
-                    "type": "boolean",
-                    "description": "Consider this version of the taxonomy with this\nname the latest? Defaults to True.\n"
-                  }
-                },
-                "required": [
-                  "name",
-                  "hierarchy",
-                  "version"
-                ]
+                "$ref": "#/components/schemas/TaxonomyPostBody"
               }
             }
           }
@@ -26016,13 +25575,7 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "taxonomy_id": {
-                              "type": "integer",
-                              "description": "New taxonomy ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/TaxonomyPostResponse"
                         }
                       }
                     }
@@ -26089,10 +25642,11 @@
           }
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object"
+                "$ref": "#/components/schemas/TeamPutBody"
               }
             }
           }
@@ -26102,16 +25656,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TeamPutResponse"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -26182,21 +25739,11 @@
           "teams"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string"
-                  },
-                  "group_ids": {
-                    "type": "array",
-                    "items": {
-                      "type": "integer"
-                    }
-                  }
-                }
+                "$ref": "#/components/schemas/TeamPostBody"
               }
             }
           }
@@ -26206,16 +25753,19 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TeamPostResponse"
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             }
@@ -26277,15 +25827,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TelescopeNoID"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -26302,6 +25843,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TelescopePutBody"
               }
             }
           }
@@ -26422,10 +25973,11 @@
           "telescopes"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TelescopeNoID"
+                "$ref": "#/components/schemas/TelescopePostBody"
               }
             }
           }
@@ -26443,26 +25995,11 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New telescope ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/TelescopePostResponse"
                         }
                       }
                     }
                   ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -26524,33 +26061,12 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ThumbnailNoID"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
               "application/json": {
                 "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "$ref": "#/components/schemas/Thumbnail"
-                        }
-                      }
-                    }
-                  ]
+                  "$ref": "#/components/schemas/Success"
                 }
               }
             }
@@ -26561,6 +26077,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Error"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ThumbnailPutBody"
               }
             }
           }
@@ -26612,29 +26138,11 @@
           "thumbnails"
         ],
         "requestBody": {
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "obj_id": {
-                    "type": "string",
-                    "description": "ID of object associated with thumbnails."
-                  },
-                  "data": {
-                    "type": "string",
-                    "format": "byte",
-                    "description": "base64-encoded PNG image file contents. Image size must be between 16px and 500px on a side."
-                  },
-                  "ttype": {
-                    "type": "string",
-                    "description": "Thumbnail type. Must be one of 'new', 'ref', 'sub', 'sdss', 'dr8', 'new_gz', 'ref_gz', 'sub_gz'"
-                  }
-                },
-                "required": [
-                  "data",
-                  "ttype"
-                ]
+                "$ref": "#/components/schemas/ThumbnailPostBody"
               }
             }
           }
@@ -26652,26 +26160,11 @@
                       "type": "object",
                       "properties": {
                         "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New thumbnail ID"
-                            }
-                          }
+                          "$ref": "#/components/schemas/ThumbnailPostResponse"
                         }
                       }
                     }
                   ]
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -27887,27 +27380,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "aclIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Array of ACL IDs (strings) to be granted to user"
-                  }
-                },
-                "required": [
-                  "aclIds"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -27915,6 +27387,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserACLPostBody"
               }
             }
           }
@@ -27976,27 +27458,6 @@
             }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "roleIds": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "Array of Role IDs (strings) to be granted to user"
-                  }
-                },
-                "required": [
-                  "roleIds"
-                ]
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "content": {
@@ -28004,6 +27465,16 @@
                 "schema": {
                   "$ref": "#/components/schemas/Success"
                 }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRolePostBody"
               }
             }
           }
@@ -79472,6 +78943,94 @@
         ],
         "additionalProperties": false
       },
+      "FilterPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a filter.",
+        "properties": {
+          "name": {
+            "description": "Filter name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "stream_id": {
+            "description": "ID of the Filter's Stream.",
+            "title": "Stream Id",
+            "type": "integer"
+          },
+          "group_id": {
+            "description": "ID of the Filter's Group.",
+            "title": "Group Id",
+            "type": "integer"
+          },
+          "altdata": {
+            "default": null,
+            "description": "Arbitrary additional JSON data associated with the Filter.",
+            "title": "Altdata",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "stream_id",
+          "group_id"
+        ],
+        "title": "FilterPostBody",
+        "type": "object"
+      },
+      "FilterPostResponse": {
+        "description": "Data payload returned when creating a filter.",
+        "properties": {
+          "id": {
+            "description": "New filter ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "FilterPostResponse",
+        "type": "object"
+      },
+      "FilterPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a filter.",
+        "properties": {
+          "name": {
+            "default": null,
+            "description": "Filter name.",
+            "title": "Name",
+            "type": "string",
+            "nullable": true
+          },
+          "altdata": {
+            "default": null,
+            "description": "Arbitrary additional JSON data associated with the Filter.",
+            "title": "Altdata",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "group_id": {
+            "default": null,
+            "description": "ID of the Filter's Group. Cannot be changed; accepted only if it matches the current value.",
+            "title": "Group Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "stream_id": {
+            "default": null,
+            "description": "ID of the Filter's Stream. Cannot be changed; accepted only if it matches the current value.",
+            "title": "Stream Id",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "title": "FilterPatchBody",
+        "type": "object"
+      },
       "GalaxyASCIIFileHandlerPost": {
         "type": "object",
         "properties": {
@@ -79594,6 +79153,344 @@
         },
         "additionalProperties": false
       },
+      "ListingPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for adding a listing.",
+        "properties": {
+          "obj_id": {
+            "description": "ID of the object to add to the list.",
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "list_name": {
+            "description": "Listing name for this item, e.g., \"favorites\". Multiple objects can be saved by the same user to different lists, where the list names are user-defined. List name must be a non-empty string starting with an alphanumeric character or underscore. (it must match the regex: /^\\w+/)",
+            "title": "List Name",
+            "type": "string"
+          },
+          "user_id": {
+            "default": null,
+            "description": "ID of user that you want to add the listing to. If not given, will default to the associated user object that is posting.",
+            "title": "User Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "params": {
+            "default": null,
+            "description": "Optional parameters for \"watchlist\" type listings, when searching for new candidates around a given object. For example, if you want to search for new candidates around a given object, you can specify the search radius and the number of candidates to return. The parameters are passed to the microservice that is responsible for processing the listing. The microservice will return a list of candidates that match the given parameters, and ingest them.",
+            "title": "Params",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "required": [
+          "obj_id",
+          "list_name"
+        ],
+        "title": "ListingPostBody",
+        "type": "object"
+      },
+      "ListingPostResponse": {
+        "description": "Data payload returned when adding a listing.",
+        "properties": {
+          "id": {
+            "description": "New listing ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "ListingPostResponse",
+        "type": "object"
+      },
+      "ListingPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a listing.",
+        "properties": {
+          "user_id": {
+            "default": null,
+            "description": "ID of the user the listing belongs to.",
+            "title": "User Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "obj_id": {
+            "default": null,
+            "description": "ID of the listed object.",
+            "title": "Obj Id",
+            "type": "string",
+            "nullable": true
+          },
+          "list_name": {
+            "default": null,
+            "description": "Listing name for this item, e.g., \"favorites\". Multiple objects can be saved by the same user to different lists, where the list names are user-defined. List name must be a non-empty string starting with an alphanumeric character or underscore. (it must match the regex: /^\\w+/)",
+            "title": "List Name",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "title": "ListingPatchBody",
+        "type": "object"
+      },
+      "GroupAdmissionRequestPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a group admission request.",
+        "properties": {
+          "groupID": {
+            "description": "ID of the group to request admission to",
+            "title": "Groupid",
+            "type": "integer"
+          },
+          "userID": {
+            "description": "ID of the user requesting admission",
+            "title": "Userid",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "groupID",
+          "userID"
+        ],
+        "title": "GroupAdmissionRequestPostBody",
+        "type": "object"
+      },
+      "GroupAdmissionRequestPostResponse": {
+        "description": "Data payload returned when creating a group admission request.",
+        "properties": {
+          "id": {
+            "description": "New group admission request ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "GroupAdmissionRequestPostResponse",
+        "type": "object"
+      },
+      "GroupAdmissionRequestPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a group admission request's status.",
+        "properties": {
+          "status": {
+            "description": "One of either 'accepted', 'declined', or 'pending'.",
+            "enum": [
+              "pending",
+              "accepted",
+              "declined"
+            ],
+            "title": "Status",
+            "type": "string"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "GroupAdmissionRequestPatchBody",
+        "type": "object"
+      },
+      "InstrumentLogPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for posting instrument logs.",
+        "properties": {
+          "start_date": {
+            "description": "Arrow-parseable date string (e.g. 2020-01-01).",
+            "title": "Start Date",
+            "type": "string"
+          },
+          "end_date": {
+            "description": "Arrow-parseable date string (e.g. 2020-01-01).",
+            "title": "End Date",
+            "type": "string"
+          },
+          "log": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ],
+            "description": "Nested JSON containing the log messages, or a parsable string of log lines.",
+            "title": "Log"
+          }
+        },
+        "required": [
+          "start_date",
+          "end_date",
+          "log"
+        ],
+        "title": "InstrumentLogPostBody",
+        "type": "object"
+      },
+      "InstrumentLogPostResponse": {
+        "description": "Data payload returned when posting instrument logs.",
+        "properties": {
+          "id": {
+            "description": "The id of the InstrumentLog",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "InstrumentLogPostResponse",
+        "type": "object"
+      },
+      "InstrumentStatusPutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating an instrument's status.",
+        "properties": {
+          "status": {
+            "default": null,
+            "description": "The status of the instrument, as a JSON object or a JSON-encoded string. When empty or omitted, the status is instead refreshed from the instrument's remote API.",
+            "title": "Status",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "additionalProperties": true,
+                "type": "object"
+              }
+            ],
+            "nullable": true
+          }
+        },
+        "title": "InstrumentStatusPutBody",
+        "type": "object"
+      },
+      "InvitationPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for inviting a new user.",
+        "properties": {
+          "userEmail": {
+            "description": "Email address to send the invitation to.",
+            "title": "Useremail",
+            "type": "string"
+          },
+          "groupIDs": {
+            "description": "List of IDs of groups invited user will be added to. If `streamIDs` is not provided, invited user will be given accesss to all streams associated with the groups specified by this field.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Groupids",
+            "type": "array"
+          },
+          "role": {
+            "default": "Full user",
+            "description": "The role the new user will have in the system. If provided, must be one of either \"Full user\" or \"View only\". Defaults to \"Full user\".",
+            "title": "Role",
+            "type": "string"
+          },
+          "streamIDs": {
+            "default": null,
+            "description": "List of IDs of streams invited user will be given access to. If not provided, user will be granted access to all streams associated with the groups specified by `groupIDs`.",
+            "title": "Streamids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "groupAdmin": {
+            "default": null,
+            "description": "List of booleans indicating whether user should be granted admin status for respective specified group(s). Defaults to all false.",
+            "title": "Groupadmin",
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "canSave": {
+            "default": null,
+            "description": "List of booleans indicating whether user should be able to save sources to respective specified group(s). Defaults to all true.",
+            "title": "Cansave",
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "userExpirationDate": {
+            "default": null,
+            "description": "Arrow-parseable date string (e.g. 2020-01-01). Set a user's expiration date, after which the user's account will be deactivated and will be unable to access the application.",
+            "title": "Userexpirationdate",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "userEmail",
+          "groupIDs"
+        ],
+        "title": "InvitationPostBody",
+        "type": "object"
+      },
+      "InvitationPostResponse": {
+        "description": "Data payload returned when creating an invitation.",
+        "properties": {
+          "id": {
+            "description": "New invitation ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "InvitationPostResponse",
+        "type": "object"
+      },
+      "InvitationPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a pending invitation.",
+        "properties": {
+          "groupIDs": {
+            "default": null,
+            "description": "List of IDs of groups the user is invited to.",
+            "title": "Groupids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "streamIDs": {
+            "default": null,
+            "description": "List of IDs of streams invited user will be given access to.",
+            "title": "Streamids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "role": {
+            "default": null,
+            "description": "The role the new user will have in the system.",
+            "title": "Role",
+            "type": "string",
+            "nullable": true
+          },
+          "userExpirationDate": {
+            "default": null,
+            "description": "Arrow-parseable date string (e.g. 2020-01-01). Set a user's expiration date, after which the user's account will be deactivated and will be unable to access the application.",
+            "title": "Userexpirationdate",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "title": "InvitationPatchBody",
+        "type": "object"
+      },
       "ObservationHandlerPost": {
         "type": "object",
         "properties": {
@@ -79675,6 +79572,187 @@
         ],
         "additionalProperties": false
       },
+      "ObjTagOptionPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a tag option.",
+        "properties": {
+          "name": {
+            "description": "Tag name (letters and numbers only)",
+            "title": "Name",
+            "type": "string"
+          },
+          "color": {
+            "default": null,
+            "description": "Hex color code (e.g., #3a87ad)",
+            "title": "Color",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ObjTagOptionPostBody",
+        "type": "object"
+      },
+      "ObjTagOptionPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a tag option.",
+        "properties": {
+          "name": {
+            "description": "New tag name",
+            "title": "Name",
+            "type": "string"
+          },
+          "color": {
+            "default": null,
+            "description": "New hex color code (e.g., #3a87ad)",
+            "title": "Color",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "ObjTagOptionPatchBody",
+        "type": "object"
+      },
+      "ObjTagPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating an object-tag association.",
+        "properties": {
+          "objtagoption_id": {
+            "description": "ID of the tag option to associate",
+            "title": "Objtagoption Id",
+            "type": "integer"
+          },
+          "obj_id": {
+            "description": "ID of the object to tag",
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "group_ids": {
+            "default": null,
+            "description": "IDs of groups that can access this tag association. Defaults to the public group.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "required": [
+          "objtagoption_id",
+          "obj_id"
+        ],
+        "title": "ObjTagPostBody",
+        "type": "object"
+      },
+      "SharingPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for sharing data with additional groups/users.",
+        "properties": {
+          "groupIDs": {
+            "description": "List of IDs of groups data will be shared with. To share data with a single user, specify their single user group ID here.",
+            "items": {
+              "type": "integer"
+            },
+            "minItems": 1,
+            "title": "Groupids",
+            "type": "array"
+          },
+          "photometryIDs": {
+            "default": null,
+            "description": "IDs of the photometry data to be shared. If `spectrumIDs` is not provided, this is required.",
+            "title": "Photometryids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "spectrumIDs": {
+            "default": null,
+            "description": "IDs of the spectra to be shared. If `photometryIDs` is not provided, this is required.",
+            "title": "Spectrumids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "required": [
+          "groupIDs"
+        ],
+        "title": "SharingPostBody",
+        "type": "object"
+      },
+      "RecurringAPIPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a recurring API.",
+        "properties": {
+          "endpoint": {
+            "description": "Endpoint of the API call.",
+            "title": "Endpoint",
+            "type": "string"
+          },
+          "method": {
+            "description": "HTTP method of the API call.",
+            "title": "Method",
+            "type": "string"
+          },
+          "next_call": {
+            "description": "Time of the next API call.",
+            "title": "Next Call",
+            "type": "string"
+          },
+          "call_delay": {
+            "description": "Delay until next API call in days.",
+            "title": "Call Delay",
+            "type": "number"
+          },
+          "payload": {
+            "description": "JSON string with the payload of the API call.",
+            "title": "Payload",
+            "type": "string"
+          },
+          "number_of_retries": {
+            "default": null,
+            "description": "Number of retries before service is deactivated.",
+            "title": "Number Of Retries",
+            "maximum": 10,
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "endpoint",
+          "method",
+          "next_call",
+          "call_delay",
+          "payload"
+        ],
+        "title": "RecurringAPIPostBody",
+        "type": "object"
+      },
+      "RecurringAPIPostResponse": {
+        "description": "Data payload returned when creating a recurring API.",
+        "properties": {
+          "id": {
+            "description": "New RecurringAPI ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "RecurringAPIPostResponse",
+        "type": "object"
+      },
       "SkymapQueueAPIHandlerPost": {
         "type": "object",
         "properties": {
@@ -79696,6 +79774,186 @@
           "localization_id"
         ],
         "additionalProperties": false
+      },
+      "SourceLabelsPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for labelling a source.",
+        "properties": {
+          "groupIds": {
+            "description": "List of IDs of groups to indicate labelling for",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Groupids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "groupIds"
+        ],
+        "title": "SourceLabelsPostBody",
+        "type": "object"
+      },
+      "SourceLabelsDeleteBody": {
+        "additionalProperties": false,
+        "description": "Request body for deleting source labels.",
+        "properties": {
+          "groupIds": {
+            "description": "List of IDs of groups to indicate scanning for",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Groupids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "groupIds"
+        ],
+        "title": "SourceLabelsDeleteBody",
+        "type": "object"
+      },
+      "AnnotationPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for posting an annotation.",
+        "properties": {
+          "origin": {
+            "description": "String describing the source of this information. Only one Annotation per origin is allowed, although each Annotation can have multiple fields. To add/change data, use the update method instead of trying to post another Annotation from this origin. Origin must be a non-empty string starting with an alphanumeric character or underscore (it must match the regex: /^\\w+/).",
+            "pattern": "^\\w+",
+            "title": "Origin",
+            "type": "string"
+          },
+          "data": {
+            "additionalProperties": true,
+            "description": "Annotation data as {key: value} pairs.",
+            "title": "Data",
+            "type": "object"
+          },
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view annotation. Defaults to all of requesting user's groups.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "required": [
+          "origin",
+          "data"
+        ],
+        "title": "AnnotationPostBody",
+        "type": "object"
+      },
+      "AnnotationPostResponse": {
+        "description": "Data payload returned when posting an annotation.",
+        "properties": {
+          "annotation_id": {
+            "description": "New annotation ID",
+            "title": "Annotation Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "annotation_id"
+        ],
+        "title": "AnnotationPostResponse",
+        "type": "object"
+      },
+      "AnnotationPutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating an annotation.",
+        "properties": {
+          "data": {
+            "default": null,
+            "description": "Annotation data as {key: value} pairs.",
+            "title": "Data",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "origin": {
+            "default": null,
+            "description": "String describing the source of this information.",
+            "title": "Origin",
+            "type": "string",
+            "nullable": true
+          },
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view the annotation.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "title": "AnnotationPutBody",
+        "type": "object"
+      },
+      "SourceGroupsPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for saving/unsaving a source to/from groups.",
+        "properties": {
+          "objId": {
+            "description": "ID of the object in question.",
+            "title": "Objid",
+            "type": "string"
+          },
+          "inviteGroupIds": {
+            "description": "List of group IDs to save or invite to save specified source.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Invitegroupids",
+            "type": "array"
+          },
+          "unsaveGroupIds": {
+            "description": "List of group IDs from which specified source is to be unsaved.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Unsavegroupids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "objId"
+        ],
+        "title": "SourceGroupsPostBody",
+        "type": "object"
+      },
+      "SourceGroupsPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a Source table row.",
+        "properties": {
+          "groupID": {
+            "description": "ID of the group whose Source row to update.",
+            "title": "Groupid",
+            "type": "integer"
+          },
+          "active": {
+            "description": "Whether the source is saved to the group.",
+            "title": "Active",
+            "type": "boolean"
+          },
+          "requested": {
+            "description": "Whether the source is requested to be saved to the group.",
+            "title": "Requested",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "groupID",
+          "active",
+          "requested"
+        ],
+        "title": "SourceGroupsPatchBody",
+        "type": "object"
       },
       "SpatialCatalogASCIIFileHandlerPost": {
         "type": "object",
@@ -79729,6 +79987,711 @@
           }
         },
         "additionalProperties": false
+      },
+      "StreamUserPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for granting stream access to a user.",
+        "properties": {
+          "user_id": {
+            "description": "ID of the user to be granted stream access",
+            "title": "User Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "StreamUserPostBody",
+        "type": "object"
+      },
+      "StreamUserPostResponse": {
+        "description": "Data payload returned when granting stream access to a user.",
+        "properties": {
+          "stream_id": {
+            "description": "Stream ID",
+            "title": "Stream Id",
+            "type": "integer"
+          },
+          "user_id": {
+            "description": "User ID",
+            "title": "User Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "stream_id",
+          "user_id"
+        ],
+        "title": "StreamUserPostResponse",
+        "type": "object"
+      },
+      "StreamPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a stream.",
+        "properties": {
+          "name": {
+            "description": "Stream name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "altdata": {
+            "default": null,
+            "description": "Misc. metadata stored in JSON format, e.g. `{'collection': 'ZTF_alerts', selector: [1, 2]}`",
+            "title": "Altdata",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "auto_join": {
+            "default": false,
+            "description": "Boolean indicating whether any user may add themselves to this stream. Auto-join streams are visible to all users.",
+            "title": "Auto Join",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "StreamPostBody",
+        "type": "object"
+      },
+      "StreamPostResponse": {
+        "description": "Data payload returned when creating a stream.",
+        "properties": {
+          "id": {
+            "description": "New stream ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "StreamPostResponse",
+        "type": "object"
+      },
+      "StreamPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a stream.",
+        "properties": {
+          "name": {
+            "description": "Stream name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "altdata": {
+            "default": null,
+            "description": "Misc. metadata stored in JSON format, e.g. `{'collection': 'ZTF_alerts', selector: [1, 2]}`",
+            "title": "Altdata",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "auto_join": {
+            "default": null,
+            "description": "Boolean indicating whether any user may add themselves to this stream. Auto-join streams are visible to all users.",
+            "title": "Auto Join",
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "StreamPatchBody",
+        "type": "object"
+      },
+      "TaxonomyPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for posting a new taxonomy.",
+        "properties": {
+          "name": {
+            "description": "Short string to make this taxonomy memorable to end users.",
+            "title": "Name",
+            "type": "string"
+          },
+          "version": {
+            "description": "Semantic version of this taxonomy name",
+            "title": "Version",
+            "type": "string"
+          },
+          "hierarchy": {
+            "default": null,
+            "description": "Nested JSON describing the taxonomy which should be validated against a schema before entry. One of `hierarchy` or `hierarchy_file` must be provided.",
+            "title": "Hierarchy",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          },
+          "hierarchy_file": {
+            "default": null,
+            "description": "YAML string describing the taxonomy, parsed into `hierarchy` when provided.",
+            "title": "Hierarchy File",
+            "type": "string",
+            "nullable": true
+          },
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view the taxonomy. Defaults to the public group.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "provenance": {
+            "default": null,
+            "description": "Identifier (e.g., URL or git hash) that uniquely ties this taxonomy back to an origin or place of record",
+            "title": "Provenance",
+            "type": "string",
+            "nullable": true
+          },
+          "isLatest": {
+            "default": true,
+            "description": "Consider this version of the taxonomy with this name the latest? Defaults to True.",
+            "title": "Islatest",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "version"
+        ],
+        "title": "TaxonomyPostBody",
+        "type": "object"
+      },
+      "TaxonomyPostResponse": {
+        "description": "Data payload returned when posting a taxonomy.",
+        "properties": {
+          "taxonomy_id": {
+            "description": "New taxonomy ID",
+            "title": "Taxonomy Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "taxonomy_id"
+        ],
+        "title": "TaxonomyPostResponse",
+        "type": "object"
+      },
+      "TaxonomyPutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a taxonomy.",
+        "properties": {
+          "name": {
+            "default": null,
+            "description": "Short string to make this taxonomy memorable to end users.",
+            "title": "Name",
+            "type": "string",
+            "nullable": true
+          },
+          "version": {
+            "default": null,
+            "description": "Semantic version of this taxonomy name",
+            "title": "Version",
+            "type": "string",
+            "nullable": true
+          },
+          "provenance": {
+            "default": null,
+            "description": "Identifier (e.g., URL or git hash) that uniquely ties this taxonomy back to an origin or place of record",
+            "title": "Provenance",
+            "type": "string",
+            "nullable": true
+          },
+          "isLatest": {
+            "default": null,
+            "description": "Consider this version of the taxonomy with this name the latest?",
+            "title": "Islatest",
+            "type": "boolean",
+            "nullable": true
+          },
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view the taxonomy.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "hierarchy": {
+            "default": null,
+            "description": "Not editable; upload a new taxonomy if a hierarchy change is desired.",
+            "title": "Hierarchy",
+            "additionalProperties": true,
+            "type": "object",
+            "nullable": true
+          }
+        },
+        "title": "TaxonomyPutBody",
+        "type": "object"
+      },
+      "TeamPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a team.",
+        "properties": {
+          "name": {
+            "description": "Team name.",
+            "title": "Name",
+            "type": "string"
+          },
+          "nickname": {
+            "default": null,
+            "description": "Team nickname.",
+            "title": "Nickname",
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "default": null,
+            "description": "Team description.",
+            "title": "Description",
+            "type": "string",
+            "nullable": true
+          },
+          "primary_color": {
+            "default": null,
+            "description": "Primary color.",
+            "title": "Primary Color",
+            "type": "string",
+            "nullable": true
+          },
+          "secondary_color": {
+            "default": null,
+            "description": "Secondary color.",
+            "title": "Secondary Color",
+            "type": "string",
+            "nullable": true
+          },
+          "logo_url": {
+            "default": null,
+            "description": "Logo URL or data URI.",
+            "title": "Logo Url",
+            "type": "string",
+            "nullable": true
+          },
+          "background_url": {
+            "default": null,
+            "description": "Background image URL or data URI.",
+            "title": "Background Url",
+            "type": "string",
+            "nullable": true
+          },
+          "group_ids": {
+            "description": "IDs of the groups making up the team. The current user must be an admin of each group added to the team.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Group Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "title": "TeamPostBody",
+        "type": "object"
+      },
+      "TeamPostResponse": {
+        "description": "Data payload returned when creating a team.",
+        "properties": {
+          "id": {
+            "description": "New team ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "TeamPostResponse",
+        "type": "object"
+      },
+      "TeamPutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a team.",
+        "properties": {
+          "name": {
+            "default": null,
+            "description": "Team name.",
+            "title": "Name",
+            "type": "string",
+            "nullable": true
+          },
+          "nickname": {
+            "default": null,
+            "description": "Team nickname.",
+            "title": "Nickname",
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "default": null,
+            "description": "Team description.",
+            "title": "Description",
+            "type": "string",
+            "nullable": true
+          },
+          "primary_color": {
+            "default": null,
+            "description": "Primary color.",
+            "title": "Primary Color",
+            "type": "string",
+            "nullable": true
+          },
+          "secondary_color": {
+            "default": null,
+            "description": "Secondary color.",
+            "title": "Secondary Color",
+            "type": "string",
+            "nullable": true
+          },
+          "logo_url": {
+            "default": null,
+            "description": "Logo URL or data URI.",
+            "title": "Logo Url",
+            "type": "string",
+            "nullable": true
+          },
+          "background_url": {
+            "default": null,
+            "description": "Background image URL or data URI.",
+            "title": "Background Url",
+            "type": "string",
+            "nullable": true
+          },
+          "group_ids": {
+            "default": null,
+            "description": "When provided, replaces the team's groups; the user must be an admin of each group added or removed.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "title": "TeamPutBody",
+        "type": "object"
+      },
+      "TeamPutResponse": {
+        "description": "Data payload returned when updating a team.",
+        "properties": {
+          "id": {
+            "description": "Updated team ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "TeamPutResponse",
+        "type": "object"
+      },
+      "TelescopePostBody": {
+        "additionalProperties": false,
+        "description": "Request body for creating a telescope.",
+        "properties": {
+          "name": {
+            "description": "Unabbreviated facility name (e.g., Palomar 200-inch Hale Telescope).",
+            "title": "Name",
+            "type": "string"
+          },
+          "nickname": {
+            "description": "Abbreviated facility name (e.g., P200).",
+            "title": "Nickname",
+            "type": "string"
+          },
+          "diameter": {
+            "description": "Diameter in meters.",
+            "title": "Diameter",
+            "type": "number"
+          },
+          "lat": {
+            "default": null,
+            "description": "Latitude in deg.",
+            "title": "Lat",
+            "type": "number",
+            "nullable": true
+          },
+          "lon": {
+            "default": null,
+            "description": "Longitude in deg.",
+            "title": "Lon",
+            "type": "number",
+            "nullable": true
+          },
+          "elevation": {
+            "default": null,
+            "description": "Elevation in meters.",
+            "title": "Elevation",
+            "type": "number",
+            "nullable": true
+          },
+          "skycam_link": {
+            "default": null,
+            "description": "Link to the telescope's sky camera.",
+            "title": "Skycam Link",
+            "type": "string",
+            "nullable": true
+          },
+          "weather_link": {
+            "default": null,
+            "description": "Link to the preferred weather site.",
+            "title": "Weather Link",
+            "type": "string",
+            "nullable": true
+          },
+          "robotic": {
+            "default": false,
+            "description": "Is this telescope robotic?",
+            "title": "Robotic",
+            "type": "boolean"
+          },
+          "fixed_location": {
+            "default": null,
+            "description": "Does this telescope have a fixed location (lon, lat, elev)? Defaults to true.",
+            "title": "Fixed Location",
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name",
+          "nickname",
+          "diameter"
+        ],
+        "title": "TelescopePostBody",
+        "type": "object"
+      },
+      "TelescopePostResponse": {
+        "description": "Data payload returned when creating a telescope.",
+        "properties": {
+          "id": {
+            "description": "New telescope ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "TelescopePostResponse",
+        "type": "object"
+      },
+      "TelescopePutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a telescope.",
+        "properties": {
+          "name": {
+            "default": null,
+            "description": "Unabbreviated facility name (e.g., Palomar 200-inch Hale Telescope).",
+            "title": "Name",
+            "type": "string",
+            "nullable": true
+          },
+          "nickname": {
+            "default": null,
+            "description": "Abbreviated facility name (e.g., P200).",
+            "title": "Nickname",
+            "type": "string",
+            "nullable": true
+          },
+          "diameter": {
+            "default": null,
+            "description": "Diameter in meters.",
+            "title": "Diameter",
+            "type": "number",
+            "nullable": true
+          },
+          "lat": {
+            "default": null,
+            "description": "Latitude in deg.",
+            "title": "Lat",
+            "type": "number",
+            "nullable": true
+          },
+          "lon": {
+            "default": null,
+            "description": "Longitude in deg.",
+            "title": "Lon",
+            "type": "number",
+            "nullable": true
+          },
+          "elevation": {
+            "default": null,
+            "description": "Elevation in meters.",
+            "title": "Elevation",
+            "type": "number",
+            "nullable": true
+          },
+          "skycam_link": {
+            "default": null,
+            "description": "Link to the telescope's sky camera.",
+            "title": "Skycam Link",
+            "type": "string",
+            "nullable": true
+          },
+          "weather_link": {
+            "default": null,
+            "description": "Link to the preferred weather site.",
+            "title": "Weather Link",
+            "type": "string",
+            "nullable": true
+          },
+          "robotic": {
+            "default": null,
+            "description": "Is this telescope robotic?",
+            "title": "Robotic",
+            "type": "boolean",
+            "nullable": true
+          },
+          "fixed_location": {
+            "default": null,
+            "description": "Does this telescope have a fixed location (lon, lat, elev)?",
+            "title": "Fixed Location",
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "title": "TelescopePutBody",
+        "type": "object"
+      },
+      "ThumbnailPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for uploading a thumbnail.",
+        "properties": {
+          "obj_id": {
+            "description": "ID of object associated with thumbnails.",
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "data": {
+            "description": "base64-encoded PNG image file contents. Image size must be between 16px and 500px on a side.",
+            "title": "Data",
+            "type": "string"
+          },
+          "ttype": {
+            "description": "Thumbnail type. Must be one of 'new', 'ref', 'sub', 'sdss', 'dr8', 'new_gz', 'ref_gz', 'sub_gz'",
+            "title": "Ttype",
+            "type": "string"
+          }
+        },
+        "required": [
+          "obj_id",
+          "data",
+          "ttype"
+        ],
+        "title": "ThumbnailPostBody",
+        "type": "object"
+      },
+      "ThumbnailPostResponse": {
+        "description": "Data payload returned when uploading a thumbnail.",
+        "properties": {
+          "id": {
+            "description": "New thumbnail ID",
+            "title": "Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id"
+        ],
+        "title": "ThumbnailPostResponse",
+        "type": "object"
+      },
+      "ThumbnailPutBody": {
+        "additionalProperties": false,
+        "description": "Request body for updating a thumbnail.",
+        "properties": {
+          "obj_id": {
+            "default": null,
+            "description": "ID of the thumbnail's obj.",
+            "title": "Obj Id",
+            "type": "string",
+            "nullable": true
+          },
+          "type": {
+            "default": null,
+            "description": "Thumbnail type (e.g., ref, new, sub, ls, ps1, ...)",
+            "title": "Type",
+            "type": "string",
+            "nullable": true
+          },
+          "file_uri": {
+            "default": null,
+            "description": "Path of the Thumbnail on the machine running SkyPortal.",
+            "title": "File Uri",
+            "type": "string",
+            "nullable": true
+          },
+          "public_url": {
+            "default": null,
+            "description": "Publically accessible URL of the thumbnail.",
+            "title": "Public Url",
+            "type": "string",
+            "nullable": true
+          },
+          "origin": {
+            "default": null,
+            "description": "Origin of the Thumbnail.",
+            "title": "Origin",
+            "type": "string",
+            "nullable": true
+          },
+          "is_grayscale": {
+            "default": null,
+            "description": "Whether the thumbnail is (mostly) grayscale.",
+            "title": "Is Grayscale",
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "title": "ThumbnailPutBody",
+        "type": "object"
+      },
+      "UserACLPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for granting ACLs to a user.",
+        "properties": {
+          "aclIds": {
+            "description": "Array of ACL IDs (strings) to be granted to user",
+            "items": {
+              "type": "string"
+            },
+            "title": "Aclids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "aclIds"
+        ],
+        "title": "UserACLPostBody",
+        "type": "object"
+      },
+      "UserRolePostBody": {
+        "additionalProperties": false,
+        "description": "Request body for granting roles to a user.",
+        "properties": {
+          "roleIds": {
+            "description": "Array of Role IDs (strings) to be granted to user",
+            "items": {
+              "type": "string"
+            },
+            "title": "Roleids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "roleIds"
+        ],
+        "title": "UserRolePostBody",
+        "type": "object"
       }
     },
     "securitySchemes": {
