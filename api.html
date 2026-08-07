@@ -28893,164 +28893,6 @@
         }
       }
     },
-    "/api/boom/filters/{filter_id}": {
-      "get": {
-        "summary": "Get a filter",
-        "description": "Retrieve a filter",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SingleFilter"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>POST a new filter.",
-        "tags": [
-          "filters"
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "allOf": [
-                    {
-                      "$ref": "#/components/schemas/Success"
-                    },
-                    {
-                      "type": "object",
-                      "properties": {
-                        "data": {
-                          "type": "object",
-                          "properties": {
-                            "id": {
-                              "type": "integer",
-                              "description": "New filter ID"
-                            }
-                          }
-                        }
-                      }
-                    }
-                  ]
-                }
-              }
-            }
-          }
-        }
-      },
-      "patch": {
-        "summary": "Update a filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Update filter name",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FilterNoID"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          },
-          "400": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a filter",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Delete a filter",
-        "tags": [
-          "filters"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "filter_id",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Success"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/kowalski/filters/{filter_id}/v": {
       "get": {
         "summary": "Retrieve a filter as stored on Kowalski",
@@ -38436,6 +38278,10 @@
             "description": "ID of the Broker this Filter runs on, if any.",
             "nullable": true
           },
+          "autosave": {
+            "type": "boolean",
+            "description": "If set, objects passing this filter during broker ingestion are auto-saved as Sources to the Filter's Group (in addition to being registered as Candidates)."
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -38552,6 +38398,10 @@
             "type": "integer",
             "description": "ID of the Broker this Filter runs on, if any.",
             "nullable": true
+          },
+          "autosave": {
+            "type": "boolean",
+            "description": "If set, objects passing this filter during broker ingestion are auto-saved as Sources to the Filter's Group (in addition to being registered as Candidates)."
           }
         },
         "required": [
@@ -80124,7 +79974,6 @@
         "type": "object"
       },
       "AnnotationPostBody": {
-        "additionalProperties": false,
         "description": "Request body for posting an annotation.",
         "properties": {
           "origin": {
@@ -80173,7 +80022,6 @@
         "type": "object"
       },
       "AnnotationPutBody": {
-        "additionalProperties": false,
         "description": "Request body for updating an annotation.",
         "properties": {
           "data": {
