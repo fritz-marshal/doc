@@ -23,7 +23,7 @@
   <link rel="index" title="Index" href="genindex.html" />
   <link rel="search" title="Search" href="search.html" />
   <link rel="next" title="Developer Guidelines" href="developer.html" />
-  <link rel="prev" title="Kowalski collection schemas" href="catalogs.html" /> 
+  <link rel="prev" title="Catalog collection schemas" href="catalogs.html" /> 
   </head>
 
   <body>
@@ -103,7 +103,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+              <a href="catalogs.html" class="reference internal ">Catalog collection schemas</a>
             
 
             
@@ -118,7 +118,7 @@
             
               <ul>
                 
-                  <li class="toctree-l2"><a href="#kowalski-and-skyportal" class="reference internal">Kowalski and SkyPortal</a></li>
+                  <li class="toctree-l2"><a href="#boom-and-skyportal" class="reference internal">BOOM and SkyPortal</a></li>
                 
               </ul>
             
@@ -162,7 +162,7 @@
   <ul class="page-nav">
   <li class="prev">
     <a href="catalogs.html"
-       title="previous chapter">← Kowalski collection schemas</a>
+       title="previous chapter">← Catalog collection schemas</a>
   </li>
   <li class="next">
     <a href="developer.html"
@@ -179,15 +179,13 @@
 <p>This is the TL;DR section of the docs.</p>
 <p>The key characteristics of Fritz are efficiency, scalability, portability, and extensibility.
 Fritz employs a modular architecture and
-integrates and extends two major components: <a class="reference external" href="https://github.com/dmitryduev/kowalski">Kowalski</a>
+integrates and extends two major components: <a class="reference external" href="https://github.com/boom-astro/boom">BOOM</a>
 acts as the alert processor and data archive, and <a class="reference external" href="https://github.com/skyportal/skyportal">SkyPortal</a>,
 which handles the rest of the stack.
 The schematic overview of our system is shown below:</p>
 <p><img alt="img/fritz.png" src="_images/fritz.jpg" /></p>
-<section id="kowalski-and-skyportal">
-<h2>Kowalski and SkyPortal<a class="headerlink" href="#kowalski-and-skyportal" title="Link to this heading">¶</a></h2>
-<p>A schematic overview of the functional aspects of <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> and how they interact is shown below:</p>
-<p><img alt="img/kowalski.png" src="_images/kowalski.jpg" /></p>
+<section id="boom-and-skyportal">
+<h2>BOOM and SkyPortal<a class="headerlink" href="#boom-and-skyportal" title="Link to this heading">¶</a></h2>
 <p>A non-relational (NoSQL) database <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> powers the data archive, the alert stream sink,
 and the alert handling service. We base the choice of <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> as the workhorse on the following reasons:</p>
 <ul class="simple">
@@ -202,20 +200,14 @@ meaning no downtime in case of an alert packet schema change.</p></li>
 <li><p>Built-in <code class="docutils literal notranslate"><span class="pre">GeoJSON</span></code> support with 2D indexes on the sphere allowing efficient (potentially complicated) positional queries.</p></li>
 <li><p>Built-in support for horizontal scaling through sharding.</p></li>
 </ul>
-<p>An API layer provides an interface for the interaction with the backend:
-it is built using a <code class="docutils literal notranslate"><span class="pre">python</span></code> asynchronous web framework, <code class="docutils literal notranslate"><span class="pre">aiohttp</span></code>, and the standard <code class="docutils literal notranslate"><span class="pre">python</span></code> async event loop
-serves as a simple, fast, and robust job queue.
-A <a class="reference external" href="https://github.com/dmitryduev/penquins">programmatic <code class="docutils literal notranslate"><span class="pre">python</span></code> client</a> is also available
-to interact with Kowalski’s API.
-Multiple instances of the API service are maintained using the <code class="docutils literal notranslate"><span class="pre">Gunicorn</span></code> WSGI HTTP Server.
-Incoming and outgoing traffic is routed through <code class="docutils literal notranslate"><span class="pre">traefik</span></code>,
-which acts as a simple and performant reverse proxy/load balancer.
-An alert brokering layer listens to <code class="docutils literal notranslate"><span class="pre">Kafka</span></code> alert streams and uses a <code class="docutils literal notranslate"><span class="pre">dask.distributed</span></code> cluster for
-distributed alert packet processing, which includes data preprocessing, execution of machine learning models,
+<p>An HTTP API layer provides the interface to the backend, and is what SkyPortal talks to:
+Fritz reaches it through SkyPortal’s broker API abstraction, so alert queries, filter
+testing and photometry retrieval all go through one documented surface.</p>
+<p>An alert brokering layer listens to <code class="docutils literal notranslate"><span class="pre">Kafka</span></code> alert streams and processes each packet,
+which includes data preprocessing, execution of machine learning models,
 catalog cross-matching, and ingestion into <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code>.
 It also executes user-defined filters based on the augmented alert data and posts the filtering results
-to a <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> instance. Kowalski is containerized using <code class="docutils literal notranslate"><span class="pre">Docker</span></code> software and orchestrated with <code class="docutils literal notranslate"><span class="pre">docker-compose</span></code>
-allowing for simple and efficient deployment in the cloud and/or on-premise.</p>
+to a <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> instance, where they appear as Candidates on the relevant scanning page.</p>
 <p><a class="reference external" href="https://skyportal.io"><code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code></a>, similarly being an API-driven system, provides an interactive marshal
 and a follow-up observation manager with flawless integration with both robotic and classical follow-up facilities.
 It is designed with extensibility and scalability in mind: it uses an asynchronous <code class="docutils literal notranslate"><span class="pre">python</span></code> <code class="docutils literal notranslate"><span class="pre">tornado</span></code>-based backend,
@@ -232,7 +224,7 @@ authentication via OAuth; and distributed computation via Dask.</p>
             <div class="inner"><ul class="page-nav">
   <li class="prev">
     <a href="catalogs.html"
-       title="previous chapter">← Kowalski collection schemas</a>
+       title="previous chapter">← Catalog collection schemas</a>
   </li>
   <li class="next">
     <a href="developer.html"

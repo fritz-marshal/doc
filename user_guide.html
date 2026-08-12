@@ -113,7 +113,7 @@
         
           <li class="toctree-l1 ">
             
-              <a href="catalogs.html" class="reference internal ">Kowalski collection schemas</a>
+              <a href="catalogs.html" class="reference internal ">Catalog collection schemas</a>
             
 
             
@@ -192,7 +192,7 @@
 </ul>
 <p>The key characteristics of Fritz are efficiency, scalability, portability, and extensibility.
 Fritz employs a modular architecture and
-integrates and extends two major components: <a class="reference external" href="https://github.com/dmitryduev/kowalski">Kowalski</a>
+integrates and extends two major components: <a class="reference external" href="https://github.com/boom-astro/boom">BOOM</a>
 acts as the alert processor and data archive, and <a class="reference external" href="https://github.com/skyportal/skyportal">SkyPortal</a>,
 which handles the rest of the stack.
 The schematic overview of our system is shown below:</p>
@@ -229,7 +229,7 @@ the group, and the group’s <a class="reference external" href="https://docs.fr
 (defined on one of the alert streams that the group has access to)
 on the Group page. Group admins can create new filters (and modify existing ones).
 System administrators can grant alert stream access to the groups.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Fritz</span></code> provides rich alert stream filtering capabilities through its Kowalski backend,
+<p><code class="docutils literal notranslate"><span class="pre">Fritz</span></code> provides rich alert stream filtering capabilities through its BOOM backend,
 which consumes the ZTF Kafka alert stream, persisting the alerts to a database,
 and supplementing them with additional data such as the Galactic coordinates,
 external catalog cross-matches, machine learning scores etc.</p>
@@ -251,7 +251,7 @@ or implement <a class="reference external" href="https://docs.fritz.science/user
 <h4>Candidates and Sources<a class="headerlink" href="#candidates-and-sources" title="Link to this heading">¶</a></h4>
 <p>Alerts passing a filter are posted to Fritz’s SkyPortal backend as Candidates
 and appear on the Scanning page (for the corresponding filter groups).</p>
-<p>Candidates do not have to originate from <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> and could be posted (manually) via the API.</p>
+<p>Candidates do not have to originate from <code class="docutils literal notranslate"><span class="pre">BOOM</span></code> and could be posted (manually) via the API.</p>
 <p>On the Candidates page, the users can filter, scan and inspect the objects that have passed filters of their groups
 and save them to one or more groups. Candidates that are not saved to any group within 7 days are removed from <code class="docutils literal notranslate"><span class="pre">Fritz</span></code>.
 Saved Candidates become Sources that are persisted indefinitely.</p>
@@ -310,7 +310,7 @@ However, <code class="docutils literal notranslate"><span class="pre">Fritz</spa
 </section>
 <section id="using-the-api">
 <h3>Using the API<a class="headerlink" href="#using-the-api" title="Link to this heading">¶</a></h3>
-<p>An API enables access to most of the underlying functionality of Fritz/SkyPortal/Kowalski.
+<p>An API enables access to most of the underlying functionality of Fritz/SkyPortal/BOOM.
 The workflows described above are all enabled by specific API calls.
 The complete OpenAPI specification is available at <a class="reference external" href="https://docs.fritz.science/api.html">https://docs.fritz.science/api.html</a>.</p>
 <p>To use the API, you will need a token that can be generated on the Profile page. Once you have that, you can
@@ -378,17 +378,17 @@ access Fritz programmatically as follows.</p>
 <p><a class="reference external" href="https://github.com/ZwickyTransientFacility/ztf-avro-alert">ZTF alerts</a> are
 <a class="reference external" href="https://iopscience.iop.org/article/10.1088/1538-3873/aae8ac/meta">generated at IPAC</a> based on difference
 imaging analysis and are distributed to the world at low latency via a Kafka alert stream.
-<code class="docutils literal notranslate"><span class="pre">Fritz</span></code>’s <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> backend consumes this stream, persisting the alerts to a <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> database,
+<code class="docutils literal notranslate"><span class="pre">Fritz</span></code>’s <code class="docutils literal notranslate"><span class="pre">BOOM</span></code> backend consumes this stream, persisting the alerts to a <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code> database,
 and supplementing them with other useful quantities such as Galactic coordinates, external catalog cross-matches,
-machine learning scores etc. Next, <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> executes a series of user-defined filters on each new (“enhanced”)
+machine learning scores etc. Next, <code class="docutils literal notranslate"><span class="pre">BOOM</span></code> executes a series of user-defined filters on each new (“enhanced”)
 incoming alert accessible to the filter. Users create filters on the <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> frontend and they are executed
-on the <code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> backend. If an alert passes a filter, it is pushed up to <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> and appears on a program’s
+on the <code class="docutils literal notranslate"><span class="pre">BOOM</span></code> backend. If an alert passes a filter, it is pushed up to <code class="docutils literal notranslate"><span class="pre">SkyPortal</span></code> and appears on a program’s
 scanning page.</p>
 <p>Note: for a detailed description of the ZTF alerts and their contents, please see
 <a class="reference external" href="https://github.com/ZwickyTransientFacility/ztf-avro-alert">here</a>.</p>
 <section id="implementation-of-filters-as-mongodb-aggregation-pipelines">
 <h4>Implementation of Filters as MongoDB Aggregation Pipelines<a class="headerlink" href="#implementation-of-filters-as-mongodb-aggregation-pipelines" title="Link to this heading">¶</a></h4>
-<p><code class="docutils literal notranslate"><span class="pre">Kowalski</span></code> uses <a class="reference external" href="https://mongodb.com"><code class="docutils literal notranslate"><span class="pre">MongoDB</span></code></a>, a document-based NoSQL database, on the backend.</p>
+<p><code class="docutils literal notranslate"><span class="pre">BOOM</span></code> uses <a class="reference external" href="https://mongodb.com"><code class="docutils literal notranslate"><span class="pre">MongoDB</span></code></a>, a document-based NoSQL database, on the backend.</p>
 <ul class="simple">
 <li><p>For a very brief introduction into <code class="docutils literal notranslate"><span class="pre">MongoDB</span></code>, we recommend watching
 <a class="reference external" href="https://www.youtube.com/watch?v=EE8ZTQxa0AM">MongoDB in 5 Minutes with Eliot Horowitz</a>.</p></li>
@@ -425,51 +425,30 @@ Expressions can be nested.</p>
 </section>
 <section id="testing-your-filter">
 <h4>Testing your filter<a class="headerlink" href="#testing-your-filter" title="Link to this heading">¶</a></h4>
-<p>To ease the process of writing and debugging the filters, we have set up two live <em>public</em> <code class="docutils literal notranslate"><span class="pre">MongoDB</span> <span class="pre">Atlas</span></code> databases
-in the cloud:</p>
-<ul class="simple">
-<li><p>The first one contains a small curated set of ~300 sample public ZTF alerts originating from SNe, variable stars,
-AGN, and bogus detections. The auxiliary information is limited to the detection history present in the alert packets.</p></li>
-<li><p>The second one contains ~120,000 public ZTF alerts from July 6, 2020. The auxiliary information contains a ~100-day
-history of detections (limited to reduce the test database size), cross-matches with external catalogs, and a few
-additional computed quantities.</p></li>
-</ul>
-<p>We recommend to begin exploring filtering on the first database and then move onto the second one.</p>
-<p>We will show how to use a tool called <a class="reference external" href="https://www.mongodb.com/try/download/compass">MongoDB Compass</a>
-(the full version is now free) to construct and debug aggregation pipelines (aka alert filters), using the two cloud
-databases, that can be then plugged into <code class="docutils literal notranslate"><span class="pre">Fritz</span></code>.</p>
-<p>Filters will be managed on a dedicated page on <code class="docutils literal notranslate"><span class="pre">Fritz</span></code>. A detailed description of the interface and its capabilities
-(including, for example, filter versioning and diff’ing) will be covered elsewhere – please stay tuned.</p>
-<section id="mongodb-compass">
-<h5>MongoDB Compass<a class="headerlink" href="#mongodb-compass" title="Link to this heading">¶</a></h5>
-<p>Download and install MongoDB Compass for your system from <a class="reference external" href="https://www.mongodb.com/try/download/compass">here</a>.</p>
-<p>The connection string to access the first sample public alert database:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>mongodb://ztf:FritzZwicky@fritz-test-shard-00-00-uas9d.gcp.mongodb.net:27017,fritz-test-shard-00-01-uas9d.gcp.mongodb.net:27017,fritz-test-shard-00-02-uas9d.gcp.mongodb.net:27017/test?authSource=admin&amp;replicaSet=fritz-test-shard-0&amp;readPreference=primary&amp;appname=MongoDB%20Compass&amp;ssl=true
+<p>To ease the process of writing and debugging the filters, Fritz can run a candidate pipeline against
+real recent alerts and show you what it would have returned, without saving anything or activating the
+filter. This is the recommended way to iterate: it runs against the same backend, the same collection
+and the same permissions your filter will see in production.</p>
+<p>Filter preview is available from the filter’s page, and over the API:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">POST</span> <span class="o">/</span><span class="n">api</span><span class="o">/</span><span class="n">brokers</span><span class="o">/</span><span class="p">{</span><span class="n">broker_id</span><span class="p">}</span><span class="o">/</span><span class="nb">filter</span><span class="o">/</span><span class="n">test</span>
 </pre></div>
 </div>
-<p>The connection string to access the second sample public alert database:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mongodb</span><span class="o">+</span><span class="n">srv</span><span class="p">:</span><span class="o">//</span><span class="n">ztf</span><span class="p">:</span><span class="n">FritzZwicky</span><span class="nd">@fritz</span><span class="o">-</span><span class="n">public</span><span class="o">-</span><span class="mf">20200706.</span><span class="n">uas9d</span><span class="o">.</span><span class="n">gcp</span><span class="o">.</span><span class="n">mongodb</span><span class="o">.</span><span class="n">net</span><span class="o">/</span><span class="n">kowalski</span>
-</pre></div>
-</div>
-<p>Upon connection:</p>
+<p>with the aggregation pipeline in the request body. The response contains the alerts that passed, so you
+can check both that the filter returns something and that what it returns is what you expected. Note that
+the preview runs over a bounded recent time window rather than the whole archive, so a filter targeting
+rare events may legitimately come back empty – widen the window or relax a stage to convince yourself
+the pipeline is doing what you think.</p>
+<p>A few practical notes:</p>
 <ul class="simple">
-<li><p>Select the <code class="docutils literal notranslate"><span class="pre">kowalski</span></code> database</p></li>
-<li><p>Select the <code class="docutils literal notranslate"><span class="pre">ZTF_alerts</span></code> collection</p></li>
-<li><p>Go to the Aggregations tab</p></li>
-<li><p>Click the down arrow located to the left of the “Collation” button and select “New Pipeline From Text”</p></li>
-<li><p>Copy paste the contents of the provided JSON files with the sample filters (see below)</p></li>
+<li><p>The filter code you save on Fritz must be valid JSON. If you draft pipelines in a tool that emits
+JavaScript-style output (single quotes, unquoted keys), convert it before saving, and use an editor that
+can validate JSON.</p></li>
+<li><p>The last stage of a pipeline must be a <code class="docutils literal notranslate"><span class="pre">$project</span></code> that includes <code class="docutils literal notranslate"><span class="pre">objectId</span></code>, so the backend can tell which
+object each passing alert belongs to.</p></li>
 </ul>
-<p>Note that Compass shows the output of all stages interactively and also displays/explains any errors in the code,
-which is extremely helpful for debugging and experimentation.</p>
-<p>By default, Compass’ aggregation pipeline builder works in Sample Mode, showing up to 20 documents that pass any
-given stage. You can change the default settings, including the default timeout by clicking the button
-with a little gear next to the “Auto Preview” toggle switch.</p>
-<p><img alt="fritz-filters-01" src="https://user-images.githubusercontent.com/7557205/87487417-6f66ff80-c5f2-11ea-8d7b-49c51b6a502d.gif" /></p>
-<p>Note: the filter code that you will save on Fritz must be valid JSON, so, once you’re done with debugging,
-when exporting a filter in Compass, select “NODE” under “Export Pipeline To:”, copy-paste into a text editor,
-and then manually replace single quotes with double quotes. We also recommend using a text editor that can validate
-JSON.</p>
-</section>
+<p>If you have direct read access to a MongoDB deployment holding alert data, tools such as
+<a class="reference external" href="https://www.mongodb.com/try/download/compass">MongoDB Compass</a> are also useful for interactive pipeline
+building, since they show the output of each stage as you go and explain errors in place.</p>
 </section>
 <section id="upstream-aggregation-pipeline-stages">
 <h4>“Upstream” aggregation pipeline stages<a class="headerlink" href="#upstream-aggregation-pipeline-stages" title="Link to this heading">¶</a></h4>
@@ -587,7 +566,7 @@ filters in Compass, the users must take care of that – all the examples below 
 </section>
 <section id="alert-data-augmentation">
 <h4>Alert data augmentation<a class="headerlink" href="#alert-data-augmentation" title="Link to this heading">¶</a></h4>
-<p>Fritz’s Kowalski backend augments the alert data with the following: [as of January 2021]</p>
+<p>Fritz’s BOOM backend augments the alert data with the following: [as of January 2021]</p>
 <ul class="simple">
 <li><p>Galactic coordinates</p></li>
 <li><p>Cross-matches with external catalogs:</p>
@@ -603,7 +582,7 @@ filters in Compass, the users must take care of that – all the examples below 
 <li><p>PS1_DR1 (all matches within 2”)</p></li>
 <li><p>PS1_STRM (all matches within 2”)</p></li>
 <li><p>galaxy_redshifts_20200522 (all matches within 2”)</p></li>
-<li><p>CLU_20190625 (<a class="reference external" href="https://github.com/dmitryduev/kowalski/blob/master/kowalski/alert_broker_ztf.py#L351">“elliptical” matches with close galaxies using 3x their size</a>)</p></li>
+<li><p>CLU_20190625 (“elliptical” matches with close galaxies, using 3x their size)</p></li>
 </ul>
 </li>
 </ul>
@@ -1826,45 +1805,43 @@ stage based on the values of the boolean fields defined above:</p>
 </section>
 <section id="fast-transients-program-filter">
 <h4>Fast Transients program filter<a class="headerlink" href="#fast-transients-program-filter" title="Link to this heading">¶</a></h4>
-<p>In this example, we will see how to adapt the Fast Transients’ program filter that has been using Kowalski for the
-initial search.</p>
+<p>In this example, we will see how the Fast Transients’ program expresses its initial search.</p>
 <p><a class="reference download internal" download="" href="_downloads/0d9e822457e27108abb8cb59fd37715c/fritz_filter_fast.json"><code class="xref download docutils literal notranslate"><span class="pre">fritz_filter_fast.json</span></code></a></p>
-<p>In the <code class="docutils literal notranslate"><span class="pre">python</span></code> code snippet below, courtesy of Anna Ho and Yuhan Yao, a coarse search is run using Kowalski and then a
-number of logical expressions would be evaluated on the query result:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">astropy.time</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">penquins</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kowalski</span>
+<p>The coarse search is the filter pipeline itself: a <code class="docutils literal notranslate"><span class="pre">$match</span></code> stage selecting on the alert’s own
+quality columns, followed by a <code class="docutils literal notranslate"><span class="pre">$project</span></code> naming the fields the later logic needs. Expressed as an
+aggregation pipeline, that first stage is:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;$match&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;candidate.magpsf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$lt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;candidate.isdiffpos&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$in&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;t&quot;</span><span class="p">]</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;candidate.programid&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$gt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;candidate.ssdistnr&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$lt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;candidate.drb&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nt">&quot;$gt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.65</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;$project&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;objectId&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.distpsnr1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.sgscore1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.srmag1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.sgmag1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.simag1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;candidate.szmag1&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">drb</span></code> cut of 0.65 gives roughly a 1.7% false-negative and false-positive rate. Note that the
+time window is not part of the pipeline: the backend restricts each run to the alerts it is
+processing, so a filter should not select on <code class="docutils literal notranslate"><span class="pre">candidate.jd</span></code> itself.</p>
+<p>In the <code class="docutils literal notranslate"><span class="pre">python</span></code> code snippet below, courtesy of Anna Ho and Yuhan Yao, a number of logical
+expressions are then evaluated on the alerts the search returned, where <code class="docutils literal notranslate"><span class="pre">out</span></code> is the list of
+passing alerts (for example, the <code class="docutils literal notranslate"><span class="pre">data</span></code> of a filter preview response):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="c1"># Set search window</span>
-<span class="n">obst</span> <span class="o">=</span> <span class="n">obs</span><span class="p">[</span><span class="s1">&#39;UT_START&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
-<span class="n">start</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">obst</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;isot&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">jd</span> <span class="o">-</span> <span class="mf">0.02</span>
-<span class="n">end</span> <span class="o">=</span> <span class="n">Time</span><span class="p">(</span><span class="n">obst</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;isot&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">jd</span> <span class="o">+</span> <span class="mf">0.02</span>
-<span class="c1"># gt is greater than, lt is lower than</span>
-<span class="n">q</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;query_type&quot;</span><span class="p">:</span> <span class="s2">&quot;find&quot;</span><span class="p">,</span>
-     <span class="s2">&quot;query&quot;</span><span class="p">:</span> <span class="p">{</span>
-         <span class="s2">&quot;catalog&quot;</span><span class="p">:</span> <span class="s2">&quot;ZTF_alerts&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;filter&quot;</span><span class="p">:</span> <span class="p">{</span>
-                 <span class="s1">&#39;candidate.jd&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$gt&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span> <span class="s1">&#39;$lt&#39;</span><span class="p">:</span> <span class="n">end</span><span class="p">},</span>
-                 <span class="s1">&#39;candidate.magpsf&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$lt&#39;</span><span class="p">:</span> <span class="mi">20</span><span class="p">},</span>
-                 <span class="s1">&#39;candidate.isdiffpos&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$in&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;1&#39;</span><span class="p">,</span> <span class="s1">&#39;t&#39;</span><span class="p">]},</span>
-                 <span class="s1">&#39;candidate.programid&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$gt&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-                 <span class="s1">&#39;candidate.ssdistnr&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$lt&#39;</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">},</span>
-                 <span class="s1">&#39;candidate.drb&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;$gt&#39;</span><span class="p">:</span> <span class="mf">0.65</span><span class="p">},</span> <span class="c1"># That gives a 1.7% FNR and FPR.</span>
-         <span class="p">},</span>
-         <span class="s2">&quot;projection&quot;</span><span class="p">:</span> <span class="p">{</span>
-                 <span class="s2">&quot;objectId&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.distpsnr1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.sgscore1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.srmag1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.sgmag1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.simag1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-                 <span class="s2">&quot;candidate.szmag1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
-         <span class="p">}</span>
-     <span class="p">}</span>
-     <span class="p">}</span>
-<span class="n">kowalski</span> <span class="o">=</span> <span class="n">Kowalski</span><span class="p">()</span>
-<span class="n">query_result</span> <span class="o">=</span> <span class="n">kowalski</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">query</span><span class="o">=</span><span class="n">q</span><span class="p">)</span>
-<span class="n">out</span> <span class="o">=</span> <span class="n">query_result</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
 <span class="n">names_all</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">val</span><span class="p">[</span><span class="s1">&#39;objectId&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">out</span><span class="p">])</span>
 <span class="n">names</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">names_all</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;There are </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span><span class="si">}</span><span class="s2"> unique cands from this initial filter.&quot;</span><span class="p">)</span>
