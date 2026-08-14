@@ -12389,6 +12389,10 @@
                   "canSave": {
                     "type": "boolean",
                     "description": "Boolean indicating whether user can save sources to group. Defaults to true."
+                  },
+                  "canSharePhotometry": {
+                    "type": "boolean",
+                    "description": "Boolean indicating whether user can share photometry points to other groups. Defaults to false."
                   }
                 },
                 "required": [
@@ -25397,6 +25401,278 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/super_objs/{super_obj_id}": {
+      "get": {
+        "summary": "Retrieve a SuperObj",
+        "tags": [
+          "super objs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "super_obj_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update a SuperObj",
+        "description": "Update a SuperObj's metadata or membership. `obj_ids` replaces the\nmembership wholesale; `add_obj_ids` and `remove_obj_ids` modify it\nincrementally and may not be combined with `obj_ids`.\n",
+        "tags": [
+          "super objs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "super_obj_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "is_roid": {
+                    "type": "boolean"
+                  },
+                  "obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "add_obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "remove_obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a SuperObj",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Delete a SuperObj. The Objs it links are left untouched; only the\nassociation is removed.\n",
+        "tags": [
+          "super objs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "super_obj_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/super_objs": {
+      "get": {
+        "summary": "Retrieve multiple SuperObjs",
+        "tags": [
+          "super objs"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "name",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by (partial) name"
+          },
+          {
+            "in": "query",
+            "name": "isRoid",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "Filter by moving-object status"
+          },
+          {
+            "in": "query",
+            "name": "objID",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Only SuperObjs linking this Obj"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a SuperObj",
+        "description": "Create a SuperObj linking multiple Objs that represent the same\nastrophysical object, e.g. detections of one asteroid on separate\nnights, or the same transient reported by different surveys.\n",
+        "tags": [
+          "super objs"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the super-object, e.g. an MPC designation."
+                  },
+                  "is_roid": {
+                    "type": "boolean",
+                    "description": "Whether the super-object is a moving object."
+                  },
+                  "obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "IDs of the Objs to link."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "description": "New SuperObj ID"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -47169,6 +47445,10 @@
           "can_save": {
             "type": "boolean",
             "description": "Boolean flag indicating whether the user should be able to save sources to the group"
+          },
+          "can_share_photometry": {
+            "type": "boolean",
+            "description": "Boolean flag indicating whether the user should be able to share photometry points to other groups even if the user is not the owner of the photometry data"
           }
         },
         "required": [
@@ -47254,6 +47534,10 @@
           "can_save": {
             "type": "boolean",
             "description": "Boolean flag indicating whether the user should be able to save sources to the group"
+          },
+          "can_share_photometry": {
+            "type": "boolean",
+            "description": "Boolean flag indicating whether the user should be able to share photometry points to other groups even if the user is not the owner of the photometry data"
           }
         },
         "required": [
@@ -48760,6 +49044,12 @@
               "type": "boolean"
             }
           },
+          "can_share_photometry_for_groups": {
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          },
           "user_email": {
             "type": "string",
             "maxLength": 255,
@@ -48781,6 +49071,7 @@
         "required": [
           "admin_for_groups",
           "can_save_to_groups",
+          "can_share_photometry_for_groups",
           "role_id",
           "token"
         ],
@@ -48882,6 +49173,12 @@
               "type": "boolean"
             }
           },
+          "can_share_photometry_for_groups": {
+            "type": "array",
+            "items": {
+              "type": "boolean"
+            }
+          },
           "user_email": {
             "type": "string",
             "maxLength": 255,
@@ -48899,6 +49196,7 @@
         "required": [
           "admin_for_groups",
           "can_save_to_groups",
+          "can_share_photometry_for_groups",
           "role_id",
           "token"
         ],
@@ -62939,7 +63237,7 @@
                 }
               }
             ],
-            "description": "Limiting magnitude of the image in the magnitude system `magsys`. Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Null values not allowed."
+            "description": "Limiting magnitude of the image in the magnitude system `magsys`. Can be given as a scalar or a 1D list. If a scalar, will be broadcast to all values given as lists. Required for non-detections (when mag is null)."
           },
           "limiting_mag_nsigma": {
             "oneOf": [
@@ -62987,7 +63285,6 @@
         "required": [
           "filter",
           "instrument_id",
-          "limiting_mag",
           "magsys",
           "mjd",
           "obj_id"
@@ -75877,6 +76174,11 @@
             "description": "Elevation in meters.",
             "nullable": true
           },
+          "mpc_obscode": {
+            "type": "string",
+            "description": "Minor Planet Center observatory code, e.g. 'X05' (Rubin) or 'I41' (ZTF). Required to query moving-object ephemerides for this site.",
+            "nullable": true
+          },
           "diameter": {
             "type": "number",
             "description": "Diameter in meters."
@@ -75987,6 +76289,11 @@
           "elevation": {
             "type": "number",
             "description": "Elevation in meters.",
+            "nullable": true
+          },
+          "mpc_obscode": {
+            "type": "string",
+            "description": "Minor Planet Center observatory code, e.g. 'X05' (Rubin) or 'I41' (ZTF). Required to query moving-object ephemerides for this site.",
             "nullable": true
           },
           "diameter": {
@@ -76114,6 +76421,11 @@
             "description": "Origin of the Thumbnail.",
             "nullable": true
           },
+          "survey": {
+            "type": "string",
+            "description": "Survey the cutout came from (e.g. ZTF, LSST), for per-survey labeling; NULL for all-sky archival thumbnails (sdss, ps1, ...) and legacy rows.",
+            "nullable": true
+          },
           "obj_id": {
             "type": "string",
             "description": "ID of the thumbnail's obj."
@@ -76226,6 +76538,11 @@
           "origin": {
             "type": "string",
             "description": "Origin of the Thumbnail.",
+            "nullable": true
+          },
+          "survey": {
+            "type": "string",
+            "description": "Survey the cutout came from (e.g. ZTF, LSST), for per-survey labeling; NULL for all-sky archival thumbnails (sdss, ps1, ...) and legacy rows.",
             "nullable": true
           },
           "obj_id": {
@@ -79284,6 +79601,16 @@
             "type": "array",
             "nullable": true
           },
+          "canSharePhotometry": {
+            "default": null,
+            "description": "List of booleans indicating whether user should be able to share photometry points to respective specified group(s). Defaults to all false.",
+            "title": "Cansharephotometry",
+            "items": {
+              "type": "boolean"
+            },
+            "type": "array",
+            "nullable": true
+          },
           "userExpirationDate": {
             "default": null,
             "description": "Arrow-parseable date string (e.g. 2020-01-01). Set a user's expiration date, after which the user's account will be deactivated and will be unable to access the application.",
@@ -80443,6 +80770,13 @@
             "description": "Thumbnail type. Must be one of 'new', 'ref', 'sub', 'sdss', 'dr8', 'new_gz', 'ref_gz', 'sub_gz'",
             "title": "Ttype",
             "type": "string"
+          },
+          "survey": {
+            "default": null,
+            "description": "Survey the cutout came from (e.g. ZTF, LSST). NULL for all-sky archival thumbnails.",
+            "title": "Survey",
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
