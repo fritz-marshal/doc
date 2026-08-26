@@ -6254,6 +6254,26 @@
             "schema": {
               "type": "integer"
             }
+          },
+          {
+            "in": "query",
+            "name": "group_id",
+            "required": false,
+            "description": "Only return filters belonging to this Group.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "stream_id",
+            "required": false,
+            "description": "Only return filters reading from this Stream.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
           }
         ]
       },
@@ -6336,7 +6356,7 @@
     "/api/filters": {
       "get": {
         "summary": "Get all filters",
-        "description": "Retrieve all filters",
+        "description": "Retrieve all filters, optionally restricted to one group or stream.\nEach filter is returned without its altdata, which holds the whole\nbroker definition; GET on a single filter returns that.\n",
         "tags": [
           "filters"
         ],
@@ -6345,7 +6365,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ArrayOfFilters"
+                  "$ref": "#/components/schemas/ArrayOfFilterListItems"
                 }
               }
             }
@@ -6359,7 +6379,29 @@
               }
             }
           }
-        }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "group_id",
+            "required": false,
+            "description": "Only return filters belonging to this Group.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "stream_id",
+            "required": false,
+            "description": "Only return filters reading from this Stream.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        ]
       },
       "post": {
         "summary": "Create a new filter",
@@ -20335,6 +20377,252 @@
         }
       }
     },
+    "/api/data_access_request/{request_id}": {
+      "get": {
+        "summary": "Get a data access request",
+        "description": "Retrieve a single data access request",
+        "tags": [
+          "data sharing"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "objId",
+            "required": false,
+            "description": "Only requests on this object",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "description": "Only requests with this status",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "description": "'incoming' for requests to answer, 'outgoing' for requests made by the calling user. Both when omitted.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "required": false,
+            "description": "Page number for paginated query results. Defaults to 1.",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "numPerPage",
+            "required": false,
+            "description": "Number of requests to return per paginated request. Defaults to 25. Max 500.",
+            "schema": {
+              "default": 25,
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Answer a data access request",
+        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Accept or decline a request for data you own. Accepting shares the requested dataset with a group the requester belongs to, defaulting to their single user group.\n",
+        "tags": [
+          "data sharing"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataAccessRequestPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Withdraw a data access request",
+        "description": "Withdraw a request you made",
+        "tags": [
+          "data sharing"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "request_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/api/data_access_request": {
+      "get": {
+        "summary": "Get data access requests",
+        "description": "Retrieve the data access requests the calling user made, or that they are in a position to answer.\n",
+        "tags": [
+          "data sharing"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "objId",
+            "required": false,
+            "description": "Only requests on this object",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "description": "Only requests with this status",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "required": false,
+            "description": "'incoming' for requests to answer, 'outgoing' for requests made by the calling user. Both when omitted.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "required": false,
+            "description": "Page number for paginated query results. Defaults to 1.",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "numPerPage",
+            "required": false,
+            "description": "Number of requests to return per paginated request. Defaults to 25. Max 500.",
+            "schema": {
+              "default": 25,
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Ask for data on a source",
+        "description": "Ask the owners of photometry or spectra on a source to share it. One request is created per dataset asked for; datasets already visible to the calling user, or already the subject of a pending request, are skipped.\n",
+        "tags": [
+          "data sharing"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataAccessRequestPostBody"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/sharing": {
       "post": {
         "summary": "Share data with additional groups/users",
@@ -22450,6 +22738,37 @@
         ]
       }
     },
+    "/api/sources/{obj_id}/data_availability": {
+      "get": {
+        "summary": "Retrieve what data exists on a source but is not visible",
+        "description": "Retrieve metadata describing the photometry and spectra attached to a source that the calling user cannot read: who owns it, which instrument and filter it was taken with, when, and how much of it there is. No fluxes, magnitudes or spectra are returned; this is the description of data that can then be asked for.\n",
+        "tags": [
+          "sources",
+          "data sharing"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/sources/{obj_id}/interests": {
       "get": {
         "summary": "Retrieve the interests registered on a source",
@@ -23070,6 +23389,106 @@
             }
           }
         ]
+      }
+    },
+    "/api/sources/{obj_id}/acknowledgment": {
+      "get": {
+        "summary": "Retrieve the acknowledgment block for an Obj",
+        "description": "Build the citation text for a source from what it actually used: the\ninstance, the filters and brokers that selected it, the facilities\nthat supplied its photometry and spectra, and the programs it was\nobserved under. Returns the assembled paragraph and the components it\nwas built from, so a caller can drop anything unused.\n",
+        "tags": [
+          "objs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "exclude_filter_ids",
+            "required": false,
+            "description": "Filters not to cite. Omit to cite every one detected.",
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "exclude_instrument_ids",
+            "required": false,
+            "description": "Instruments not to cite. Omit to cite every one detected.",
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "exclude_allocation_ids",
+            "required": false,
+            "description": "Allocations not to cite. Omit to cite every one detected.",
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "text": {
+                              "type": "string",
+                              "description": "The assembled acknowledgment paragraph"
+                            },
+                            "components": {
+                              "type": "object",
+                              "description": "The parts the text was built from"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/sources/{obj_id}/observability": {
@@ -30170,6 +30589,45 @@
         ]
       }
     },
+    "/api/user/{user_id}/profile": {
+      "get": {
+        "summary": "Get a user's public profile",
+        "description": "Retrieve the profile a user shares with others: their name and avatar, plus the fields they chose to share in their settings.\n",
+        "tags": [
+          "users"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/user/{user_id}/acls": {
       "post": {
         "summary": "Grant ACLs to a user",
@@ -30329,7 +30787,7 @@
     "/api/user/{user_id}": {
       "get": {
         "summary": "Get a user",
-        "description": "Retrieve a user",
+        "description": "Retrieve a user. Without the Manage users ACL, only the user's own record is returned in full; other users are reduced to the profile they chose to share.\n",
         "tags": [
           "users"
         ],
@@ -30448,7 +30906,7 @@
     "/api/user": {
       "get": {
         "summary": "Get all users",
-        "description": "Retrieve all users",
+        "description": "Retrieve all users. Without the Manage users ACL, contact details not shared on a user's public profile are omitted.\n",
         "tags": [
           "users"
         ],
@@ -36762,6 +37220,381 @@
         ],
         "additionalProperties": false
       },
+      "DataAccessRequest": {
+        "type": "object",
+        "properties": {
+          "requester": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User asking for the data.",
+            "readOnly": true
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who owns the data being asked for.",
+            "readOnly": true
+          },
+          "obj": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Obj"
+              }
+            ],
+            "description": "The Obj the data is attached to.",
+            "readOnly": true
+          },
+          "instrument": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instrument"
+              }
+            ],
+            "description": "Instrument of the requested photometry.",
+            "readOnly": true
+          },
+          "spectrum": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Spectrum"
+              }
+            ],
+            "description": "The requested spectrum.",
+            "readOnly": true
+          },
+          "responded_by": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who answered the request.",
+            "readOnly": true
+          },
+          "granted_group": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              }
+            ],
+            "description": "Group the data was shared into on acceptance.",
+            "readOnly": true
+          },
+          "requester_id": {
+            "type": "integer",
+            "description": "ID of the User asking for the data."
+          },
+          "owner_id": {
+            "type": "integer",
+            "description": "ID of the User who owns the data being asked for."
+          },
+          "obj_id": {
+            "type": "string",
+            "description": "ID of the Obj the data is attached to."
+          },
+          "data_type": {
+            "enum": [
+              "photometry",
+              "spectrum"
+            ],
+            "maxLength": 10,
+            "description": "Which kind of data is being asked for.",
+            "type": "string"
+          },
+          "instrument_id": {
+            "type": "integer",
+            "description": "Instrument of the requested photometry; null for a spectrum.",
+            "nullable": true
+          },
+          "filter": {
+            "type": "string",
+            "description": "Bandpass of the requested photometry; null for a spectrum.",
+            "nullable": true
+          },
+          "spectrum_id": {
+            "type": "integer",
+            "description": "The requested spectrum; null for photometry.",
+            "nullable": true
+          },
+          "owner_group_ids": {
+            "type": "array",
+            "description": "Groups holding the data when the request was made. Snapshotted so that the set of people who can answer it does not shift as the data is shared onward.",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "accepted",
+              "declined"
+            ],
+            "maxLength": 8,
+            "description": "Whether the request has been answered, and how.",
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "description": "What the requester said when asking.",
+            "nullable": true
+          },
+          "responded_by_id": {
+            "type": "integer",
+            "description": "ID of the User who answered the request.",
+            "nullable": true
+          },
+          "granted_group_id": {
+            "type": "integer",
+            "description": "Group the data was shared into on acceptance.",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "data_type",
+          "obj_id",
+          "owner_id",
+          "requester_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleDataAccessRequest": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataAccessRequest"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfDataAccessRequests": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataAccessRequest"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "DataAccessRequestNoID": {
+        "type": "object",
+        "properties": {
+          "requester": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User asking for the data.",
+            "readOnly": true
+          },
+          "owner": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who owns the data being asked for.",
+            "readOnly": true
+          },
+          "obj": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Obj"
+              }
+            ],
+            "description": "The Obj the data is attached to.",
+            "readOnly": true
+          },
+          "instrument": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Instrument"
+              }
+            ],
+            "description": "Instrument of the requested photometry.",
+            "readOnly": true
+          },
+          "spectrum": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Spectrum"
+              }
+            ],
+            "description": "The requested spectrum.",
+            "readOnly": true
+          },
+          "responded_by": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who answered the request.",
+            "readOnly": true
+          },
+          "granted_group": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              }
+            ],
+            "description": "Group the data was shared into on acceptance.",
+            "readOnly": true
+          },
+          "requester_id": {
+            "type": "integer",
+            "description": "ID of the User asking for the data."
+          },
+          "obj_id": {
+            "type": "string",
+            "description": "ID of the Obj the data is attached to."
+          },
+          "data_type": {
+            "enum": [
+              "photometry",
+              "spectrum"
+            ],
+            "maxLength": 10,
+            "description": "Which kind of data is being asked for.",
+            "type": "string"
+          },
+          "instrument_id": {
+            "type": "integer",
+            "description": "Instrument of the requested photometry; null for a spectrum.",
+            "nullable": true
+          },
+          "filter": {
+            "type": "string",
+            "description": "Bandpass of the requested photometry; null for a spectrum.",
+            "nullable": true
+          },
+          "spectrum_id": {
+            "type": "integer",
+            "description": "The requested spectrum; null for photometry.",
+            "nullable": true
+          },
+          "owner_group_ids": {
+            "type": "array",
+            "description": "Groups holding the data when the request was made. Snapshotted so that the set of people who can answer it does not shift as the data is shared onward.",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "accepted",
+              "declined"
+            ],
+            "maxLength": 8,
+            "description": "Whether the request has been answered, and how.",
+            "type": "string"
+          },
+          "message": {
+            "type": "string",
+            "description": "What the requester said when asking.",
+            "nullable": true
+          },
+          "responded_by_id": {
+            "type": "integer",
+            "description": "ID of the User who answered the request.",
+            "nullable": true
+          },
+          "granted_group_id": {
+            "type": "integer",
+            "description": "Group the data was shared into on acceptance.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "data_type",
+          "obj_id",
+          "requester_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleDataAccessRequestNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/DataAccessRequestNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfDataAccessRequestNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataAccessRequestNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
       "DefaultAnalysis": {
         "type": "object",
         "properties": {
@@ -40230,6 +41063,90 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/Filter"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "FilterListItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Filter ID."
+          },
+          "name": {
+            "type": "string",
+            "description": "Filter name."
+          },
+          "group_id": {
+            "type": "integer",
+            "description": "ID of the Filter's Group."
+          },
+          "stream_id": {
+            "type": "integer",
+            "description": "ID of the Filter's Stream."
+          },
+          "broker_id": {
+            "type": "integer",
+            "description": "ID of the Broker this Filter runs on, if any.",
+            "nullable": true
+          },
+          "autosave": {
+            "type": "boolean",
+            "description": "Whether objects passing this filter are auto-saved as Sources to the Filter's Group."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "modified": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SingleFilterListItem": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/FilterListItem"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfFilterListItems": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FilterListItem"
             }
           }
         },
@@ -44738,6 +45655,10 @@
             "type": "boolean",
             "description": "Boolean indicating whether requests to join the group are automatically accepted."
           },
+          "discoverable_data": {
+            "type": "boolean",
+            "description": "Whether non-members may be told that the group's photometry and spectra exist, and so ask for them. Data held only by groups with this off is never advertised."
+          },
           "single_user_group": {
             "type": "boolean",
             "description": "Flag indicating whether this group is a singleton group for one user only.",
@@ -47571,6 +48492,10 @@
           "auto_accept_requests": {
             "type": "boolean",
             "description": "Boolean indicating whether requests to join the group are automatically accepted."
+          },
+          "discoverable_data": {
+            "type": "boolean",
+            "description": "Whether non-members may be told that the group's photometry and spectra exist, and so ask for them. Data held only by groups with this off is never advertised."
           },
           "single_user_group": {
             "type": "boolean",
@@ -51028,6 +51953,11 @@
             "description": "The spectral band covered by the instrument (e.g., Optical, IR).",
             "nullable": true
           },
+          "acknowledgment": {
+            "type": "string",
+            "description": "Sentence to cite this instrument with, used to build a source's acknowledgment block. Falls back to the instrument name when unset.",
+            "nullable": true
+          },
           "telescope_id": {
             "type": "integer",
             "description": "The ID of the Telescope that hosts the Instrument."
@@ -51937,6 +52867,11 @@
           "band": {
             "type": "string",
             "description": "The spectral band covered by the instrument (e.g., Optical, IR).",
+            "nullable": true
+          },
+          "acknowledgment": {
+            "type": "string",
+            "description": "Sentence to cite this instrument with, used to build a source's acknowledgment block. Falls back to the instrument name when unset.",
             "nullable": true
           },
           "telescope_id": {
@@ -79485,6 +80420,11 @@
             "type": "boolean",
             "description": "Does this telescope have a fixed location (lon, lat, elev)?"
           },
+          "acknowledgment": {
+            "type": "string",
+            "description": "Sentence to cite this telescope with, used to build a source's acknowledgment block. Falls back to the telescope name when unset.",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -79601,6 +80541,11 @@
           "fixed_location": {
             "type": "boolean",
             "description": "Does this telescope have a fixed location (lon, lat, elev)?"
+          },
+          "acknowledgment": {
+            "type": "string",
+            "description": "Sentence to cite this telescope with, used to build a source's acknowledgment block. Falls back to the telescope name when unset.",
+            "nullable": true
           }
         },
         "required": [
@@ -83219,6 +84164,96 @@
         "title": "ObjTagPostBody",
         "type": "object"
       },
+      "PhotometryDataset": {
+        "additionalProperties": false,
+        "description": "One owner's photometry on an object in a single instrument/filter.",
+        "properties": {
+          "ownerID": {
+            "description": "ID of the User who owns the photometry",
+            "title": "Ownerid",
+            "type": "integer"
+          },
+          "instrumentID": {
+            "description": "ID of the instrument it was taken with",
+            "title": "Instrumentid",
+            "type": "integer"
+          },
+          "filter": {
+            "description": "Bandpass the photometry was taken in",
+            "title": "Filter",
+            "type": "string"
+          }
+        },
+        "required": [
+          "ownerID",
+          "instrumentID",
+          "filter"
+        ],
+        "title": "PhotometryDataset",
+        "type": "object"
+      },
+      "DataAccessRequestPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for asking an owner for data on an object.",
+        "properties": {
+          "objId": {
+            "description": "ID of the object the data is attached to",
+            "title": "Objid",
+            "type": "string"
+          },
+          "photometry": {
+            "description": "Photometry datasets being asked for, as returned by the data availability endpoint.",
+            "items": {
+              "$ref": "#/components/schemas/PhotometryDataset"
+            },
+            "title": "Photometry",
+            "type": "array"
+          },
+          "spectrumIDs": {
+            "description": "IDs of the spectra being asked for",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Spectrumids",
+            "type": "array"
+          },
+          "message": {
+            "default": null,
+            "description": "Note to the owner explaining the request",
+            "title": "Message",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "objId"
+        ],
+        "title": "DataAccessRequestPostBody",
+        "type": "object"
+      },
+      "DataAccessRequestPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for answering a request.",
+        "properties": {
+          "status": {
+            "description": "Either 'accepted' or 'declined'",
+            "title": "Status",
+            "type": "string"
+          },
+          "groupID": {
+            "default": null,
+            "description": "Group to share the data into when accepting. Defaults to the requester's single user group.",
+            "title": "Groupid",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "DataAccessRequestPatchBody",
+        "type": "object"
+      },
       "SharingPostBody": {
         "additionalProperties": false,
         "description": "Request body for sharing data with additional groups/users.",
@@ -84056,6 +85091,13 @@
             "title": "Fixed Location",
             "type": "boolean",
             "nullable": true
+          },
+          "acknowledgment": {
+            "default": null,
+            "description": "Sentence papers should cite this telescope with, used to build a source's acknowledgment block.",
+            "title": "Acknowledgment",
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -84153,6 +85195,13 @@
             "description": "Does this telescope have a fixed location (lon, lat, elev)?",
             "title": "Fixed Location",
             "type": "boolean",
+            "nullable": true
+          },
+          "acknowledgment": {
+            "default": null,
+            "description": "Sentence papers should cite this telescope with, used to build a source's acknowledgment block.",
+            "title": "Acknowledgment",
+            "type": "string",
             "nullable": true
           }
         },
