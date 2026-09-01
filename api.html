@@ -81379,7 +81379,14 @@
             "default": null,
             "description": "Filter version id (fid) to validate.",
             "title": "Fid",
-            "type": "integer",
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "string"
+              }
+            ],
             "nullable": true
           }
         },
@@ -91140,6 +91147,13 @@
             "type": "number",
             "nullable": true
           },
+          "mpc_obscode": {
+            "default": null,
+            "description": "Minor Planet Center observatory code, e.g. 'X05' (Rubin) or 'I41' (ZTF).",
+            "title": "Mpc Obscode",
+            "type": "string",
+            "nullable": true
+          },
           "skycam_link": {
             "default": null,
             "description": "Link to the telescope's sky camera.",
@@ -91242,6 +91256,13 @@
             "description": "Elevation in meters.",
             "title": "Elevation",
             "type": "number",
+            "nullable": true
+          },
+          "mpc_obscode": {
+            "default": null,
+            "description": "Minor Planet Center observatory code, e.g. 'X05' (Rubin) or 'I41' (ZTF).",
+            "title": "Mpc Obscode",
+            "type": "string",
             "nullable": true
           },
           "skycam_link": {
