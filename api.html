@@ -3882,6 +3882,62 @@
           },
           {
             "in": "query",
+            "name": "minAbsGalacticLatitude",
+            "required": false,
+            "description": "Keep only candidates at least this many degrees from the galactic plane, i.e. |b| >= this. Use to require extragalactic candidates.",
+            "schema": {
+              "maximum": 90,
+              "minimum": 0,
+              "type": "number",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "maxSgscore",
+            "required": false,
+            "description": "Keep only candidates whose crossmatch star/galaxy score is below this. A high score means the candidate sits on a star.",
+            "schema": {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "minNdethist",
+            "required": false,
+            "description": "Keep only candidates with at least this many detections in their alert history.",
+            "schema": {
+              "minimum": 0,
+              "type": "number",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "promptDeltaT",
+            "required": false,
+            "description": "Exempt candidates detected within this many days of the event from the galactic latitude and detection history cuts, which exist to thin late candidates. Those cuts still apply to everything else.",
+            "schema": {
+              "minimum": 0,
+              "type": "number",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "crossmatchOrigin",
+            "required": false,
+            "description": "Annotation origin the crossmatch cuts above are read from, compared lower-cased.",
+            "schema": {
+              "default": "gcn-crossmatch",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "annotationFilterList",
             "required": false,
             "description": "Comma-separated string of JSON objects representing annotation filters. Filter objects are expected to have keys { origin, key, value } for non-numeric value types, or { origin, key, min, max } for numeric values.",
@@ -20288,6 +20344,77 @@
         ]
       }
     },
+    "/api/sources/{obj_id}/scout_ephemeris": {
+      "get": {
+        "summary": "Get a NEOCP candidate's ephemeris",
+        "description": "Positions over time for a JPL Scout NEOCP candidate, with the\nplane-of-sky uncertainty at each step.\n\nA Scout candidate is stored with one nominal position and a single\nuncertainty, which places it on the sky only when that uncertainty is\nsmall. Objects with a short arc carry a sigma of degrees and move\nwhile observed, so a position is only meaningful with a time attached.\n\nFetched from JPL on each request rather than stored, since Scout\nre-fits as new astrometry arrives.\n",
+        "tags": [
+          "sources"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "hours",
+            "required": false,
+            "description": "Span to cover, starting now. Shortened if the requested span and step would exceed JPL's 500-row limit.",
+            "schema": {
+              "default": 3.0,
+              "exclusiveMinimum": 0,
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "stepMinutes",
+            "required": false,
+            "description": "Minutes between ephemeris rows.",
+            "schema": {
+              "default": 1,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "obsCode",
+            "required": false,
+            "description": "MPC observatory code the positions are computed for. A near-Earth object's apparent place depends on it, so pass the real site rather than the geocentric default when pointing a telescope.",
+            "schema": {
+              "default": "500",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/finder_chart/facilities": {
       "get": {
         "summary": "Get finding chart facility parameters",
@@ -21313,17 +21440,25 @@
         ]
       }
     },
-    "/api/sources/{obj_id}/comments/channels": {
+    "/api/{associated_resource_type}/{resource_id}/comments/channels": {
       "get": {
-        "summary": "List the conversations opened on a source",
-        "description": "Retrieve the names of the source's named conversations. A conversation exists as soon as a comment carries its name.\n",
+        "summary": "List the conversations opened on a resource",
+        "description": "Retrieve the names of the resource's named conversations. A conversation exists as soon as a comment carries its name.\n",
         "tags": [
           "comments"
         ],
         "parameters": [
           {
             "in": "path",
-            "name": "obj_id",
+            "name": "associated_resource_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "resource_id",
             "required": true,
             "schema": {
               "type": "string"
@@ -21343,7 +21478,7 @@
         }
       },
       "delete": {
-        "summary": "Delete a conversation on a source",
+        "summary": "Delete a conversation on a resource",
         "description": "<b>Permission(s) required:</b> <em>Comment (or System admin)</em><br><br>Delete a named conversation and every comment it holds. Restricted to the user who opened it (the author of its first comment) and to system admins.\n",
         "tags": [
           "comments"
@@ -21351,7 +21486,15 @@
         "parameters": [
           {
             "in": "path",
-            "name": "obj_id",
+            "name": "associated_resource_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "resource_id",
             "required": true,
             "schema": {
               "type": "string"
@@ -33215,6 +33358,14 @@
             "type": "string",
             "description": "ID of the Comment's Obj."
           },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          },
+          "text": {
+            "type": "string",
+            "description": "Comment body."
+          },
           "channel": {
             "type": "string",
             "description": "Conversation the comment belongs to, NULL for the main thread.",
@@ -33223,14 +33374,6 @@
           "system": {
             "type": "boolean",
             "description": "Whether the comment was posted by the app rather than typed by its author."
-          },
-          "id": {
-            "type": "integer",
-            "description": "Unique object identifier."
-          },
-          "text": {
-            "type": "string",
-            "description": "Comment body."
           },
           "attachment_name": {
             "type": "string",
@@ -33345,6 +33488,10 @@
             "type": "string",
             "description": "ID of the Comment's Obj."
           },
+          "text": {
+            "type": "string",
+            "description": "Comment body."
+          },
           "channel": {
             "type": "string",
             "description": "Conversation the comment belongs to, NULL for the main thread.",
@@ -33353,10 +33500,6 @@
           "system": {
             "type": "boolean",
             "description": "Whether the comment was posted by the app rather than typed by its author."
-          },
-          "text": {
-            "type": "string",
-            "description": "Comment body."
           },
           "attachment_name": {
             "type": "string",
@@ -33479,6 +33622,15 @@
             "type": "string",
             "description": "Comment body."
           },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
+          },
           "attachment_name": {
             "type": "string",
             "description": "Filename of the attachment.",
@@ -33595,6 +33747,15 @@
           "text": {
             "type": "string",
             "description": "Comment body."
+          },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
           },
           "attachment_name": {
             "type": "string",
@@ -33717,6 +33878,15 @@
             "type": "string",
             "description": "Comment body."
           },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
+          },
           "attachment_name": {
             "type": "string",
             "description": "Filename of the attachment.",
@@ -33833,6 +34003,15 @@
           "text": {
             "type": "string",
             "description": "Comment body."
+          },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
           },
           "attachment_name": {
             "type": "string",
@@ -33955,6 +34134,15 @@
             "type": "string",
             "description": "Comment body."
           },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
+          },
           "attachment_name": {
             "type": "string",
             "description": "Filename of the attachment.",
@@ -34071,6 +34259,15 @@
           "text": {
             "type": "string",
             "description": "Comment body."
+          },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
           },
           "attachment_name": {
             "type": "string",
@@ -34206,6 +34403,15 @@
             "type": "string",
             "description": "Comment body."
           },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
+          },
           "attachment_name": {
             "type": "string",
             "description": "Filename of the attachment.",
@@ -34336,6 +34542,15 @@
           "text": {
             "type": "string",
             "description": "Comment body."
+          },
+          "channel": {
+            "type": "string",
+            "description": "Conversation the comment belongs to, NULL for the main thread.",
+            "nullable": true
+          },
+          "system": {
+            "type": "boolean",
+            "description": "Whether the comment was posted by the app rather than typed by its author."
           },
           "attachment_name": {
             "type": "string",
