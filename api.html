@@ -2651,7 +2651,7 @@
     "/api/brokers/{broker_id}/alerts/{alert_id}/photometry": {
       "get": {
         "summary": "Display photometry for an object (DB + on-demand broker)",
-        "description": "Return an object's photometry for display: the persisted,\naccess-controlled photometry from the database merged with photometry\nfetched on demand from the broker (deduped by instrument/filter/mjd,\nso the broker only augments saved points). The broker half is held in\na read-through cache keyed by the object and the requester's access\nscope, and is never written to the database. Returns a bare list of\npoints, matching GET /sources/{id}/photometry.\n",
+        "description": "Return an object's photometry for display: the persisted,\naccess-controlled photometry from the database merged with photometry\nfetched on demand from the broker (deduped by instrument/filter/mjd,\nso the broker only augments saved points). The broker half is\nscope-filtered and never written to the database. Returns a bare list\nof points, matching GET /sources/{id}/photometry.\n",
         "tags": [
           "brokers",
           "photometry"
@@ -2736,16 +2736,6 @@
               ],
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "refresh",
-            "required": false,
-            "description": "Bypass any cached broker payload and re-fetch.",
-            "schema": {
-              "default": false,
-              "type": "boolean"
-            }
           }
         ]
       }
@@ -2828,16 +2818,6 @@
                 "ab-b12"
               ],
               "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "refresh",
-            "required": false,
-            "description": "Bypass any cached broker payload and re-fetch.",
-            "schema": {
-              "default": false,
-              "type": "boolean"
             }
           },
           {
@@ -10175,6 +10155,45 @@
         }
       }
     },
+    "/api/gcn_event/{dateobs}/summarize": {
+      "post": {
+        "summary": "Summarize a GCN event",
+        "description": "Describes the event from its extractions using the configured model.\nThe previous summary stays in `summary_history`.\n",
+        "tags": [
+          "gcn events"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dateobs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/api/gcn_event/{dateobs}": {
       "get": {
         "summary": "Get a GCN Event",
@@ -10244,9 +10263,9 @@
           }
         ]
       },
-      "delete": {
-        "summary": "Delete a GCN Event",
-        "description": "<b>Permission(s) required:</b> <em>Manage GCNs (or System admin)</em><br><br>Delete a GCN event",
+      "patch": {
+        "summary": "Update a GCN Event",
+        "description": "<b>Permission(s) required:</b> <em>Manage GCNs (or System admin)</em><br><br>Sets the event summary, prepending the previous one to\n`summary_history`.\n",
         "tags": [
           "gcn events"
         ],
@@ -10270,6 +10289,56 @@
             }
           }
         },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GcnEventPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dateobs",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete a GCN Event",
+        "description": "Delete a GCN event",
+        "tags": [
+          "gcn events"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
         "parameters": [
           {
             "in": "path",
@@ -23530,6 +23599,26 @@
           },
           {
             "in": "query",
+            "name": "isRoid",
+            "required": false,
+            "description": "If true, return only moving objects (solar system bodies)",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "isNotRoid",
+            "required": false,
+            "description": "If true, exclude moving objects",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
             "name": "hasBeenLabelled",
             "required": false,
             "description": "If true, return only those objects which have been labelled",
@@ -26122,6 +26211,122 @@
                       }
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/db_stats/history": {
+      "get": {
+        "summary": "Get DB row counts per time interval",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Number of rows added per time interval (bucketed on created_at) for a\nselection of tables, for plotting ingest rates on the DB Stats page.\nBuckets with no rows are returned with a count of zero.\n",
+        "tags": [
+          "system info"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "tables",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Comma-separated list of tables to count. Defaults to `candidates`.\nAllowed values are returned in the `tables` field of the response.\n"
+          },
+          {
+            "in": "query",
+            "name": "interval",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "hour",
+                "day",
+                "week",
+                "month"
+              ]
+            },
+            "description": "Bucket width. Defaults to `day`."
+          },
+          {
+            "in": "query",
+            "name": "startDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Arrow-parseable UTC datetime; only rows created at or after this\ntime are counted, rounded down to the start of its bucket so the\nfirst bin is complete. Defaults to 30 days ago.\n"
+          },
+          {
+            "in": "query",
+            "name": "endDate",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Arrow-parseable UTC datetime; only rows created before this time\nare counted. Defaults to now.\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "interval": {
+                              "type": "string"
+                            },
+                            "startDate": {
+                              "type": "string"
+                            },
+                            "endDate": {
+                              "type": "string"
+                            },
+                            "bins": {
+                              "type": "array",
+                              "description": "Start of each bucket, as a UTC datetime without\nan offset (as are `startDate` and `endDate`).\n",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "tables": {
+                              "type": "array",
+                              "description": "Every table this endpoint can count.",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "counts": {
+                              "type": "object",
+                              "description": "Per requested table, one count per entry of `bins`.\n",
+                              "additionalProperties": {
+                                "type": "array",
+                                "items": {
+                                  "type": "integer"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
                 }
               }
             }
@@ -40818,6 +41023,17 @@
             "description": "Trigger ID supplied by instrument",
             "nullable": true
           },
+          "summary": {
+            "type": "string",
+            "description": "Narrative summary of what is known about the event.",
+            "nullable": true
+          },
+          "summary_history": {
+            "description": "Record of the summaries generated and written about this event",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
+          },
           "aliases": {
             "type": "array",
             "description": "List of different names for this event, parsed from different GCN notices.",
@@ -41930,6 +42146,17 @@
             "type": "string",
             "description": "Trigger ID supplied by instrument",
             "nullable": true
+          },
+          "summary": {
+            "type": "string",
+            "description": "Narrative summary of what is known about the event.",
+            "nullable": true
+          },
+          "summary_history": {
+            "description": "Record of the summaries generated and written about this event",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
           },
           "aliases": {
             "type": "array",
@@ -85639,6 +85866,34 @@
           "notice_id"
         ],
         "title": "GcnEventPostResponse",
+        "type": "object"
+      },
+      "GcnEventPatchBody": {
+        "additionalProperties": false,
+        "properties": {
+          "summary": {
+            "default": null,
+            "description": "Narrative summary of the event. Null clears it.",
+            "title": "Summary",
+            "type": "string",
+            "nullable": true
+          },
+          "summary_origin": {
+            "default": null,
+            "description": "What produced this summary, recorded in the history.",
+            "title": "Summary Origin",
+            "type": "string",
+            "nullable": true
+          },
+          "is_bot": {
+            "default": null,
+            "description": "Whether a bot wrote this summary.",
+            "title": "Is Bot",
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "title": "GcnEventPatchBody",
         "type": "object"
       },
       "GcnEventObjPostBody": {
