@@ -1314,6 +1314,61 @@
       }
     },
     "/api/{analysis_resource_type}/{analysis_id}/analysis": {
+      "patch": {
+        "summary": "Re-share an analysis with a set of groups",
+        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Change which groups can see an existing analysis and its annotation,\ne.g. share a privately-run fit with a group later, or make it private\nagain by scoping it to only the requester's single-user group. Author\nonly.\n",
+        "tags": [
+          "analysis"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_resource_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
       "delete": {
         "summary": "Delete an Analysis.",
         "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
@@ -1588,6 +1643,61 @@
       }
     },
     "/api/{analysis_resource_type}/analysis/{analysis_id}": {
+      "patch": {
+        "summary": "Re-share an analysis with a set of groups",
+        "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Change which groups can see an existing analysis and its annotation,\ne.g. share a privately-run fit with a group later, or make it private\nagain by scoping it to only the requester's single-user group. Author\nonly.\n",
+        "tags": [
+          "analysis"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalysisPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "analysis_resource_type",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "analysis_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
       "delete": {
         "summary": "Delete an Analysis.",
         "description": "<b>Permission(s) required:</b> <em>Run Analyses (or System admin)</em><br><br>Delete an Analysis.",
@@ -21863,6 +21973,56 @@
             "name": "resource_id",
             "required": true,
             "description": "The ID of the underlying data. This would be a string for an object ID, or an integer for other data types, e.g., a spectrum.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/sources/{obj_id}/annotations/alma": {
+      "post": {
+        "summary": "Add ALMA archive annotations",
+        "description": "Ask the ALMA Science Archive what it holds at this source's position\nand post a summary of the coverage as an annotation. Records the\ndataset identifiers too, which is what an ALMA reduction needs.\n",
+        "tags": [
+          "annotations"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ALMAQueryBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "description": "ID of the object to retrieve the Vizier crossmatch for",
             "schema": {
               "type": "string"
             }
@@ -83222,6 +83382,25 @@
         "title": "AnalysisPostBody",
         "type": "object"
       },
+      "AnalysisPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for re-sharing an existing analysis with a set of groups.",
+        "properties": {
+          "group_ids": {
+            "description": "Group IDs the analysis and its annotation should be visible to. Set to only the requester's single-user group to keep it private.",
+            "items": {
+              "type": "integer"
+            },
+            "title": "Group Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "group_ids"
+        ],
+        "title": "AnalysisPatchBody",
+        "type": "object"
+      },
       "AssignmentPostBody": {
         "additionalProperties": false,
         "description": "Request body for posting a new observing-run assignment.",
@@ -91287,6 +91466,38 @@
           }
         },
         "title": "ObjMPCPostBody",
+        "type": "object"
+      },
+      "ALMAQueryBody": {
+        "additionalProperties": false,
+        "description": "Request body for posting ALMA archive coverage annotations.",
+        "properties": {
+          "crossmatchRadius": {
+            "default": 30.0,
+            "description": "Search radius (in arcseconds) around the source. Default is 30.",
+            "title": "Crossmatchradius",
+            "type": "number",
+            "nullable": true
+          },
+          "publicOnly": {
+            "default": true,
+            "description": "Only observations whose proprietary period has lapsed. Default is true.",
+            "title": "Publiconly",
+            "type": "boolean",
+            "nullable": true
+          },
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view annotation. Defaults to all of requesting user's groups.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "title": "ALMAQueryBody",
         "type": "object"
       },
       "GaiaQueryBody": {
