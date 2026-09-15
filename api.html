@@ -24367,8 +24367,8 @@
     },
     "/api/data_sharing/bulk": {
       "post": {
-        "summary": "Bulk-share one group's data with another group",
-        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Grant (or revoke) a target group's access to every spectrum and/or\nphotometry point already shared with a source group, in one\nset-based operation. Additive and idempotent: it only inserts or\ndeletes group associations and never touches the data itself. This\nis the supported way to re-expose narrowly-shared legacy/imported\ndata collaboration-wide.\n",
+        "summary": "Bulk-share spectra/photometry with a group",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Grant (or revoke) a target group's access to every spectrum and/or\nphotometry point selected either by a source group (`from_group_id`)\nor by a set of objects (`obj_ids`), in one set-based operation.\nAdditive and idempotent: it only inserts or deletes group\nassociations and never touches the data itself. The supported way to\nre-expose narrowly-shared legacy/imported data collaboration-wide.\n",
         "tags": [
           "groups"
         ],
@@ -24378,12 +24378,19 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "from_group_id",
                   "to_group_id"
                 ],
                 "properties": {
                   "from_group_id": {
-                    "type": "integer"
+                    "type": "integer",
+                    "description": "Source group; mutually exclusive with obj_ids."
+                  },
+                  "obj_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Source objects; mutually exclusive with from_group_id."
                   },
                   "to_group_id": {
                     "type": "integer"
@@ -28401,6 +28408,63 @@
             "name": "user_id",
             "required": true,
             "description": "ID of the user to add as a coauthor",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Reorder the coauthors of an external sharing service",
+        "description": "<b>Permission(s) required:</b> <em>Manage sharing services (or System admin)</em><br><br>Reorder the coauthors of an external sharing service, the order is the one used to publish",
+        "tags": [
+          "external sharing service"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SharingServiceCoauthorPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "sharing_service_id",
+            "required": true,
+            "description": "ID of the external sharing service",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "description": "Unused, the order is given in the body",
             "schema": {
               "type": "integer"
             }
@@ -73574,6 +73638,10 @@
           "user_id": {
             "type": "integer"
           },
+          "order": {
+            "type": "integer",
+            "description": "Position of the coauthor in the published author list, ascending."
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -73647,6 +73715,10 @@
           },
           "user_id": {
             "type": "integer"
+          },
+          "order": {
+            "type": "integer",
+            "description": "Position of the coauthor in the published author list, ascending."
           }
         },
         "required": [
@@ -93942,6 +94014,25 @@
           "id"
         ],
         "title": "SharingServiceCoauthorPostResponse",
+        "type": "object"
+      },
+      "SharingServiceCoauthorPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for reordering the coauthors of an external sharing service.",
+        "properties": {
+          "user_ids": {
+            "description": "IDs of all the coauthors of the sharing service, in the order they should be published",
+            "items": {
+              "type": "integer"
+            },
+            "title": "User Ids",
+            "type": "array"
+          }
+        },
+        "required": [
+          "user_ids"
+        ],
+        "title": "SharingServiceCoauthorPatchBody",
         "type": "object"
       },
       "SharingServiceGroupPutBody": {
