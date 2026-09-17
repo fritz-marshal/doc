@@ -26445,6 +26445,36 @@
               "type": "string",
               "nullable": true
             }
+          },
+          {
+            "in": "query",
+            "name": "includeEpochs",
+            "required": false,
+            "description": "Include each linked Obj's thumbnails and annotations. A scanning view needs them; a plain listing does not, and they cost a query each.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "required": false,
+            "description": "Page number, starting at 1.",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "numPerPage",
+            "required": false,
+            "description": "SuperObjs per page, capped at 500.",
+            "schema": {
+              "default": 100,
+              "type": "integer"
+            }
           }
         ]
       },
@@ -26923,6 +26953,14 @@
                             "invitationsEnabled": {
                               "type": "boolean",
                               "description": "Boolean indicating whether new user invitation pipeline\nis enabled in current deployment.\n"
+                            },
+                            "userApplicationsEnabled": {
+                              "type": "boolean",
+                              "description": "Boolean indicating whether account applications are\nenabled in current deployment.\n"
+                            },
+                            "canDecideUserApplications": {
+                              "type": "boolean",
+                              "description": "Boolean indicating whether the requesting user may\nendorse or decline account applications.\n"
                             },
                             "slackPreamble": {
                               "type": "string",
@@ -29100,6 +29138,245 @@
         ]
       }
     },
+    "/api/user_applications/{application_id}": {
+      "get": {
+        "summary": "Get an account application",
+        "description": "Retrieve an account application",
+        "tags": [
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "patch": {
+        "summary": "Endorse or decline an account application",
+        "description": "Endorsing issues the invitation the applicant signs up with, and emails\nit to them. Groups are limited to those the endorser belongs to.\n",
+        "tags": [
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserApplicationPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Delete an account application",
+        "description": "Delete an account application",
+        "tags": [
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "application_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
+    "/api/user_applications": {
+      "get": {
+        "summary": "Get account applications",
+        "description": "Retrieve account applications awaiting endorsement",
+        "tags": [
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "description": "Only return applications with this status.",
+            "schema": {
+              "enum": [
+                "pending",
+                "endorsed",
+                "declined"
+              ],
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "mine",
+            "required": false,
+            "description": "Only return applications naming the requesting user as endorser.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "in": "query",
+            "name": "numPerPage",
+            "required": false,
+            "description": "Number of applications per paginated request.",
+            "schema": {
+              "default": 25,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageNumber",
+            "required": false,
+            "description": "Page number for paginated results.",
+            "schema": {
+              "default": 1,
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Apply for an account",
+        "description": "Submit an application for an account, to be endorsed by an existing\nuser. Open to unauthenticated callers.\n",
+        "tags": [
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserApplicationPostBody"
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/user/{user_id}/profile": {
       "get": {
         "summary": "Get a user's public profile",
@@ -30470,6 +30747,30 @@
               "type": "string"
             }
           }
+        ]
+      }
+    },
+    "/apply": {
+      "get": {
+        "summary": "Display the account application form",
+        "description": "Display the form for applying for an account",
+        "tags": [
+          "public",
+          "user_applications"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "text/html": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {}
         ]
       }
     }
@@ -36516,8 +36817,12 @@
             "description": "Optional parameters that are passed to the analysis service",
             "nullable": true
           },
+          "analysis_resource_type": {
+            "type": "string",
+            "description": "Resource this default triggers on: 'obj' (classifications) or 'gcn_event' (incoming GCN triggers)."
+          },
           "source_filter": {
-            "description": "\n            JSONB column that defines the criteria for which this default analysis will be triggered.\n            Example: {\"classifications\": {\"name\": \"Kilonova\", \"probability\": 0.9}}\n        ",
+            "description": "\n            JSONB column that defines the criteria for which this default analysis will be triggered.\n            For 'obj': {\"classifications\": [{\"name\": \"Kilonova\", \"probability\": 0.9}]}.\n            For 'gcn_event': {\"gcn_tags\": [\"GRB\"], \"notice_types\": [...]} (either, matched as OR).\n        ",
             "type": "object",
             "additionalProperties": true
           },
@@ -36636,8 +36941,12 @@
             "description": "Optional parameters that are passed to the analysis service",
             "nullable": true
           },
+          "analysis_resource_type": {
+            "type": "string",
+            "description": "Resource this default triggers on: 'obj' (classifications) or 'gcn_event' (incoming GCN triggers)."
+          },
           "source_filter": {
-            "description": "\n            JSONB column that defines the criteria for which this default analysis will be triggered.\n            Example: {\"classifications\": {\"name\": \"Kilonova\", \"probability\": 0.9}}\n        ",
+            "description": "\n            JSONB column that defines the criteria for which this default analysis will be triggered.\n            For 'obj': {\"classifications\": [{\"name\": \"Kilonova\", \"probability\": 0.9}]}.\n            For 'gcn_event': {\"gcn_tags\": [\"GRB\"], \"notice_types\": [...]} (either, matched as OR).\n        ",
             "type": "object",
             "additionalProperties": true
           },
@@ -74121,6 +74430,10 @@
             "description": "Whether to publish objects that already exist in TNS but not reported under this internal name (e.g., reported by another survey).",
             "nullable": true
           },
+          "_mpc_altdata": {
+            "type": "string",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -74369,6 +74682,9 @@
             "type": "boolean"
           },
           "auto_share_to_hermes": {
+            "type": "boolean"
+          },
+          "auto_share_to_mpc": {
             "type": "boolean"
           },
           "auto_sharing_allow_bots": {
@@ -74625,6 +74941,9 @@
           "auto_share_to_hermes": {
             "type": "boolean"
           },
+          "auto_share_to_mpc": {
+            "type": "boolean"
+          },
           "auto_sharing_allow_bots": {
             "type": "boolean"
           }
@@ -74767,6 +75086,10 @@
             "type": "boolean",
             "description": "Whether to publish objects that already exist in TNS but not reported under this internal name (e.g., reported by another survey).",
             "nullable": true
+          },
+          "_mpc_altdata": {
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -74890,6 +75213,32 @@
           },
           "tns_payload": {
             "description": "Payload to publish to TNS.",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
+          },
+          "publish_to_mpc": {
+            "type": "boolean",
+            "description": "Whether to publish to the Minor Planet Center or not."
+          },
+          "mpc_status": {
+            "type": "string",
+            "description": "Status of the MPC submission.",
+            "nullable": true
+          },
+          "mpc_submission_id": {
+            "type": "string",
+            "description": "Designation or tracking id the MPC submission was filed under.",
+            "nullable": true
+          },
+          "mpc_response": {
+            "description": "Serialized HTTP response from the MPC.",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
+          },
+          "mpc_payload": {
+            "description": "ADES payload submitted to the MPC.",
             "nullable": true,
             "type": "object",
             "additionalProperties": true
@@ -75072,6 +75421,32 @@
           },
           "tns_payload": {
             "description": "Payload to publish to TNS.",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
+          },
+          "publish_to_mpc": {
+            "type": "boolean",
+            "description": "Whether to publish to the Minor Planet Center or not."
+          },
+          "mpc_status": {
+            "type": "string",
+            "description": "Status of the MPC submission.",
+            "nullable": true
+          },
+          "mpc_submission_id": {
+            "type": "string",
+            "description": "Designation or tracking id the MPC submission was filed under.",
+            "nullable": true
+          },
+          "mpc_response": {
+            "description": "Serialized HTTP response from the MPC.",
+            "nullable": true,
+            "type": "object",
+            "additionalProperties": true
+          },
+          "mpc_payload": {
+            "description": "ADES payload submitted to the MPC.",
             "nullable": true,
             "type": "object",
             "additionalProperties": true
@@ -81990,6 +82365,304 @@
         ],
         "additionalProperties": false
       },
+      "UserApplication": {
+        "type": "object",
+        "properties": {
+          "endorser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User the applicant named as their endorser.",
+            "readOnly": true
+          },
+          "endorsed_by": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who endorsed or declined the application.",
+            "readOnly": true
+          },
+          "invitation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Invitation"
+              }
+            ],
+            "description": "The Invitation the endorsement issued.",
+            "readOnly": true
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Applicant's first name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Applicant's last name."
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Address the invitation is sent to once the application is endorsed."
+          },
+          "affiliation": {
+            "type": "string",
+            "description": "Applicant's stated institution or affiliation.",
+            "nullable": true
+          },
+          "statement": {
+            "type": "string",
+            "description": "Applicant's stated reason for wanting access.",
+            "nullable": true
+          },
+          "endorser_email": {
+            "type": "string",
+            "description": "Address of the endorser the applicant named, as typed by them.",
+            "nullable": true
+          },
+          "endorser_id": {
+            "type": "integer",
+            "description": "ID of the User matching `endorser_email`, if the address is one we know.",
+            "nullable": true
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "endorsed",
+              "declined"
+            ],
+            "maxLength": 8,
+            "description": "Application status. Can be one of either 'pending', 'endorsed', or 'declined'.",
+            "type": "string"
+          },
+          "endorsed_by_id": {
+            "type": "integer",
+            "description": "ID of the User who endorsed or declined the application.",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC time the application was endorsed or declined.",
+            "nullable": true
+          },
+          "decline_reason": {
+            "type": "string",
+            "description": "Why the application was declined.",
+            "nullable": true
+          },
+          "invitation_id": {
+            "type": "integer",
+            "description": "ID of the Invitation the endorsement issued.",
+            "nullable": true
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "contact_email",
+          "first_name",
+          "last_name"
+        ],
+        "additionalProperties": false
+      },
+      "SingleUserApplication": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserApplication"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfUserApplications": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserApplication"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "UserApplicationNoID": {
+        "type": "object",
+        "properties": {
+          "endorser": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User the applicant named as their endorser.",
+            "readOnly": true
+          },
+          "endorsed_by": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The User who endorsed or declined the application.",
+            "readOnly": true
+          },
+          "invitation": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Invitation"
+              }
+            ],
+            "description": "The Invitation the endorsement issued.",
+            "readOnly": true
+          },
+          "first_name": {
+            "type": "string",
+            "description": "Applicant's first name."
+          },
+          "last_name": {
+            "type": "string",
+            "description": "Applicant's last name."
+          },
+          "contact_email": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "Address the invitation is sent to once the application is endorsed."
+          },
+          "affiliation": {
+            "type": "string",
+            "description": "Applicant's stated institution or affiliation.",
+            "nullable": true
+          },
+          "statement": {
+            "type": "string",
+            "description": "Applicant's stated reason for wanting access.",
+            "nullable": true
+          },
+          "endorser_email": {
+            "type": "string",
+            "description": "Address of the endorser the applicant named, as typed by them.",
+            "nullable": true
+          },
+          "endorser_id": {
+            "type": "integer",
+            "description": "ID of the User matching `endorser_email`, if the address is one we know.",
+            "nullable": true
+          },
+          "status": {
+            "enum": [
+              "pending",
+              "endorsed",
+              "declined"
+            ],
+            "maxLength": 8,
+            "description": "Application status. Can be one of either 'pending', 'endorsed', or 'declined'.",
+            "type": "string"
+          },
+          "endorsed_by_id": {
+            "type": "integer",
+            "description": "ID of the User who endorsed or declined the application.",
+            "nullable": true
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "UTC time the application was endorsed or declined.",
+            "nullable": true
+          },
+          "decline_reason": {
+            "type": "string",
+            "description": "Why the application was declined.",
+            "nullable": true
+          },
+          "invitation_id": {
+            "type": "integer",
+            "description": "ID of the Invitation the endorsement issued.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "contact_email",
+          "first_name",
+          "last_name"
+        ],
+        "additionalProperties": false
+      },
+      "SingleUserApplicationNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UserApplicationNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfUserApplicationNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserApplicationNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
       "UserInvitation": {
         "type": "object",
         "properties": {
@@ -83577,6 +84250,12 @@
         "additionalProperties": false,
         "description": "Request body for creating a default analysis.",
         "properties": {
+          "analysis_resource_type": {
+            "default": "obj",
+            "description": "Resource this default triggers on: 'obj' (classifications) or 'gcn_event' (incoming GCN triggers).",
+            "title": "Analysis Resource Type",
+            "type": "string"
+          },
           "default_analysis_parameters": {
             "anyOf": [
               {
@@ -94929,6 +95608,108 @@
           "id"
         ],
         "title": "SharingServicePutResponse",
+        "type": "object"
+      },
+      "UserApplicationPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for applying for an account.",
+        "properties": {
+          "firstName": {
+            "description": "Applicant's first name.",
+            "maxLength": 100,
+            "title": "Firstname",
+            "type": "string"
+          },
+          "lastName": {
+            "description": "Applicant's last name.",
+            "maxLength": 100,
+            "title": "Lastname",
+            "type": "string"
+          },
+          "email": {
+            "description": "Address the invitation is sent to once the application is endorsed.",
+            "maxLength": 255,
+            "title": "Email",
+            "type": "string"
+          },
+          "affiliation": {
+            "default": null,
+            "description": "Applicant's institution or affiliation.",
+            "title": "Affiliation",
+            "maxLength": 255,
+            "type": "string",
+            "nullable": true
+          },
+          "statement": {
+            "default": null,
+            "description": "Why the applicant wants access.",
+            "title": "Statement",
+            "maxLength": 2000,
+            "type": "string",
+            "nullable": true
+          },
+          "endorserEmail": {
+            "default": null,
+            "description": "Address of an existing user the applicant asks to endorse them.",
+            "title": "Endorseremail",
+            "maxLength": 255,
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "email"
+        ],
+        "title": "UserApplicationPostBody",
+        "type": "object"
+      },
+      "UserApplicationPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for endorsing or declining an account application.",
+        "properties": {
+          "status": {
+            "description": "One of either 'endorsed' or 'declined'.",
+            "enum": [
+              "endorsed",
+              "declined"
+            ],
+            "title": "Status",
+            "type": "string"
+          },
+          "groupIDs": {
+            "default": null,
+            "description": "IDs of groups to add the applicant to. The endorser must belong to each of them. Defaults to none, which still lands the applicant in the sitewide public group.",
+            "title": "Groupids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "role": {
+            "default": "Full user",
+            "description": "The role the new user will have in the system.",
+            "enum": [
+              "Full user",
+              "View only"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "declineReason": {
+            "default": null,
+            "description": "Why the application was declined.",
+            "title": "Declinereason",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "title": "UserApplicationPatchBody",
         "type": "object"
       },
       "UserACLPostBody": {
