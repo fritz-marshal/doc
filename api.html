@@ -4207,6 +4207,16 @@
           },
           {
             "in": "query",
+            "name": "savedGroupIDs",
+            "required": false,
+            "description": "Comma-separated string of group IDs (e.g. \"1,2\") that the \"Selected\" saved statuses check against. Defaults to the groups of the candidates' filters.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
             "name": "startDate",
             "required": false,
             "description": "Arrow-parseable date string (e.g. 2020-01-01). If provided, filter by Candidate.passed_at >= startDate",
@@ -16410,7 +16420,7 @@
             "in": "query",
             "name": "upcomingOnly",
             "required": false,
-            "description": "Only return runs that have not finished yet. Callers offering a run to assign a target to want these, rather than every run ever scheduled.",
+            "description": "Only return runs that have not finished yet or finished within the last two days. Callers offering a run to assign a target to want these, rather than every run ever scheduled.",
             "schema": {
               "default": false,
               "type": "boolean"
