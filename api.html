@@ -2101,6 +2101,54 @@
         ]
       }
     },
+    "/api/brokers/{broker_id}/filters/{filter_id}/backfill": {
+      "post": {
+        "summary": "Backfill a filter from its broker",
+        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Queues a one-off ingest of the objects the broker already holds for this filter, paced to the upstream call allowance. Returns once queued, not once finished.",
+        "tags": [
+          "brokers"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BrokerFilterBackfillBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "broker_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "filter_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
     "/api/brokers/{broker_id}/filter_modules/{name})?": {
       "get": {
         "summary": "Broker filter-building vocabulary",
@@ -2459,6 +2507,42 @@
       "get": {
         "summary": "Get your credentials for a broker",
         "description": "Reports which fields are set and how the account is routed. The credentials themselves are never returned.",
+        "tags": [
+          "brokers"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "broker_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "in": "path",
+            "name": "action",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Replay a broker's stream from the start",
+        "description": "Bumps the replay epoch, which suffixes the consumer group. The upstream holds no offset for a group it has not seen, so the next run reads from the earliest message it still retains rather than from where the last one stopped. Resets the caller's own account, or the broker's shared one when they have no credentials and administer it.",
         "tags": [
           "brokers"
         ],
@@ -7108,6 +7192,46 @@
             "schema": {
               "default": "csv",
               "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/followup_request/{followup_request_id}/script": {
+      "get": {
+        "summary": "Download a follow-up request's observing script",
+        "description": "Render the observing script for a request, for facilities whose API builds one. The script is built from the request's current payload rather than stored, so an edited request yields a corrected script.",
+        "tags": [
+          "followup requests"
+        ],
+        "responses": {
+          "200": {
+            "description": "The observing script",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "followup_request_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
             }
           }
         ]
@@ -14898,7 +15022,7 @@
     "/api/instrument/{instrument_id}/fields": {
       "delete": {
         "summary": "Delete an instrument's fields",
-        "description": "<b>Permission(s) required:</b> <em>Manage instruments (or System admin)</em><br><br>Delete fields associated with an instrument",
+        "description": "Delete fields associated with an instrument",
         "tags": [
           "instruments"
         ],
@@ -14986,7 +15110,7 @@
       },
       "post": {
         "summary": "Add instrument logs",
-        "description": "Add log messages from an instrument",
+        "description": "<b>Permission(s) required:</b> <em>Manage instruments (or System admin)</em><br><br>Add log messages from an instrument",
         "tags": [
           "instruments"
         ],
@@ -15097,7 +15221,7 @@
     "/api/instrument/{instrument_id}/status": {
       "put": {
         "summary": "Update instrument status",
-        "description": "<b>Permission(s) required:</b> <em>Upload data (or System admin)</em><br><br>Update the status of an instrument",
+        "description": "<b>Permission(s) required:</b> <em>Upload data, Manage instruments (or System admin)</em><br><br>Update the status of an instrument",
         "tags": [
           "instruments"
         ],
@@ -15264,7 +15388,7 @@
       },
       "put": {
         "summary": "Update an instrument",
-        "description": "<b>Permission(s) required:</b> <em>Manage instruments (or System admin)</em><br><br>Update instrument",
+        "description": "Update instrument",
         "tags": [
           "instruments"
         ],
@@ -15311,7 +15435,7 @@
       },
       "delete": {
         "summary": "Delete an instrument",
-        "description": "<b>Permission(s) required:</b> <em>Manage instruments (or System admin)</em><br><br>Delete an instrument",
+        "description": "Delete an instrument",
         "tags": [
           "instruments"
         ],
@@ -27669,6 +27793,104 @@
         }
       }
     },
+    "/api/instance_managers": {
+      "get": {
+        "summary": "Get the users managing this instance",
+        "description": "Public, so that the login page can list them.",
+        "tags": [
+          "system info"
+        ],
+        "security": [
+          {}
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/InstanceManagersResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "List a user as managing this instance",
+        "tags": [
+          "system info"
+        ],
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceManagerPostBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/instance_managers/{user_id}": {
+      "patch": {
+        "summary": "Change whether the login and About pages show a manager's email",
+        "tags": [
+          "system info"
+        ],
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/InstanceManagerPatchBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      },
+      "delete": {
+        "summary": "Stop listing a user as managing this instance",
+        "tags": [
+          "system info"
+        ],
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "user_id",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ]
+      }
+    },
     "/api/feedback/{feedback_id}": {
       "get": {
         "summary": "Retrieve messages left to the admins",
@@ -30917,7 +31139,7 @@
             "schema": {
               "type": "integer"
             },
-            "description": "How many items to skip, for paging further back."
+            "description": "How many items to skip, for paging further back, at most 5000."
           },
           {
             "in": "query",
@@ -31357,6 +31579,16 @@
             "name": "username",
             "required": false,
             "description": "Get users whose username contains this string.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "description": "Get users whose username or full name contains this string, ignoring case.",
             "schema": {
               "type": "string",
               "nullable": true
@@ -35024,6 +35256,10 @@
             "type": "object",
             "additionalProperties": true
           },
+          "stream_epoch": {
+            "type": "integer",
+            "description": "Suffixes the Kafka consumer group, so bumping it replays the stream: a group the upstream has not seen before starts at the earliest retained offset instead of a stored one."
+          },
           "_altdata": {
             "type": "string",
             "description": "The credentials themselves: the upstream API token and any stream username/password. Never serialized back to a client.",
@@ -35119,6 +35355,10 @@
             "description": "Per topic, what the ingestion loop last saw of it: whether its alerts can be ingested and, when they cannot, why. A topic absent from here has had nothing consumed from it yet. Shown on the pages of the filters the topic feeds.",
             "type": "object",
             "additionalProperties": true
+          },
+          "stream_epoch": {
+            "type": "integer",
+            "description": "Suffixes the Kafka consumer group, so bumping it replays the stream: a group the upstream has not seen before starts at the earliest retained offset instead of a stored one."
           },
           "_altdata": {
             "type": "string",
@@ -55467,6 +55707,152 @@
         ],
         "additionalProperties": false
       },
+      "InstanceManager": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The managing User",
+            "readOnly": true
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "ID of the managing User"
+          },
+          "show_email": {
+            "type": "boolean",
+            "description": "Whether the login and About pages show the manager's email"
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleInstanceManager": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/InstanceManager"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfInstanceManagers": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceManager"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "InstanceManagerNoID": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/User"
+              }
+            ],
+            "description": "The managing User",
+            "readOnly": true
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "ID of the managing User"
+          },
+          "show_email": {
+            "type": "boolean",
+            "description": "Whether the login and About pages show the manager's email"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "additionalProperties": false
+      },
+      "SingleInstanceManagerNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/InstanceManagerNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfInstanceManagerNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstanceManagerNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
       "Instrument": {
         "type": "object",
         "properties": {
@@ -55661,6 +56047,7 @@
               "NEWFIRMAPI",
               "RUBINMMAAPI",
               "NGPSAPI",
+              "WENDELSTEINAPI",
               null
             ],
             "maxLength": 17,
@@ -55707,6 +56094,7 @@
               "NEWFIRMAPI",
               "RUBINMMAAPI",
               "NGPSAPI",
+              "WENDELSTEINAPI",
               null
             ],
             "maxLength": 17,
@@ -55742,6 +56130,11 @@
           "across_id": {
             "type": "string",
             "description": "NASA ACROSS instrument UUID, used to route visibility queries to the ACROSS calculator. See https://across.sciencecloud.nasa.gov",
+            "nullable": true
+          },
+          "created_by_id": {
+            "type": "integer",
+            "description": "ID of the User who created the Instrument.",
             "nullable": true
           },
           "region": {
@@ -56582,6 +56975,7 @@
               "NEWFIRMAPI",
               "RUBINMMAAPI",
               "NGPSAPI",
+              "WENDELSTEINAPI",
               null
             ],
             "maxLength": 17,
@@ -56628,6 +57022,7 @@
               "NEWFIRMAPI",
               "RUBINMMAAPI",
               "NGPSAPI",
+              "WENDELSTEINAPI",
               null
             ],
             "maxLength": 17,
@@ -56663,6 +57058,11 @@
           "across_id": {
             "type": "string",
             "description": "NASA ACROSS instrument UUID, used to route visibility queries to the ACROSS calculator. See https://across.sciencecloud.nasa.gov",
+            "nullable": true
+          },
+          "created_by_id": {
+            "type": "integer",
+            "description": "ID of the User who created the Instrument.",
             "nullable": true
           },
           "region": {
@@ -88670,6 +89070,21 @@
         "title": "BrokerFilterValidateBody",
         "type": "object"
       },
+      "BrokerFilterBackfillBody": {
+        "additionalProperties": false,
+        "description": "Request body for backfilling a filter from a broker's own store.",
+        "properties": {
+          "limit": {
+            "default": null,
+            "description": "Objects to pull at most. Defaults to the instance's `brokers.backfill.limit`, which also caps this.",
+            "title": "Limit",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "title": "BrokerFilterBackfillBody",
+        "type": "object"
+      },
       "BrokerFilterModuleWriteBody": {
         "additionalProperties": false,
         "description": "Request body for creating/updating a broker custom filter module.",
@@ -98995,6 +99410,117 @@
           "started_at"
         ],
         "title": "DeploymentsResponse",
+        "type": "object"
+      },
+      "InstanceManagerResponse": {
+        "additionalProperties": false,
+        "description": "A user listed as managing the instance.",
+        "properties": {
+          "user_id": {
+            "title": "User Id",
+            "type": "integer"
+          },
+          "username": {
+            "default": null,
+            "description": "Only returned to signed-in users",
+            "title": "Username",
+            "type": "string",
+            "nullable": true
+          },
+          "first_name": {
+            "default": null,
+            "title": "First Name",
+            "type": "string",
+            "nullable": true
+          },
+          "last_name": {
+            "default": null,
+            "title": "Last Name",
+            "type": "string",
+            "nullable": true
+          },
+          "affiliations": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Affiliations",
+            "type": "array"
+          },
+          "gravatar_url": {
+            "title": "Gravatar Url",
+            "type": "string"
+          },
+          "show_email": {
+            "title": "Show Email",
+            "type": "boolean"
+          },
+          "email": {
+            "default": null,
+            "description": "Only when show_email is set",
+            "title": "Email",
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "user_id",
+          "gravatar_url",
+          "show_email",
+          "created_at"
+        ],
+        "title": "InstanceManagerResponse",
+        "type": "object"
+      },
+      "InstanceManagersResponse": {
+        "additionalProperties": false,
+        "description": "The users listed as managing the instance.",
+        "properties": {
+          "managers": {
+            "items": {
+              "$ref": "#/components/schemas/InstanceManagerResponse"
+            },
+            "title": "Managers",
+            "type": "array"
+          }
+        },
+        "title": "InstanceManagersResponse",
+        "type": "object"
+      },
+      "InstanceManagerPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for listing a user as managing the instance.",
+        "properties": {
+          "user_id": {
+            "description": "ID of the user",
+            "title": "User Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "user_id"
+        ],
+        "title": "InstanceManagerPostBody",
+        "type": "object"
+      },
+      "InstanceManagerPatchBody": {
+        "additionalProperties": false,
+        "description": "Request body for changing how a manager is shown.",
+        "properties": {
+          "show_email": {
+            "description": "Whether the login and About pages show the manager's email",
+            "title": "Show Email",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "show_email"
+        ],
+        "title": "InstanceManagerPatchBody",
         "type": "object"
       },
       "FeedbackAuthorResponse": {
