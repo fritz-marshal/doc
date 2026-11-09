@@ -9571,6 +9571,141 @@
         }
       }
     },
+    "/api/moving_object/track/{track_id}/mpc": {
+      "get": {
+        "summary": "Preview a track's MPC submission",
+        "description": "The MPC submissions already made for a ZTF track and, given a sharing\nservice, the ADES PSV it would be filed with now.\n",
+        "tags": [
+          "moving objects"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "track_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "post": {
+        "summary": "Submit a ZTF track to the MPC",
+        "description": "Queue a vetted track for the Minor Planet Center, filed under the\nrequester's name with the sharing service's MPC header. The PSV is\nfixed now, so the MPC receives what the reviewer previewed.\n",
+        "tags": [
+          "moving objects"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovingObjectTrackMPCPostBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "track_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/moving_object/track/{track_id}/known": {
+      "post": {
+        "summary": "Check a track against the known small bodies",
+        "description": "Start a JPL check of whether a track is an already-known small body\nand return at once, since JPL takes minutes to answer. The verdict is\npushed to the requester's browser as skyportal/TRACK_KNOWN_OBJECT.\n",
+        "tags": [
+          "moving objects"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MovingObjectTrackKnownPostBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "track_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
     "/api/moving_object/track/{track_id}": {
       "get": {
         "summary": "Get a linked track and its detections",
@@ -27982,7 +28117,7 @@
     "/api/feedback/{feedback_id}/replies": {
       "post": {
         "summary": "Reply to a message left to the admins",
-        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>The author of the message is notified.",
+        "description": "Admins can reply to any message, users to their own. The other side is notified.",
         "tags": [
           "system info"
         ],
@@ -37567,6 +37702,27 @@
               "$ref": "#/components/schemas/Group"
             }
           },
+          "stream_ids": {
+            "type": "array",
+            "description": "Only users with access to all of these streams can see the comment.",
+            "items": {
+              "type": "integer"
+            },
+            "nullable": true
+          },
+          "hidden_stream_ids": {
+            "type": "array",
+            "description": "Users with access to all of these streams cannot see the comment, e.g. the public version of a comment whose full version needs them.",
+            "items": {
+              "type": "integer"
+            },
+            "nullable": true
+          },
+          "private_version_id": {
+            "type": "integer",
+            "description": "ID of the comment this one is the public version of.",
+            "nullable": true
+          },
           "obj_id": {
             "type": "string",
             "description": "ID of the Comment's Obj."
@@ -37696,6 +37852,27 @@
             "items": {
               "$ref": "#/components/schemas/Group"
             }
+          },
+          "stream_ids": {
+            "type": "array",
+            "description": "Only users with access to all of these streams can see the comment.",
+            "items": {
+              "type": "integer"
+            },
+            "nullable": true
+          },
+          "hidden_stream_ids": {
+            "type": "array",
+            "description": "Users with access to all of these streams cannot see the comment, e.g. the public version of a comment whose full version needs them.",
+            "items": {
+              "type": "integer"
+            },
+            "nullable": true
+          },
+          "private_version_id": {
+            "type": "integer",
+            "description": "ID of the comment this one is the public version of.",
+            "nullable": true
           },
           "obj_id": {
             "type": "string",
@@ -43653,7 +43830,7 @@
                 "$ref": "#/components/schemas/User"
               }
             ],
-            "description": "The admin who replied",
+            "description": "The User who replied",
             "readOnly": true
           },
           "feedback_id": {
@@ -43662,7 +43839,7 @@
           },
           "author_id": {
             "type": "integer",
-            "description": "ID of the admin who replied"
+            "description": "ID of the User who replied"
           },
           "text": {
             "type": "string",
@@ -43743,7 +43920,7 @@
                 "$ref": "#/components/schemas/User"
               }
             ],
-            "description": "The admin who replied",
+            "description": "The User who replied",
             "readOnly": true
           },
           "feedback_id": {
@@ -43752,7 +43929,7 @@
           },
           "author_id": {
             "type": "integer",
-            "description": "ID of the admin who replied"
+            "description": "ID of the User who replied"
           },
           "text": {
             "type": "string",
@@ -78722,6 +78899,10 @@
             "type": "boolean",
             "description": "Whether to enable publishing to TROVE or not."
           },
+          "enable_sharing_with_mpc": {
+            "type": "boolean",
+            "description": "Whether to enable submitting moving-object tracks to the MPC or not."
+          },
           "tns_bot_name": {
             "type": "string",
             "description": "Name of the TNS bot.",
@@ -79398,6 +79579,10 @@
           "enable_sharing_with_trove": {
             "type": "boolean",
             "description": "Whether to enable publishing to TROVE or not."
+          },
+          "enable_sharing_with_mpc": {
+            "type": "boolean",
+            "description": "Whether to enable submitting moving-object tracks to the MPC or not."
           },
           "tns_bot_name": {
             "type": "string",
@@ -92339,6 +92524,33 @@
             "type": "string",
             "nullable": true
           },
+          "stream_ids": {
+            "default": null,
+            "description": "Only users with access to all of these streams can see the comment. Only used for comments on sources.",
+            "title": "Stream Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "hidden_stream_ids": {
+            "default": null,
+            "description": "Users with access to all of these streams cannot see the comment, e.g. to post a public version next to a comment restricted with stream_ids. Only used for comments on sources.",
+            "title": "Hidden Stream Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "public_text": {
+            "default": null,
+            "description": "Public version of the comment, posted with it for users who do not have access to all of stream_ids. Only used for comments on sources.",
+            "title": "Public Text",
+            "type": "string",
+            "nullable": true
+          },
           "origin": {
             "default": null,
             "description": "Optional workflow that created the comment.",
@@ -92642,6 +92854,27 @@
             "title": "Band",
             "type": "string",
             "nullable": true
+          },
+          "obs_jd": {
+            "default": null,
+            "description": "Julian date of the middle of the exposure.",
+            "title": "Obs Jd",
+            "type": "number",
+            "nullable": true
+          },
+          "ssnamenr": {
+            "default": null,
+            "description": "Known object the survey matched, if any.",
+            "title": "Ssnamenr",
+            "type": "string",
+            "nullable": true
+          },
+          "objectId": {
+            "default": null,
+            "description": "Survey object id of the detection.",
+            "title": "Objectid",
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -92706,6 +92939,63 @@
           "broker_id"
         ],
         "title": "MovingObjectTrackPostBody",
+        "type": "object"
+      },
+      "MovingObjectTrackMPCPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for submitting a vetted track to the Minor Planet Center.",
+        "properties": {
+          "sharing_service_id": {
+            "description": "Sharing service whose MPC header the submission is filed with.",
+            "title": "Sharing Service Id",
+            "type": "integer"
+          },
+          "obj_id": {
+            "description": "One of the track's saved Objs, to file it under.",
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "broker_id": {
+            "description": "Broker the track is fetched from.",
+            "title": "Broker Id",
+            "type": "integer"
+          },
+          "submitter": {
+            "default": null,
+            "description": "Name the submission is filed under, as the MPC writes it (\"Q. Ye\"). Defaults to the requester's.",
+            "title": "Submitter",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "sharing_service_id",
+          "obj_id",
+          "broker_id"
+        ],
+        "title": "MovingObjectTrackMPCPostBody",
+        "type": "object"
+      },
+      "MovingObjectTrackKnownPostBody": {
+        "additionalProperties": false,
+        "description": "Request body for checking a track against the known small bodies.",
+        "properties": {
+          "broker_id": {
+            "description": "Broker the track is fetched from.",
+            "title": "Broker Id",
+            "type": "integer"
+          },
+          "survey": {
+            "default": "ZTF",
+            "description": "Survey the track is from.",
+            "title": "Survey",
+            "type": "string"
+          }
+        },
+        "required": [
+          "broker_id"
+        ],
+        "title": "MovingObjectTrackKnownPostBody",
         "type": "object"
       },
       "EarthquakePostBody": {
@@ -100477,7 +100767,7 @@
       },
       "FeedbackReplyResponse": {
         "additionalProperties": false,
-        "description": "An admin's reply to a message.",
+        "description": "A reply to a message, from an admin or its author.",
         "properties": {
           "id": {
             "title": "Id",
@@ -100629,7 +100919,7 @@
       },
       "FeedbackReplyPostBody": {
         "additionalProperties": false,
-        "description": "Request body for an admin replying to a message.",
+        "description": "Request body for replying to a message, as an admin or its author.",
         "properties": {
           "text": {
             "description": "The reply",
@@ -102615,6 +102905,13 @@
             "type": "boolean",
             "nullable": true
           },
+          "enable_sharing_with_mpc": {
+            "default": null,
+            "description": "Whether to enable submitting moving-object tracks to the MPC or not.",
+            "title": "Enable Sharing With Mpc",
+            "type": "boolean",
+            "nullable": true
+          },
           "tns_bot_name": {
             "default": null,
             "description": "Name of the TNS bot.",
@@ -102655,6 +102952,21 @@
             "default": null,
             "description": "TROVE altdata (the account username and password), as a JSON object or string.",
             "title": "Trove Altdata",
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "nullable": true
+          },
+          "_mpc_altdata": {
+            "default": null,
+            "description": "MPC submission header: observatory_code, observers, measurers, telescope_name, telescope_design, telescope_aperture, telescope_detector and an optional ack_email used when the reviewer has none, as a JSON object or string.",
+            "title": "Mpc Altdata",
             "anyOf": [
               {
                 "additionalProperties": true,
