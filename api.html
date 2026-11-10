@@ -24709,6 +24709,37 @@
           },
           {
             "in": "query",
+            "name": "analysisServiceIds",
+            "required": false,
+            "description": "If provided, return only sources with at least one analysis from one of these analysis services (IDs from /api/analysis_service)",
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "analysisStatus",
+            "required": false,
+            "description": "If provided, return only sources with at least one analysis in this status, e.g. completed. Combines with analysisServiceIds: the same analysis must match both.",
+            "schema": {
+              "enum": [
+                "queued",
+                "pending",
+                "completed",
+                "failure",
+                "cancelled",
+                "timed_out"
+              ],
+              "type": "string",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
             "name": "createdOrModifiedAfter",
             "required": false,
             "description": "Arrow-parseable date-time string (e.g. 2020-01-01 or 2020-01-01T00:00:00 or 2020-01-01T00:00:00+00:00). If provided, filter by created_at or modified > createdOrModifiedAfter",
@@ -92874,6 +92905,34 @@
             "description": "Survey object id of the detection.",
             "title": "Objectid",
             "type": "string",
+            "nullable": true
+          },
+          "residual_ra": {
+            "default": null,
+            "description": "Observed minus computed RA from the track's orbit, on a great circle, in arcsec.",
+            "title": "Residual Ra",
+            "type": "number",
+            "nullable": true
+          },
+          "residual_dec": {
+            "default": null,
+            "description": "Observed minus computed Dec from the track's orbit, in arcsec.",
+            "title": "Residual Dec",
+            "type": "number",
+            "nullable": true
+          },
+          "fwhm_ratio": {
+            "default": null,
+            "description": "Source FWHM over the PSF FWHM of its exposure, unset when trailed.",
+            "title": "Fwhm Ratio",
+            "type": "number",
+            "nullable": true
+          },
+          "classtar": {
+            "default": null,
+            "description": "SExtractor star/galaxy score of the detection.",
+            "title": "Classtar",
+            "type": "number",
             "nullable": true
           }
         },
