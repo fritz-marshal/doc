@@ -18,7 +18,7 @@
       "url": "https://raw.githubusercontent.com/skyportal/skyportal/main/static/images/skyportal_logo.png",
       "backgroundColor": "#FFFFFF",
       "altText": "SkyPortal logo",
-      "href": "https://skyportal.io/docs"
+      "href": "https://docs.skyportal.io"
     },
     "title": "Fritz: SkyPortal API",
     "version": "1.4.0"
@@ -3528,6 +3528,46 @@
             "schema": {
               "default": false,
               "type": "boolean"
+            }
+          }
+        ]
+      }
+    },
+    "/api/brokers/hosts": {
+      "get": {
+        "summary": "Get the host galaxies of objects via the default broker",
+        "description": "Best host galaxy the broker flagged ``default_crossmatch`` associated\nwith each object the requester can read, keyed by object id. Objects\nwithout a host are left out, and the result is null when no such\nbroker serves hosts or it cannot be reached.\n",
+        "tags": [
+          "brokers"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "query",
+            "name": "objectIds",
+            "required": true,
+            "description": "Comma-separated object ids.",
+            "schema": {
+              "type": "string"
             }
           }
         ]
@@ -12843,6 +12883,220 @@
             }
           }
         ]
+      }
+    },
+    "/api/sources/{obj_id}/similar": {
+      "get": {
+        "summary": "Get an object's nearest neighbors",
+        "description": "Objects closest to this one in a broker's embedding space (BOOM's AppleCiDEr embeddings), limited to the programs the requester's streams grant. Each neighbor carries its redshift and latest human classification when the requester can read it here.",
+        "tags": [
+          "sources",
+          "brokers"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "description": "Object whose neighbors to find.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "topK",
+            "required": false,
+            "description": "Neighbors to return.",
+            "schema": {
+              "default": 10,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "brokerId",
+            "required": false,
+            "description": "Broker to search. Defaults to the first active broker that serves similarity search.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SimilarSourcesResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/similarity/vetting": {
+      "get": {
+        "summary": "Get the neighbor vetting queue",
+        "description": "Sources a person classified recently whose human-classified neighbors in a broker's embedding space mostly belong to another branch of the taxonomy. Machine classifications are ignored on both sides. A subclass agrees with its parent class (SN Ia-91T with SN Ia).",
+        "tags": [
+          "sources",
+          "classifications"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "days",
+            "required": false,
+            "description": "Look back this many days.",
+            "schema": {
+              "default": 1,
+              "exclusiveMinimum": 0,
+              "maximum": 30,
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "topK",
+            "required": false,
+            "description": "Neighbors per source.",
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "minLabeled",
+            "required": false,
+            "description": "Fewest human-classified neighbors to judge.",
+            "schema": {
+              "default": 3,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "in": "query",
+            "name": "maxAgreement",
+            "required": false,
+            "description": "Keep sources whose share of agreeing neighbors is at most this.",
+            "schema": {
+              "default": 0.5,
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            }
+          },
+          {
+            "in": "query",
+            "name": "groupIds",
+            "required": false,
+            "description": "Only sources saved to these groups.",
+            "schema": {
+              "items": {
+                "type": "integer"
+              },
+              "type": "array",
+              "nullable": true
+            }
+          },
+          {
+            "in": "query",
+            "name": "brokerId",
+            "required": false,
+            "description": "Broker to search.",
+            "schema": {
+              "type": "integer",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/SimilarityVettingResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/similarity/more_like_this": {
+      "post": {
+        "summary": "Find objects like a set of sources",
+        "description": "Objects near any of the seed sources in a broker's embedding space, with a recent embedding and no human classification, ranked by how many seeds they are near. Seeds are the given objects, or every source a person gave one of the given classes, optionally only those saved to the given groups. Seeds older than the broker's embeddings have no neighbors.",
+        "tags": [
+          "sources",
+          "classifications"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoreLikeThisPostBody"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/MoreLikeThisResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/phot_stats": {
@@ -23230,6 +23484,56 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/PS1QueryBody"
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "description": "ID of the object to retrieve the Vizier crossmatch for",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/sources/{obj_id}/annotations/spherex": {
+      "post": {
+        "summary": "Add SPHEREx archive annotations",
+        "description": "Ask IRSA which SPHEREx spectral images cover this source's position\nand post a summary of the coverage as an annotation: images per\nrelease, detectors, wavelength range and the dates of each visit.\n",
+        "tags": [
+          "annotations"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpherexQueryBody"
               }
             }
           }
@@ -34727,6 +35031,16 @@
           "comment": {
             "type": "string",
             "description": "An optional comment describing the request."
+          },
+          "purpose": {
+            "type": "string",
+            "enum": [
+              "classification",
+              "follow-up",
+              null
+            ],
+            "description": "Purpose of the assignment.",
+            "nullable": true
           }
         },
         "required": [
@@ -36715,6 +37029,11 @@
             "description": "Priority of the request (1 = lowest, 5 = highest).",
             "type": "string"
           },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of the assignment [classification, follow-up].",
+            "nullable": true
+          },
           "run_id": {
             "type": "integer",
             "description": "ID of the ObservingRun this target was assigned to."
@@ -36864,6 +37183,11 @@
             "maxLength": 1,
             "description": "Priority of the request (1 = lowest, 5 = highest).",
             "type": "string"
+          },
+          "purpose": {
+            "type": "string",
+            "description": "Purpose of the assignment [classification, follow-up].",
+            "nullable": true
           },
           "run_id": {
             "type": "integer",
@@ -68439,11 +68763,6 @@
             "type": "string",
             "description": "Internal key used for secure websocket messaging."
           },
-          "detect_photometry_count": {
-            "type": "integer",
-            "description": "How many times the object was detected above :math:`S/N = phot_detection_threshold (3.0 by default)`.",
-            "nullable": true
-          },
           "ra": {
             "type": "number",
             "nullable": true
@@ -69311,11 +69630,6 @@
             "type": "string",
             "description": "Internal key used for secure websocket messaging."
           },
-          "detect_photometry_count": {
-            "type": "integer",
-            "description": "How many times the object was detected above :math:`S/N = phot_detection_threshold (3.0 by default)`.",
-            "nullable": true
-          },
           "ra": {
             "type": "number",
             "nullable": true
@@ -69706,11 +70020,6 @@
           },
           "healpix": {
             "type": "integer",
-            "nullable": true
-          },
-          "detect_photometry_count": {
-            "type": "integer",
-            "description": "How many times the object was detected above :math:`S/N = phot_detection_threshold (3.0 by default)`.",
             "nullable": true
           },
           "ra": {
@@ -90090,6 +90399,17 @@
             "title": "Comment",
             "type": "string",
             "nullable": true
+          },
+          "purpose": {
+            "default": null,
+            "description": "Purpose of the assignment.",
+            "title": "Purpose",
+            "enum": [
+              "classification",
+              "follow-up"
+            ],
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -90151,6 +90471,17 @@
             "default": null,
             "description": "An optional comment describing the request.",
             "title": "Comment",
+            "type": "string",
+            "nullable": true
+          },
+          "purpose": {
+            "default": null,
+            "description": "Purpose of the assignment.",
+            "title": "Purpose",
+            "enum": [
+              "classification",
+              "follow-up"
+            ],
             "type": "string",
             "nullable": true
           }
@@ -93021,10 +93352,36 @@
           },
           "submitter": {
             "default": null,
-            "description": "Name the submission is filed under, as the MPC writes it (\"Q. Ye\"). Defaults to the requester's.",
+            "description": "Name the submission is filed under, as the MPC writes it (\"Q. Ye\"). Defaults to the sharing service's first MPC submitter, else the requester's.",
             "title": "Submitter",
             "type": "string",
             "nullable": true
+          },
+          "exclude_candids": {
+            "description": "Detections the reviewer left out of the submission.",
+            "items": {
+              "type": "string"
+            },
+            "title": "Exclude Candids",
+            "type": "array"
+          },
+          "psv": {
+            "default": null,
+            "description": "The PSV as the reviewer edited it, sent instead of the generated one.",
+            "title": "Psv",
+            "type": "string",
+            "nullable": true
+          },
+          "submission_type": {
+            "default": "regular",
+            "description": "MPC channel the track goes to: the regular one, NEO candidates or new comets.",
+            "enum": [
+              "regular",
+              "neo_candidate",
+              "new_comet"
+            ],
+            "title": "Submission Type",
+            "type": "string"
           }
         },
         "required": [
@@ -93874,6 +94231,357 @@
           "status"
         ],
         "title": "GcnEventObjPatchBody",
+        "type": "object"
+      },
+      "NeighborClassification": {
+        "additionalProperties": false,
+        "description": "The most recent human classification of a neighbor.",
+        "properties": {
+          "classification": {
+            "title": "Classification",
+            "type": "string"
+          },
+          "probability": {
+            "default": null,
+            "title": "Probability",
+            "type": "number",
+            "nullable": true
+          },
+          "taxonomy_id": {
+            "title": "Taxonomy Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "classification",
+          "taxonomy_id"
+        ],
+        "title": "NeighborClassification",
+        "type": "object"
+      },
+      "SimilarSourceResponse": {
+        "additionalProperties": false,
+        "description": "One neighbor of an object in the broker's embedding space.",
+        "properties": {
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "score": {
+            "description": "Cosine similarity, higher is closer.",
+            "title": "Score",
+            "type": "number"
+          },
+          "jd": {
+            "default": null,
+            "description": "JD of the alert the embedding came from.",
+            "title": "Jd",
+            "type": "number",
+            "nullable": true
+          },
+          "model_label": {
+            "default": null,
+            "description": "The broker model's class for the neighbor.",
+            "title": "Model Label",
+            "type": "string",
+            "nullable": true
+          },
+          "model_probability": {
+            "default": null,
+            "title": "Model Probability",
+            "type": "number",
+            "nullable": true
+          },
+          "in_skyportal": {
+            "description": "Whether the requester can read this object here.",
+            "title": "In Skyportal",
+            "type": "boolean"
+          },
+          "redshift": {
+            "default": null,
+            "title": "Redshift",
+            "type": "number",
+            "nullable": true
+          },
+          "classification": {
+            "default": null,
+            "$ref": "#/components/schemas/NeighborClassification",
+            "nullable": true
+          }
+        },
+        "required": [
+          "obj_id",
+          "score",
+          "in_skyportal"
+        ],
+        "title": "SimilarSourceResponse",
+        "type": "object"
+      },
+      "SimilarSourcesResponse": {
+        "additionalProperties": false,
+        "description": "An object's nearest neighbors, best first.",
+        "properties": {
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "broker_id": {
+            "title": "Broker Id",
+            "type": "integer"
+          },
+          "neighbors": {
+            "items": {
+              "$ref": "#/components/schemas/SimilarSourceResponse"
+            },
+            "title": "Neighbors",
+            "type": "array"
+          }
+        },
+        "required": [
+          "obj_id",
+          "broker_id"
+        ],
+        "title": "SimilarSourcesResponse",
+        "type": "object"
+      },
+      "SimilarityVettingItem": {
+        "additionalProperties": false,
+        "description": "A source whose human-classified neighbors disagree with its class.",
+        "properties": {
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "classification": {
+            "title": "Classification",
+            "type": "string"
+          },
+          "probability": {
+            "default": null,
+            "title": "Probability",
+            "type": "number",
+            "nullable": true
+          },
+          "classified_at": {
+            "title": "Classified At",
+            "type": "string"
+          },
+          "labeled_neighbors": {
+            "title": "Labeled Neighbors",
+            "type": "integer"
+          },
+          "agreement": {
+            "description": "Share of labeled neighbors on the same taxonomy branch.",
+            "title": "Agreement",
+            "type": "number"
+          },
+          "neighbor_classes": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "title": "Neighbor Classes",
+            "type": "object"
+          }
+        },
+        "required": [
+          "obj_id",
+          "classification",
+          "classified_at",
+          "labeled_neighbors",
+          "agreement"
+        ],
+        "title": "SimilarityVettingItem",
+        "type": "object"
+      },
+      "SimilarityVettingResponse": {
+        "additionalProperties": false,
+        "description": "Recently classified sources whose neighbors disagree, worst first.",
+        "properties": {
+          "broker_id": {
+            "title": "Broker Id",
+            "type": "integer"
+          },
+          "checked": {
+            "description": "Classified sources searched.",
+            "title": "Checked",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/SimilarityVettingItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "broker_id",
+          "checked"
+        ],
+        "title": "SimilarityVettingResponse",
+        "type": "object"
+      },
+      "MoreLikeThisPostBody": {
+        "additionalProperties": false,
+        "description": "Seeds for a \"more like this\" search.",
+        "properties": {
+          "objIds": {
+            "default": null,
+            "description": "Seed objects.",
+            "title": "Objids",
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "classifications": {
+            "default": null,
+            "description": "Seed with every source a person gave one of these classes.",
+            "title": "Classifications",
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "groupIds": {
+            "default": null,
+            "description": "Only seed with sources saved to these groups.",
+            "title": "Groupids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          },
+          "days": {
+            "default": 30,
+            "description": "Only return objects whose embedding is this recent.",
+            "exclusiveMinimum": 0,
+            "maximum": 365,
+            "title": "Days",
+            "type": "number"
+          },
+          "topK": {
+            "default": 50,
+            "description": "Neighbors per seed.",
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Topk",
+            "type": "integer"
+          },
+          "limit": {
+            "default": 100,
+            "description": "Objects to return.",
+            "maximum": 500,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "brokerId": {
+            "default": null,
+            "description": "Broker to search.",
+            "title": "Brokerid",
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "title": "MoreLikeThisPostBody",
+        "type": "object"
+      },
+      "MoreLikeThisItem": {
+        "additionalProperties": false,
+        "description": "An unclassified object near the seeds.",
+        "properties": {
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "seeds": {
+            "description": "Seeds that have it among their neighbors.",
+            "title": "Seeds",
+            "type": "integer"
+          },
+          "best_score": {
+            "title": "Best Score",
+            "type": "number"
+          },
+          "nearest_seed": {
+            "title": "Nearest Seed",
+            "type": "string"
+          },
+          "jd": {
+            "default": null,
+            "title": "Jd",
+            "type": "number",
+            "nullable": true
+          },
+          "model_label": {
+            "default": null,
+            "title": "Model Label",
+            "type": "string",
+            "nullable": true
+          },
+          "model_probability": {
+            "default": null,
+            "title": "Model Probability",
+            "type": "number",
+            "nullable": true
+          },
+          "in_skyportal": {
+            "title": "In Skyportal",
+            "type": "boolean"
+          },
+          "redshift": {
+            "default": null,
+            "title": "Redshift",
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "obj_id",
+          "seeds",
+          "best_score",
+          "nearest_seed",
+          "in_skyportal"
+        ],
+        "title": "MoreLikeThisItem",
+        "type": "object"
+      },
+      "MoreLikeThisResponse": {
+        "additionalProperties": false,
+        "description": "Unclassified recent objects near the seeds, most seeds first.",
+        "properties": {
+          "broker_id": {
+            "title": "Broker Id",
+            "type": "integer"
+          },
+          "seeds": {
+            "description": "Seed objects.",
+            "title": "Seeds",
+            "type": "integer"
+          },
+          "seeds_searched": {
+            "description": "Seeds with an embedding.",
+            "title": "Seeds Searched",
+            "type": "integer"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/MoreLikeThisItem"
+            },
+            "title": "Items",
+            "type": "array"
+          }
+        },
+        "required": [
+          "broker_id",
+          "seeds",
+          "seeds_searched"
+        ],
+        "title": "MoreLikeThisResponse",
         "type": "object"
       },
       "LocalizationHandlerGet": {
@@ -98653,10 +99361,11 @@
         "description": "Request body for crossmatching an object with the Minor Planet Center.",
         "properties": {
           "obscode": {
-            "default": "500",
-            "description": "Minor planet center observatory code. Defaults to 500, corresponds to geocentric.",
+            "default": null,
+            "description": "Minor planet center observatory code. Defaults to the code of the telescope behind the detection closest to the date, or 500 (geocentric) when it has none.",
             "title": "Obscode",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "date": {
             "default": null,
@@ -98894,6 +99603,24 @@
           }
         },
         "title": "PS1QueryBody",
+        "type": "object"
+      },
+      "SpherexQueryBody": {
+        "additionalProperties": false,
+        "description": "Request body for posting SPHEREx archive coverage annotations.",
+        "properties": {
+          "group_ids": {
+            "default": null,
+            "description": "List of group IDs corresponding to which groups should be able to view annotation. Defaults to all of requesting user's groups.",
+            "title": "Group Ids",
+            "items": {
+              "type": "integer"
+            },
+            "type": "array",
+            "nullable": true
+          }
+        },
+        "title": "SpherexQueryBody",
         "type": "object"
       },
       "AnnotationPostBody": {
@@ -103160,8 +103887,9 @@
           },
           "role": {
             "default": "Full user",
-            "description": "The role the new user will have in the system.",
+            "description": "The role the new user will have in the system. Super admin can only be granted by a system admin.",
             "enum": [
+              "Super admin",
               "Full user",
               "View only"
             ],
