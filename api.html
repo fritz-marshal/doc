@@ -22704,6 +22704,53 @@
       }
     },
     "/api/sources/{obj_id}/mpc": {
+      "get": {
+        "summary": "Get an object's default MPC observatory code",
+        "description": "Observatory code used when an MPC query does not give one: the code\nof the telescope that took the detection closest to the date, or the\ngeocentric code when that telescope has none.\n",
+        "tags": [
+          "objs"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "obj_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "required": false,
+            "description": "UTC date of the MPC query. Defaults to now.",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          },
+          "400": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "summary": "Crossmatch an object with MPC",
         "description": "Retrieve an object's status from Minor Planet Center",
@@ -30903,6 +30950,52 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SharingServiceSubmissionPostBody"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/sharing_service/tns_classifications": {
+      "get": {
+        "summary": "List TNS classification reports and classifications not reported",
+        "description": "Classification reports sent to TNS in the last days, and the recent\nhuman classifications of sources in groups that share with TNS that\nare not on TNS yet, each with the reason.\n",
+        "tags": [
+          "external sharing service"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "days",
+            "required": false,
+            "description": "How many days back to look for reports and classifications",
+            "schema": {
+              "default": 30,
+              "maximum": 365,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Success"
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "$ref": "#/components/schemas/TNSClassificationsResponse"
+                        }
+                      }
+                    }
+                  ]
+                }
               }
             }
           }
@@ -56896,6 +56989,7 @@
               "RUBINMMAAPI",
               "NGPSAPI",
               "WENDELSTEINAPI",
+              "ATCAAPI",
               null
             ],
             "maxLength": 17,
@@ -56943,6 +57037,7 @@
               "RUBINMMAAPI",
               "NGPSAPI",
               "WENDELSTEINAPI",
+              "ATCAAPI",
               null
             ],
             "maxLength": 17,
@@ -57829,6 +57924,7 @@
               "RUBINMMAAPI",
               "NGPSAPI",
               "WENDELSTEINAPI",
+              "ATCAAPI",
               null
             ],
             "maxLength": 17,
@@ -57876,6 +57972,7 @@
               "RUBINMMAAPI",
               "NGPSAPI",
               "WENDELSTEINAPI",
+              "ATCAAPI",
               null
             ],
             "maxLength": 17,
@@ -68662,6 +68759,17 @@
             "description": "Redshift source.",
             "nullable": true
           },
+          "redshift_type": {
+            "enum": [
+              "spectroscopic",
+              "photometric",
+              null
+            ],
+            "maxLength": 13,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "nullable": true,
+            "type": "string"
+          },
           "redshift_history": {
             "description": "Record of who set which redshift values and when.",
             "nullable": true,
@@ -69529,6 +69637,17 @@
             "description": "Redshift source.",
             "nullable": true
           },
+          "redshift_type": {
+            "enum": [
+              "spectroscopic",
+              "photometric",
+              null
+            ],
+            "maxLength": 13,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "nullable": true,
+            "type": "string"
+          },
           "redshift_history": {
             "description": "Record of who set which redshift values and when.",
             "nullable": true,
@@ -69926,6 +70045,17 @@
             "type": "string",
             "description": "Redshift source.",
             "nullable": true
+          },
+          "redshift_type": {
+            "enum": [
+              "spectroscopic",
+              "photometric",
+              null
+            ],
+            "maxLength": 13,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "nullable": true,
+            "type": "string"
           },
           "host_id": {
             "type": "integer",
@@ -79535,6 +79665,10 @@
           "auto_share_classifications_to_tns": {
             "type": "boolean"
           },
+          "auto_share_classifications_delay_hours": {
+            "type": "integer",
+            "description": "Hours an automatic classification report waits before it is sent."
+          },
           "auto_share_to_hermes": {
             "type": "boolean"
           },
@@ -79797,6 +79931,10 @@
           },
           "auto_share_classifications_to_tns": {
             "type": "boolean"
+          },
+          "auto_share_classifications_delay_hours": {
+            "type": "integer",
+            "description": "Hours an automatic classification report waits before it is sent."
           },
           "auto_share_to_hermes": {
             "type": "boolean"
@@ -80089,6 +80227,12 @@
             "description": "Status of the TNS submission.",
             "nullable": true
           },
+          "tns_send_after": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Earliest UTC time the TNS report may be sent.",
+            "nullable": true
+          },
           "tns_submission_id": {
             "type": "integer",
             "description": "ID of the submission returned by TNS.",
@@ -80330,6 +80474,12 @@
           "tns_status": {
             "type": "string",
             "description": "Status of the TNS submission.",
+            "nullable": true
+          },
+          "tns_send_after": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Earliest UTC time the TNS report may be sent.",
             "nullable": true
           },
           "tns_submission_id": {
@@ -82266,6 +82416,10 @@
             "type": "integer",
             "description": "ID of the Instrument that acquired the Spectrum."
           },
+          "auto_report_to_tns": {
+            "type": "boolean",
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically."
+          },
           "followup_request_id": {
             "type": "integer",
             "nullable": true
@@ -82529,6 +82683,11 @@
             "default": null,
             "description": "Free text provided as an external observer",
             "nullable": true
+          },
+          "auto_report_to_tns": {
+            "type": "boolean",
+            "default": false,
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically."
           },
           "followup_request_id": {
             "type": "integer",
@@ -82911,6 +83070,10 @@
           "instrument_id": {
             "type": "integer",
             "description": "ID of the Instrument that acquired the Spectrum."
+          },
+          "auto_report_to_tns": {
+            "type": "boolean",
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically."
           },
           "followup_request_id": {
             "type": "integer",
@@ -83405,6 +83568,10 @@
             "default": null,
             "description": "Free text provided as an external observer",
             "nullable": true
+          },
+          "auto_report_to_tns": {
+            "type": "boolean",
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically."
           },
           "origin": {
             "type": "string",
@@ -91135,6 +91302,17 @@
             "default": null,
             "description": "Redshift source.",
             "title": "Redshift Origin",
+            "type": "string",
+            "nullable": true
+          },
+          "redshift_type": {
+            "default": null,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "title": "Redshift Type",
+            "enum": [
+              "spectroscopic",
+              "photometric"
+            ],
             "type": "string",
             "nullable": true
           },
@@ -99794,6 +99972,17 @@
             "type": "string",
             "nullable": true
           },
+          "redshift_type": {
+            "default": null,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "title": "Redshift Type",
+            "enum": [
+              "spectroscopic",
+              "photometric"
+            ],
+            "type": "string",
+            "nullable": true
+          },
           "redshift_history": {
             "default": null,
             "description": "Record of who set which redshift values and when.",
@@ -100037,6 +100226,17 @@
             "default": null,
             "description": "Redshift source.",
             "title": "Redshift Origin",
+            "type": "string",
+            "nullable": true
+          },
+          "redshift_type": {
+            "default": null,
+            "description": "Whether the redshift is spectroscopic or photometric.",
+            "title": "Redshift Type",
+            "enum": [
+              "spectroscopic",
+              "photometric"
+            ],
             "type": "string",
             "nullable": true
           },
@@ -100544,6 +100744,13 @@
             "type": "string",
             "nullable": true
           },
+          "auto_report_to_tns": {
+            "default": null,
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically.",
+            "title": "Auto Report To Tns",
+            "type": "boolean",
+            "nullable": true
+          },
           "origin": {
             "default": null,
             "description": "Origin of the spectrum.",
@@ -100806,6 +101013,13 @@
             "description": "Free text provided as an external observer",
             "title": "External Observer",
             "type": "string",
+            "nullable": true
+          },
+          "auto_report_to_tns": {
+            "default": null,
+            "description": "Whether a classification resting on this spectrum may be reported to TNS automatically.",
+            "title": "Auto Report To Tns",
+            "type": "boolean",
             "nullable": true
           },
           "followup_request_id": {
@@ -103346,6 +103560,209 @@
         "title": "SharingServiceSubmissionPostBody",
         "type": "object"
       },
+      "TNSClassificationNotReportedResponse": {
+        "additionalProperties": false,
+        "description": "A recent classification that is not on TNS yet, and why.",
+        "properties": {
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "tns_name": {
+            "default": null,
+            "title": "Tns Name",
+            "type": "string",
+            "nullable": true
+          },
+          "tns_classification": {
+            "default": null,
+            "title": "Tns Classification",
+            "type": "string",
+            "nullable": true
+          },
+          "classification_id": {
+            "title": "Classification Id",
+            "type": "integer"
+          },
+          "classification": {
+            "title": "Classification",
+            "type": "string"
+          },
+          "classified_by": {
+            "default": null,
+            "title": "Classified By",
+            "type": "string",
+            "nullable": true
+          },
+          "classified_at": {
+            "default": null,
+            "title": "Classified At",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "redshift": {
+            "default": null,
+            "title": "Redshift",
+            "type": "number",
+            "nullable": true
+          },
+          "spectrum_id": {
+            "default": null,
+            "title": "Spectrum Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "instrument": {
+            "default": null,
+            "title": "Instrument",
+            "type": "string",
+            "nullable": true
+          },
+          "reason_code": {
+            "enum": [
+              "queued",
+              "held",
+              "failed",
+              "no_tns_name",
+              "no_spectrum",
+              "no_tns_type",
+              "missing_credits",
+              "manual"
+            ],
+            "title": "Reason Code",
+            "type": "string"
+          },
+          "reason": {
+            "title": "Reason",
+            "type": "string"
+          },
+          "tns_send_after": {
+            "default": null,
+            "title": "Tns Send After",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "obj_id",
+          "classification_id",
+          "classification",
+          "reason_code",
+          "reason"
+        ],
+        "title": "TNSClassificationNotReportedResponse",
+        "type": "object"
+      },
+      "TNSClassificationReportResponse": {
+        "additionalProperties": false,
+        "description": "A classification report filed to TNS.",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
+          "created_at": {
+            "default": null,
+            "title": "Created At",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
+          },
+          "obj_id": {
+            "title": "Obj Id",
+            "type": "string"
+          },
+          "tns_name": {
+            "default": null,
+            "title": "Tns Name",
+            "type": "string",
+            "nullable": true
+          },
+          "sharing_service": {
+            "default": null,
+            "title": "Sharing Service",
+            "type": "string",
+            "nullable": true
+          },
+          "user_id": {
+            "default": null,
+            "title": "User Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "auto_submission": {
+            "default": false,
+            "title": "Auto Submission",
+            "type": "boolean"
+          },
+          "tns_status": {
+            "default": null,
+            "title": "Tns Status",
+            "type": "string",
+            "nullable": true
+          },
+          "tns_submission_id": {
+            "default": null,
+            "title": "Tns Submission Id",
+            "type": "integer",
+            "nullable": true
+          },
+          "classification": {
+            "default": null,
+            "title": "Classification",
+            "type": "string",
+            "nullable": true
+          },
+          "redshift": {
+            "default": null,
+            "title": "Redshift",
+            "type": "number",
+            "nullable": true
+          },
+          "instrument": {
+            "default": null,
+            "title": "Instrument",
+            "type": "string",
+            "nullable": true
+          },
+          "authors": {
+            "default": null,
+            "title": "Authors",
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "obj_id"
+        ],
+        "title": "TNSClassificationReportResponse",
+        "type": "object"
+      },
+      "TNSClassificationsResponse": {
+        "additionalProperties": false,
+        "description": "Classification reports sent to TNS, and recent classifications not sent.",
+        "properties": {
+          "reported": {
+            "items": {
+              "$ref": "#/components/schemas/TNSClassificationReportResponse"
+            },
+            "title": "Reported",
+            "type": "array"
+          },
+          "not_reported": {
+            "items": {
+              "$ref": "#/components/schemas/TNSClassificationNotReportedResponse"
+            },
+            "title": "Not Reported",
+            "type": "array"
+          }
+        },
+        "title": "TNSClassificationsResponse",
+        "type": "object"
+      },
       "SharingServiceCoauthorPostBody": {
         "additionalProperties": false,
         "description": "Request body for adding a coauthor to an external sharing service.",
@@ -103427,6 +103844,20 @@
             "anyOf": [
               {
                 "type": "boolean"
+              },
+              {
+                "type": "string"
+              }
+            ],
+            "nullable": true
+          },
+          "auto_share_classifications_delay_hours": {
+            "default": null,
+            "description": "Hours an automatic classification report waits before it is sent",
+            "title": "Auto Share Classifications Delay Hours",
+            "anyOf": [
+              {
+                "type": "integer"
               },
               {
                 "type": "string"
