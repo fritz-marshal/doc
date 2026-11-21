@@ -12782,7 +12782,7 @@
       },
       "post": {
         "summary": "Create new phot stats for a source",
-        "description": "<b>Permission(s) required:</b> <em>system admin (or System admin)</em><br><br>create a new PhotStat to be associated with the obj_id.",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>create a new PhotStat to be associated with the obj_id.",
         "tags": [
           "photometry"
         ],
@@ -12820,7 +12820,7 @@
       },
       "put": {
         "summary": "Update phot stats for a source",
-        "description": "<b>Permission(s) required:</b> <em>system admin (or System admin)</em><br><br>create or update the PhotStat associated with the obj_id.",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>create or update the PhotStat associated with the obj_id.",
         "tags": [
           "photometry"
         ],
@@ -12858,7 +12858,7 @@
       },
       "delete": {
         "summary": "Delete phot stats of a source",
-        "description": "<b>Permission(s) required:</b> <em>system admin (or System admin)</em><br><br>delete the PhotStat associated with the obj_id.",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>delete the PhotStat associated with the obj_id.",
         "tags": [
           "photometry"
         ],
@@ -48099,6 +48099,15 @@
             "description": "The GcnEvent this association belongs to.",
             "readOnly": true
           },
+          "localization": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Localization"
+              }
+            ],
+            "description": "The Localization the Obj was matched in.",
+            "readOnly": true
+          },
           "confirmer": {
             "allOf": [
               {
@@ -48116,6 +48125,11 @@
             "type": "string",
             "format": "date-time",
             "description": "UTC event timestamp"
+          },
+          "localization_id": {
+            "type": "integer",
+            "description": "ID of the Localization the Obj was matched in.",
+            "nullable": true
           },
           "status": {
             "enum": [
@@ -48220,6 +48234,15 @@
             "description": "The GcnEvent this association belongs to.",
             "readOnly": true
           },
+          "localization": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Localization"
+              }
+            ],
+            "description": "The Localization the Obj was matched in.",
+            "readOnly": true
+          },
           "confirmer": {
             "allOf": [
               {
@@ -48237,6 +48260,11 @@
             "type": "string",
             "format": "date-time",
             "description": "UTC event timestamp"
+          },
+          "localization_id": {
+            "type": "integer",
+            "description": "ID of the Localization the Obj was matched in.",
+            "nullable": true
           },
           "status": {
             "enum": [
