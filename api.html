@@ -29526,6 +29526,26 @@
         }
       }
     },
+    "/api/assistant/usage": {
+      "get": {
+        "summary": "Read the assistant's models and monthly budget",
+        "description": "The main model, the next one when it is down or out of budget, and how much of the monthly budget is left.",
+        "tags": [
+          "assistant"
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Success"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/assistant_queries/{query_id}": {
       "get": {
         "summary": "Retrieve one shared assistant query",
@@ -35255,6 +35275,11 @@
             "type": "object",
             "additionalProperties": true
           },
+          "model": {
+            "type": "string",
+            "description": "Model that wrote the answer, if any.",
+            "nullable": true
+          },
           "id": {
             "type": "integer",
             "description": "Unique object identifier."
@@ -35367,6 +35392,11 @@
             "nullable": true,
             "type": "object",
             "additionalProperties": true
+          },
+          "model": {
+            "type": "string",
+            "description": "Model that wrote the answer, if any.",
+            "nullable": true
           }
         },
         "required": [
@@ -35829,6 +35859,156 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/AssistantQuerySubscriptionNoID"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "AssistantUsage": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model that answered."
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Tokens sent."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Tokens the model generated."
+          },
+          "cost": {
+            "type": "number",
+            "description": "Estimated cost in USD."
+          },
+          "id": {
+            "type": "integer",
+            "description": "Unique object identifier."
+          }
+        },
+        "required": [
+          "completion_tokens",
+          "cost",
+          "model",
+          "prompt_tokens"
+        ],
+        "additionalProperties": false
+      },
+      "SingleAssistantUsage": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AssistantUsage"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfAssistantUsages": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssistantUsage"
+            }
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "AssistantUsageNoID": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string",
+            "description": "Model that answered."
+          },
+          "prompt_tokens": {
+            "type": "integer",
+            "description": "Tokens sent."
+          },
+          "completion_tokens": {
+            "type": "integer",
+            "description": "Tokens the model generated."
+          },
+          "cost": {
+            "type": "number",
+            "description": "Estimated cost in USD."
+          }
+        },
+        "required": [
+          "completion_tokens",
+          "cost",
+          "model",
+          "prompt_tokens"
+        ],
+        "additionalProperties": false
+      },
+      "SingleAssistantUsageNoID": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "$ref": "#/components/schemas/AssistantUsageNoID"
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "additionalProperties": false
+      },
+      "ArrayOfAssistantUsageNoIDs": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "enum": [
+              "success"
+            ],
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AssistantUsageNoID"
             }
           }
         },
