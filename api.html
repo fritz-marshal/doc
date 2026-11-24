@@ -28470,11 +28470,11 @@
         ]
       },
       "patch": {
-        "summary": "Mark a message left to the admins as handled, reopen it, or assign it",
+        "summary": "Mark a message left to the admins as handled, reopen it, assign it, or link its fixes",
+        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>Once all the linked pull requests are deployed, the message is resolved and its author notified.",
         "tags": [
           "system info"
         ],
-        "description": "<b>Permission(s) required:</b> <em>System admin (or System admin)</em><br><br>",
         "requestBody": {
           "required": true,
           "content": {
@@ -44296,6 +44296,19 @@
             "type": "boolean",
             "description": "Whether an admin has handled the message"
           },
+          "pr_urls": {
+            "type": "array",
+            "description": "URLs of the pull requests fixing the message",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deployed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When all the linked pull requests were first deployed and the author notified",
+            "nullable": true
+          },
           "assignee_id": {
             "type": "integer",
             "description": "ID of the admin working on the message",
@@ -44401,6 +44414,19 @@
           "resolved": {
             "type": "boolean",
             "description": "Whether an admin has handled the message"
+          },
+          "pr_urls": {
+            "type": "array",
+            "description": "URLs of the pull requests fixing the message",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deployed_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "When all the linked pull requests were first deployed and the author notified",
+            "nullable": true
           },
           "assignee_id": {
             "type": "integer",
@@ -102003,6 +102029,26 @@
         "title": "FeedbackAuthorResponse",
         "type": "object"
       },
+      "FeedbackPullRequestResponse": {
+        "additionalProperties": false,
+        "description": "A pull request linked to a message, and whether this instance runs it.",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "deployed": {
+            "title": "Deployed",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "url",
+          "deployed"
+        ],
+        "title": "FeedbackPullRequestResponse",
+        "type": "object"
+      },
       "FeedbackReplyResponse": {
         "additionalProperties": false,
         "description": "A reply to a message, from an admin or its author.",
@@ -102077,6 +102123,20 @@
             },
             "title": "Replies",
             "type": "array"
+          },
+          "pull_requests": {
+            "items": {
+              "$ref": "#/components/schemas/FeedbackPullRequestResponse"
+            },
+            "title": "Pull Requests",
+            "type": "array"
+          },
+          "deployed_at": {
+            "default": null,
+            "title": "Deployed At",
+            "format": "date-time",
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -102149,6 +102209,17 @@
             "description": "ID of the admin working on it; null to unassign",
             "title": "Assignee Id",
             "type": "integer",
+            "nullable": true
+          },
+          "pr_urls": {
+            "default": null,
+            "description": "GitHub pull requests fixing it; the author is notified once all are deployed",
+            "title": "Pr Urls",
+            "items": {
+              "type": "string"
+            },
+            "maxItems": 20,
+            "type": "array",
             "nullable": true
           }
         },
